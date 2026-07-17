@@ -15,9 +15,9 @@ export default function Header({ onSelectAgencyTab }) {
       </div>
 
       {/* Middle side: Navigation Menu */}
-      <nav className="hidden xl:flex items-center gap-6 font-semibold text-sm">
-        <a href="#home" className="hover:text-slate-200 transition-colors">Home</a>
-        <a href="#live" className="hover:text-slate-200 transition-colors">Live Streaming</a>
+      <nav className="hidden md:flex gap-6">
+  <a href="/">Home</a>
+  <a href="/live">Live Streaming</a>
         <div className="relative group cursor-pointer flex items-center gap-1 hover:text-slate-200 transition-colors py-2">
           <span>Agency</span>
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
