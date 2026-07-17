@@ -337,70 +337,70 @@ export default function DiamondAgencyPage() {
         
         return (
           <div className="space-y-6">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
               <button 
                 onClick={handleExport}
-                className="bg-white border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
+                className="bg-white border border-slate-200 text-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
               >
                 Export
               </button>
               <button 
                 onClick={() => setActiveSideTab('pkg_add')}
-                className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm flex items-center gap-2 transition-all"
+                className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center gap-2 transition-all"
               >
-                <Plus className="w-4 h-4" /> Add Diamond Package
+                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Add Diamond Package
               </button>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center mb-3">
-                  <Gem className="w-4 h-4 text-[#E51E25]" />
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-red-50 flex items-center justify-center mb-2 sm:mb-3">
+                  <Gem className="w-3 h-3 sm:w-4 sm:h-4 text-[#E51E25]" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Total Diamonds Sold</div>
-                <div className="text-2xl font-black text-slate-800 mt-1">{totalDiamondsSold.toLocaleString()}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Total Diamonds Sold</div>
+                <div className="text-lg sm:text-2xl font-black text-slate-800 mt-1">{totalDiamondsSold.toLocaleString()}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center mb-3">
-                  <Banknote className="w-4 h-4 text-green-600" />
+              <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-green-50 flex items-center justify-center mb-2 sm:mb-3">
+                  <Banknote className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Total Revenue</div>
-                <div className="text-2xl font-black text-slate-800 mt-1">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Total Revenue</div>
+                <div className="text-lg sm:text-2xl font-black text-slate-800 mt-1">${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
-                  <CheckCircle2 className="w-4 h-4 text-blue-600" />
+              <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-blue-50 flex items-center justify-center mb-2 sm:mb-3">
+                  <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Active Packages</div>
-                <div className="text-2xl font-black text-slate-800 mt-1">{activePackages}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">100% active</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Active Packages</div>
+                <div className="text-lg sm:text-2xl font-black text-slate-800 mt-1">{activePackages}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">100% active</div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center mb-3">
-                  <TrendingUp className="w-4 h-4 text-amber-600" />
+              <div className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-amber-50 flex items-center justify-center mb-2 sm:mb-3">
+                  <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Total Orders</div>
-                <div className="text-2xl font-black text-slate-800 mt-1">{totalOrders.toLocaleString()}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Total Orders</div>
+                <div className="text-lg sm:text-2xl font-black text-slate-800 mt-1">{totalOrders.toLocaleString()}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">↑ vs last 7 days</div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
               <div className="lg:col-span-2 space-y-4">
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <input 
                     type="text" 
                     placeholder="Search diamond package..." 
                     value={pkgSearch}
                     onChange={(e) => setPkgSearch(e.target.value)}
-                    className="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="flex-1 bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   />
                   <select 
                     value={pkgStatusFilter}
                     onChange={(e) => setPkgStatusFilter(e.target.value)}
-                    className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   >
                     <option>All Status</option>
                     <option>Active</option>
@@ -464,8 +464,8 @@ export default function DiamondAgencyPage() {
               </div>
 
               {/* Package Settings Sidebar */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm h-fit space-y-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2"><Settings className="w-5 h-5 text-slate-400" /> Diamond Package Settings</h4>
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm h-fit space-y-4 sm:space-y-6">
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Settings className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400" /> Diamond Package Settings</h4>
                 <div className="space-y-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -525,37 +525,37 @@ export default function DiamondAgencyPage() {
         
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><Banknote className="w-4 h-4 text-green-500"/> 7-Day Revenue</div>
-                <div className="text-2xl lg:text-3xl font-black text-slate-800">${totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">all packages</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><Banknote className="w-3 h-3 sm:w-4 sm:h-4 text-green-500"/> 7-Day Revenue</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-800">${totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">all packages</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><TrendingUp className="w-4 h-4 text-blue-500"/> Best Performer</div>
-                <div className="text-xl lg:text-2xl font-black text-slate-800 truncate">{bestPerformer.name}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">${bestRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})} revenue</div>
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500"/> Best Performer</div>
+                <div className="text-base sm:text-xl lg:text-2xl font-black text-slate-800 truncate">{bestPerformer.name}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">${bestRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})} revenue</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><Award className="w-4 h-4 text-[#E51E25]"/> Avg. Bonus Offered</div>
-                <div className="text-2xl lg:text-3xl font-black text-slate-800">{avgBonus}%</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">across packages</div>
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-2 mb-2"><Award className="w-3 h-3 sm:w-4 sm:h-4 text-[#E51E25]"/> Avg. Bonus Offered</div>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-800">{avgBonus}%</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">across packages</div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-lg mb-6">Revenue by Package</h4>
-              <div className="space-y-6">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg mb-4 sm:mb-6">Revenue by Package</h4>
+              <div className="space-y-4 sm:space-y-6">
                 {[...packages].sort((a,b) => (b.sold*b.price) - (a.sold*a.price)).map(p => {
                   const rev = p.sold * p.price
                   const pct = Math.min(100, (rev / bestRevenue) * 100)
                   return (
-                    <div key={p.id} className="flex items-center gap-4">
-                      <div className="w-32 sm:w-48 text-sm font-semibold text-slate-600 truncate">{p.name}</div>
-                      <div className="flex-1 h-4 bg-slate-100 rounded-r-full overflow-hidden flex items-center">
+                    <div key={p.id} className="flex items-center gap-2 sm:gap-4">
+                      <div className="w-24 sm:w-32 md:w-48 text-xs sm:text-sm font-semibold text-slate-600 truncate">{p.name}</div>
+                      <div className="flex-1 h-3 sm:h-4 bg-slate-100 rounded-r-full overflow-hidden flex items-center">
                         <div className="h-full bg-gradient-to-r from-teal-400 to-teal-500 rounded-r-full" style={{ width: `${pct}%` }}></div>
                       </div>
-                      <div className="w-24 text-right font-mono font-bold text-slate-700">${rev.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+                      <div className="w-16 sm:w-24 text-right font-mono font-bold text-slate-700 text-xs sm:text-sm">${rev.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
                     </div>
                   )
                 })}
@@ -566,9 +566,9 @@ export default function DiamondAgencyPage() {
       
       case 'pkg_settings':
         return (
-          <div className="space-y-6 max-w-2xl">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><Settings className="w-5 h-5 text-[#E51E25]" /> Global Package Configurations</h4>
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Settings className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Global Package Configurations</h4>
               <div className="space-y-6">
                 <div className="flex items-center justify-between gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50">
                   <div>
@@ -642,22 +642,22 @@ export default function DiamondAgencyPage() {
           setActiveSideTab('pkg_all')
         }
         return (
-          <div className="space-y-6 max-w-2xl">
-            <form onSubmit={handleAddPackage} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><Plus className="w-5 h-5 text-[#E51E25]" /> Create Diamond Package</h4>
-              <div className="space-y-5">
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            <form onSubmit={handleAddPackage} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Plus className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Create Diamond Package</h4>
+              <div className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Package Name</label>
-                  <input type="text" required value={newPkgName} onChange={(e) => setNewPkgName(e.target.value)} placeholder="e.g. Starter Diamond Pack" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Package Name</label>
+                  <input type="text" required value={newPkgName} onChange={(e) => setNewPkgName(e.target.value)} placeholder="e.g. Starter Diamond Pack" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Diamonds Base Amount</label>
-                    <input type="number" required value={newPkgDiamonds} onChange={(e) => setNewPkgDiamonds(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Diamonds Base Amount</label>
+                    <input type="number" required value={newPkgDiamonds} onChange={(e) => setNewPkgDiamonds(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Price (USD)</label>
-                    <input type="number" step="0.01" required value={newPkgPrice} onChange={(e) => setNewPkgPrice(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Price (USD)</label>
+                    <input type="number" step="0.01" required value={newPkgPrice} onChange={(e) => setNewPkgPrice(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                   </div>
                 </div>
                 <div>
@@ -687,37 +687,37 @@ export default function DiamondAgencyPage() {
           setWithdrawals(withdrawals.map(w => safeIds.includes(w.id) ? { ...w, status: 'Approved' } : w))
         }
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-red-500" />
-                <span className="font-extrabold text-slate-800">{withdrawals.filter(w=>w.status==='Pending').length} pending withdrawals</span>
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" />
+                <span className="font-extrabold text-slate-800 text-sm sm:text-base">{withdrawals.filter(w=>w.status==='Pending').length} pending withdrawals</span>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">ID</th><th className="p-4">Requester</th><th className="p-4">Net Amount</th><th className="p-4">Fraud Risk</th><th className="p-4">KYC</th><th className="p-4">Status</th><th className="p-4 text-center">Actions</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">ID</th><th className="p-2 sm:p-4">Requester</th><th className="p-2 sm:p-4">Net Amount</th><th className="p-2 sm:p-4">Fraud Risk</th><th className="p-2 sm:p-4">KYC</th><th className="p-2 sm:p-4">Status</th><th className="p-2 sm:p-4 text-center">Actions</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {withdrawals.filter(w=>w.status==='Pending').map(w => (
                       <tr key={w.id} className="hover:bg-slate-50/50">
-                        <td className="p-4 font-mono font-bold text-[#E51E25]">{w.id}</td>
-                        <td className="p-4">
-                          <div className="font-bold text-slate-800">{w.requester}</div>
-                          <div className="text-xs text-slate-500">{w.agency}</div>
+                        <td className="p-2 sm:p-4 font-mono font-bold text-[#E51E25] text-xs">{w.id}</td>
+                        <td className="p-2 sm:p-4">
+                          <div className="font-bold text-slate-800 text-xs sm:text-sm">{w.requester}</div>
+                          <div className="text-[10px] sm:text-xs text-slate-500">{w.agency}</div>
                         </td>
-                        <td className="p-4 font-mono font-bold">${w.amount.toFixed(2)}</td>
-                        <td className="p-4">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${w.fraudRisk==='Low'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}`}>{w.fraudRisk} • {w.fraudScore}</span>
+                        <td className="p-2 sm:p-4 font-mono font-bold text-xs sm:text-sm">${w.amount.toFixed(2)}</td>
+                        <td className="p-2 sm:p-4">
+                          <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold ${w.fraudRisk==='Low'?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}`}>{w.fraudRisk} • {w.fraudScore}</span>
                         </td>
-                        <td className="p-4">
-                          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${w.kyc==='Verified'?'bg-green-100 text-green-700':'bg-amber-100 text-amber-700'}`}>{w.kyc}</span>
+                        <td className="p-2 sm:p-4">
+                          <span className={`text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold ${w.kyc==='Verified'?'bg-green-100 text-green-700':'bg-amber-100 text-amber-700'}`}>{w.kyc}</span>
                         </td>
-                        <td className="p-4"><span className="text-xs px-2 py-0.5 rounded-full font-bold bg-slate-100 text-slate-600">{w.status}</span></td>
-                        <td className="p-4 text-center"><button className="text-xs font-bold text-[#E51E25] hover:underline">Review</button></td>
+                        <td className="p-2 sm:p-4"><span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold bg-slate-100 text-slate-600">{w.status}</span></td>
+                        <td className="p-2 sm:p-4 text-center"><button className="text-[10px] sm:text-xs font-bold text-[#E51E25] hover:underline">Review</button></td>
                       </tr>
                     ))}
                   </tbody>
@@ -725,13 +725,13 @@ export default function DiamondAgencyPage() {
               </div>
             </div>
 
-            <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-2xl mt-6">
-              <div className="flex justify-between items-start mb-4">
+            <div className="bg-emerald-50 border border-emerald-100 p-3 sm:p-5 rounded-2xl mt-4 sm:mt-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0 mb-4">
                 <div>
-                  <h4 className="font-extrabold text-emerald-800 flex items-center gap-2"><CheckCircle2 className="w-5 h-5" /> Bulk Approve — Safe Requests</h4>
-                  <p className="text-xs text-emerald-600 mt-1">Meets auto-rules: ≤ ${withdrawalRules.maxAmount} net, fraud score ≤ {withdrawalRules.maxScore}, KYC {withdrawalRules.requireKyc ? 'verified' : 'optional'}.</p>
+                  <h4 className="font-extrabold text-emerald-800 flex items-center gap-2 text-sm sm:text-base"><CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" /> Bulk Approve — Safe Requests</h4>
+                  <p className="text-[10px] sm:text-xs text-emerald-600 mt-1">Meets auto-rules: ≤ ${withdrawalRules.maxAmount} net, fraud score ≤ {withdrawalRules.maxScore}, KYC {withdrawalRules.requireKyc ? 'verified' : 'optional'}.</p>
                 </div>
-                <button onClick={handleBulkApprove} disabled={safeWithdrawals.length===0} className="bg-emerald-600 disabled:bg-emerald-300 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm transition-all">
+                <button onClick={handleBulkApprove} disabled={safeWithdrawals.length===0} className="bg-emerald-600 disabled:bg-emerald-300 text-white px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all">
                   Approve Selected ({safeWithdrawals.length})
                 </button>
               </div>
@@ -759,9 +759,9 @@ export default function DiamondAgencyPage() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4"><Settings className="w-5 h-5 text-[#E51E25]" /> Auto-Approval Rules</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-4 sm:mt-6">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 text-sm sm:text-base"><Settings className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Auto-Approval Rules</h4>
                 <div className="space-y-4">
                   <label className="flex items-center gap-3">
                     <input type="checkbox" checked={withdrawalRules.enabled} onChange={e=>setWithdrawalRules({...withdrawalRules,enabled:e.target.checked})} className="rounded text-red-600 w-4 h-4" />
@@ -801,54 +801,54 @@ export default function DiamondAgencyPage() {
 
       case 'wallet_beans':
         return (
-          <div className="space-y-6">
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
               <div>
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-lg"><Wallet className="w-5 h-5 text-[#E51E25]" /> Bean Wallet</h4>
-                <p className="text-xs text-slate-500 mt-1">Track total beans, gifts, and platform bonuses for all agents.</p>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Bean Wallet</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Track total beans, gifts, and platform bonuses for all agents.</p>
               </div>
-              <div className="flex gap-4 flex-wrap">
-                <div className="bg-slate-50 px-5 py-3 rounded-xl border border-slate-100 text-center">
+              <div className="flex gap-2 sm:gap-4 flex-wrap">
+                <div className="bg-slate-50 px-3 sm:px-5 py-2 sm:py-3 rounded-xl border border-slate-100 text-center">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Total Beans</div>
-                  <div className="text-xl font-black text-slate-800">1,410</div>
+                  <div className="text-base sm:text-xl font-black text-slate-800">1,410</div>
                 </div>
-                <div className="bg-slate-50 px-5 py-3 rounded-xl border border-slate-100 text-center">
+                <div className="bg-slate-50 px-3 sm:px-5 py-2 sm:py-3 rounded-xl border border-slate-100 text-center">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Gift Beans</div>
-                  <div className="text-xl font-black text-slate-800">850</div>
+                  <div className="text-base sm:text-xl font-black text-slate-800">850</div>
                 </div>
-                <div className="bg-slate-50 px-5 py-3 rounded-xl border border-slate-100 text-center">
+                <div className="bg-slate-50 px-3 sm:px-5 py-2 sm:py-3 rounded-xl border border-slate-100 text-center">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Platform Bonus</div>
-                  <div className="text-xl font-black text-slate-800">560</div>
+                  <div className="text-base sm:text-xl font-black text-slate-800">560</div>
                 </div>
-                <div className="bg-slate-50 px-5 py-3 rounded-xl border border-slate-100 text-center">
+                <div className="bg-slate-50 px-3 sm:px-5 py-2 sm:py-3 rounded-xl border border-slate-100 text-center">
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Avg Beans/Agent</div>
-                  <div className="text-xl font-black text-slate-800">353</div>
+                  <div className="text-base sm:text-xl font-black text-slate-800">353</div>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {agentWallets.map(w => (
-                <div key={w.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <div className="flex justify-between items-start mb-6">
+                <div key={w.id} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex justify-between items-start mb-4 sm:mb-6">
                     <div>
-                      <h5 className="font-extrabold text-slate-800 text-lg">{w.name}</h5>
-                      <div className="text-xs text-slate-500">{w.agency}</div>
+                      <h5 className="font-extrabold text-slate-800 text-base sm:text-lg">{w.name}</h5>
+                      <div className="text-[10px] sm:text-xs text-slate-500">{w.agency}</div>
                     </div>
-                    <span className="text-[10px] font-black text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wider">{w.region}</span>
+                    <span className="text-[10px] font-black text-slate-400 bg-slate-100 px-2 sm:px-2.5 py-1 rounded-full uppercase tracking-wider">{w.region}</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-y-6">
+                  <div className="grid grid-cols-2 gap-y-4 sm:gap-y-6">
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Beans</div>
-                      <div className="text-xl font-black text-slate-800">{w.beans}</div>
+                      <div className="text-base sm:text-xl font-black text-slate-800">{w.beans}</div>
                     </div>
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Gift Beans</div>
-                      <div className="text-xl font-black text-slate-800">{w.gift}</div>
+                      <div className="text-base sm:text-xl font-black text-slate-800">{w.gift}</div>
                     </div>
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Bonus</div>
-                      <div className="text-xl font-black text-slate-800">{w.bonus}</div>
+                      <div className="text-base sm:text-xl font-black text-slate-800">{w.bonus}</div>
                     </div>
                     <div>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Loan Status</div>
@@ -868,47 +868,47 @@ export default function DiamondAgencyPage() {
 
       case 'wallet_send':
         return (
-          <div className="space-y-6 max-w-2xl">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
               <div>
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-lg"><Send className="w-5 h-5 text-[#E51E25]" /> Send Coin</h4>
-                <p className="text-xs text-slate-500 mt-1">Send beans directly to an agent's wallet from the platform reserve.</p>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Send Coin</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Send beans directly to an agent's wallet from the platform reserve.</p>
               </div>
-              <form onSubmit={e => { e.preventDefault(); setSendCoinForm({ agentId: 1, amount: '', note: '' }); alert('Coins Sent successfully!'); }} className="space-y-5">
+              <form onSubmit={e => { e.preventDefault(); setSendCoinForm({ agentId: 1, amount: '', note: '' }); alert('Coins Sent successfully!'); }} className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-2">Recipient agent</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Recipient agent</label>
                   <select 
                     value={sendCoinForm.agentId} 
                     onChange={e=>setSendCoinForm({...sendCoinForm, agentId: Number(e.target.value)})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   >
                     {agentWallets.map(a => <option key={a.id} value={a.id}>{a.name} — {a.agency}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-2">Amount (beans)</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Amount (beans)</label>
                   <input 
                     type="number" 
                     placeholder="e.g. 500" 
                     required
                     value={sendCoinForm.amount}
                     onChange={e=>setSendCoinForm({...sendCoinForm, amount: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-2">Note (optional)</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Note (optional)</label>
                   <textarea 
                     rows="3" 
                     placeholder="Reason for this transfer..." 
                     value={sendCoinForm.note}
                     onChange={e=>setSendCoinForm({...sendCoinForm, note: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 resize-none" 
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 resize-none" 
                   />
                 </div>
                 <div className="pt-2">
-                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3.5 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2">
-                    <Send className="w-4 h-4" /> Send Coin
+                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Send Coin
                   </button>
                 </div>
               </form>
@@ -918,60 +918,60 @@ export default function DiamondAgencyPage() {
 
       case 'wallet_loans':
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center mb-4">
-                  <Banknote className="w-4 h-4 text-green-600" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-green-50 flex items-center justify-center mb-2 sm:mb-4">
+                  <Banknote className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Active Loans</div>
-                <div className="text-3xl font-black text-slate-800 mt-1">{loans.filter(l=>l.status==='Active').length}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">currently active</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Active Loans</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-800 mt-1">{loans.filter(l=>l.status==='Active').length}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">currently active</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center mb-4">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-amber-50 flex items-center justify-center mb-2 sm:mb-4">
+                  <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500" />
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Pending Review</div>
-                <div className="text-3xl font-black text-slate-800 mt-1">{loans.filter(l=>l.status==='Pending').length}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">awaiting decision</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Pending Review</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-800 mt-1">{loans.filter(l=>l.status==='Pending').length}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">awaiting decision</div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center mb-4">
-                  <span className="font-extrabold text-[#E51E25] text-lg">$</span>
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-red-50 flex items-center justify-center mb-2 sm:mb-4">
+                  <span className="font-extrabold text-[#E51E25] text-base sm:text-lg">$</span>
                 </div>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-wide">Outstanding</div>
-                <div className="text-3xl font-black text-slate-800 mt-1">${loans.filter(l=>l.status!=='Pending').reduce((a,c)=>a+c.amount,0).toLocaleString(undefined,{minimumFractionDigits:2})}</div>
-                <div className="text-xs font-semibold text-green-600 mt-1">active + approved</div>
+                <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wide">Outstanding</div>
+                <div className="text-2xl sm:text-3xl font-black text-slate-800 mt-1">${loans.filter(l=>l.status!=='Pending').reduce((a,c)=>a+c.amount,0).toLocaleString(undefined,{minimumFractionDigits:2})}</div>
+                <div className="text-[10px] sm:text-xs font-semibold text-green-600 mt-1">active + approved</div>
               </div>
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="p-4 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                  <h4 className="font-extrabold text-slate-800 text-lg">Loan Management</h4>
-                  <p className="text-xs text-slate-500 mt-1">Track loan requests and outstanding balances for each agent.</p>
+                  <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">Loan Management</h4>
+                  <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Track loan requests and outstanding balances for each agent.</p>
                 </div>
-                <select className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold focus:outline-none text-slate-700">
+                <select className="bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold focus:outline-none text-slate-700">
                   <option>All</option>
                   <option>Active</option>
                   <option>Pending</option>
                 </select>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">Loan ID</th><th className="p-4">Agent</th><th className="p-4">Amount</th><th className="p-4">Tenor</th><th className="p-4">Status</th><th className="p-4">Disbursed On</th><th className="p-4 text-center">Action</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">Loan ID</th><th className="p-2 sm:p-4">Agent</th><th className="p-2 sm:p-4">Amount</th><th className="p-2 sm:p-4">Tenor</th><th className="p-2 sm:p-4">Status</th><th className="p-2 sm:p-4">Disbursed On</th><th className="p-2 sm:p-4 text-center">Action</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {loans.map(l => (
                       <tr key={l.id} className="hover:bg-slate-50/50">
-                        <td className="p-4 font-mono font-bold text-[#E51E25]">{l.id}</td>
-                        <td className="p-4 font-bold text-slate-800">{l.agent}</td>
-                        <td className="p-4 font-mono font-bold">${l.amount.toLocaleString()}</td>
-                        <td className="p-4 text-slate-600">{l.tenor}</td>
-                        <td className="p-4">
-                          <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                        <td className="p-2 sm:p-4 font-mono font-bold text-[#E51E25] text-xs">{l.id}</td>
+                        <td className="p-2 sm:p-4 font-bold text-slate-800 text-xs sm:text-sm">{l.agent}</td>
+                        <td className="p-2 sm:p-4 font-mono font-bold text-xs sm:text-sm">${l.amount.toLocaleString()}</td>
+                        <td className="p-2 sm:p-4 text-slate-600 text-xs sm:text-sm">{l.tenor}</td>
+                        <td className="p-2 sm:p-4">
+                          <span className={`text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full ${
                             l.status === 'Active' ? 'bg-green-100 text-green-700' :
                             l.status === 'Approved' ? 'bg-blue-100 text-blue-700' :
                             l.status === 'Pending' ? 'bg-amber-100 text-amber-700' : ''
@@ -1224,19 +1224,19 @@ export default function DiamondAgencyPage() {
 
       case 'platform':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Connection Status */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="flex justify-between items-center mb-5">
-                <div className="flex items-center gap-3">
-                  <Activity className={`w-5 h-5 ${isApiConnected ? 'text-green-500 animate-pulse' : 'text-red-500'}`} />
-                  <span className="font-extrabold text-slate-800">Gateway Status</span>
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="flex justify-between items-center mb-4 sm:mb-5">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Activity className={`w-4 h-4 sm:w-5 sm:h-5 ${isApiConnected ? 'text-green-500 animate-pulse' : 'text-red-500'}`} />
+                  <span className="font-extrabold text-slate-800 text-sm sm:text-base">Gateway Status</span>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${isApiConnected ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
+                <span className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold ${isApiConnected ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
                   {isApiConnected ? '● Connected' : '● Disconnected'}
                 </span>
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <button
                   onClick={() => {
                     setIsApiConnected(!isApiConnected)
@@ -1247,9 +1247,9 @@ export default function DiamondAgencyPage() {
                       status: isApiConnected ? '400 Terminated' : '200 Connected'
                     }, ...webhookLogs])
                   }}
-                  className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2"
+                  className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2"
                 >
-                  {isApiConnected ? <XCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
+                  {isApiConnected ? <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                   {isApiConnected ? 'Disconnect' : 'Connect'}
                 </button>
                 <button
@@ -1261,25 +1261,25 @@ export default function DiamondAgencyPage() {
                       status: isApiConnected ? '200 OK (6ms)' : '503 Unreachable'
                     }, ...webhookLogs])
                   }}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2"
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2"
                 >
-                  <RefreshCw className="w-4 h-4" /> Ping
+                  <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Ping
                 </button>
                 <button
                   onClick={() => setWebhookLogs([])}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2 ml-auto"
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2 sm:ml-auto"
                 >
-                  <Trash2 className="w-4 h-4" /> Clear Logs
+                  <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Clear Logs
                 </button>
               </div>
             </div>
 
             {/* Logs */}
-            <div className="bg-white border border-slate-100 shadow-sm p-5 rounded-2xl font-mono text-xs text-slate-700 space-y-2 max-h-56 overflow-y-auto">
+            <div className="bg-white border border-slate-100 shadow-sm p-3 sm:p-5 rounded-2xl font-mono text-[10px] sm:text-xs text-slate-700 space-y-2 max-h-56 overflow-y-auto">
               {webhookLogs.map((log, idx) => (
                 <div key={idx} className="flex justify-between border-b border-slate-100 pb-1.5">
                   <span className="text-slate-400 font-bold">[{log.time}]</span>
-                  <span className="flex-1 mx-3 font-semibold">{log.event} — {log.source}</span>
+                  <span className="flex-1 mx-2 sm:mx-3 font-semibold text-[10px] sm:text-xs">{log.event} — {log.source}</span>
                   <span className={`font-bold ${log.status.includes('OK') || log.status.includes('Connected') ? 'text-green-600' : 'text-[#E51E25]'}`}>{log.status}</span>
                 </div>
               ))}
@@ -1289,36 +1289,36 @@ export default function DiamondAgencyPage() {
 
       case 'create':
         return (
-          <div className="space-y-6">
-            <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-2xl border border-red-100">
-              <Building2 className="w-10 h-10 text-[#E51E25] shrink-0 mt-1" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-4 sm:p-6 rounded-2xl border border-red-100">
+              <Building2 className="w-8 h-8 sm:w-10 sm:h-10 text-[#E51E25] shrink-0 mt-1" />
               <div>
-                <h4 className="text-lg font-extrabold text-slate-800">Register New Sub-Agency</h4>
-                <p className="text-slate-500 text-sm mt-1">Agencies registered here inherit your regional commission policies automatically.</p>
+                <h4 className="text-base sm:text-lg font-extrabold text-slate-800">Register New Sub-Agency</h4>
+                <p className="text-slate-500 text-[10px] sm:text-sm mt-1">Agencies registered here inherit your regional commission policies automatically.</p>
               </div>
             </div>
-            <form onSubmit={handleCreateAgency} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form onSubmit={handleCreateAgency} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency Brand Name</label>
-                <input type="text" required value={newAgencyName} onChange={(e) => setNewAgencyName(e.target.value)} placeholder="e.g. Omega Stream Team" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency Brand Name</label>
+                <input type="text" required value={newAgencyName} onChange={(e) => setNewAgencyName(e.target.value)} placeholder="e.g. Omega Stream Team" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Representative Head</label>
-                <input type="text" required value={newAgencyHead} onChange={(e) => setNewAgencyHead(e.target.value)} placeholder="e.g. Ramesh Adhikari" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Representative Head</label>
+                <input type="text" required value={newAgencyHead} onChange={(e) => setNewAgencyHead(e.target.value)} placeholder="e.g. Ramesh Adhikari" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Territory</label>
-                <select value={newAgencyRegion} onChange={(e) => setNewAgencyRegion(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all">
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Territory</label>
+                <select value={newAgencyRegion} onChange={(e) => setNewAgencyRegion(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all">
                   <option>Nepal</option><option>India</option><option>Global</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Initial Coin Quota</label>
-                <input type="number" value={initialCoins} onChange={(e) => setInitialCoins(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
+                <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Initial Coin Quota</label>
+                <input type="number" value={initialCoins} onChange={(e) => setInitialCoins(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 focus:border-red-400 transition-all" />
               </div>
               <div className="md:col-span-2 flex justify-end pt-2">
-                <button type="submit" className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-8 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
-                  <PlusCircle className="w-4 h-4" /> Launch Agency
+                <button type="submit" className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-6 sm:px-8 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
+                  <PlusCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Launch Agency
                 </button>
               </div>
             </form>
@@ -1327,30 +1327,30 @@ export default function DiamondAgencyPage() {
 
       case 'manage':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><Users className="w-5 h-5 text-[#E51E25]" /> Network Agencies</h4>
-                <span className="text-xs bg-red-50 text-[#E51E25] font-bold px-3 py-1 rounded-full">{subAgencies.length} Total</span>
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Network Agencies</h4>
+                <span className="text-[10px] sm:text-xs bg-red-50 text-[#E51E25] font-bold px-2 sm:px-3 py-1 rounded-full">{subAgencies.length} Total</span>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
                     <tr>
-                      <th className="p-4">ID</th><th className="p-4">Agency</th><th className="p-4">Head</th>
-                      <th className="p-4 text-center">Region</th><th className="p-4 text-right">E-Rupee Coins</th><th className="p-4 text-center">Actions</th>
+                      <th className="p-2 sm:p-4">ID</th><th className="p-2 sm:p-4">Agency</th><th className="p-2 sm:p-4">Head</th>
+                      <th className="p-2 sm:p-4 text-center">Region</th><th className="p-2 sm:p-4 text-right">E-Rupee Coins</th><th className="p-2 sm:p-4 text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {subAgencies.map((a) => (
                       <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="p-4 font-mono font-bold text-slate-700">{a.id}</td>
-                        <td className="p-4 font-semibold text-slate-800">{a.name}</td>
-                        <td className="p-4 text-slate-500">{a.head}</td>
-                        <td className="p-4 text-center"><span className="text-xs bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">{a.region}</span></td>
-                        <td className="p-4 text-right font-mono font-bold text-[#E51E25]">{a.coins.toLocaleString()}</td>
-                        <td className="p-4 text-center">
-                          <button onClick={() => toggleAgencyStatus(a.id)} className={`text-xs font-bold px-4 py-1.5 rounded-lg active:scale-95 transition-all ${a.status === 'Active' ? 'bg-red-50 text-[#E51E25] hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}>
+                        <td className="p-2 sm:p-4 font-mono font-bold text-slate-700 text-xs">{a.id}</td>
+                        <td className="p-2 sm:p-4 font-semibold text-slate-800 text-xs sm:text-sm">{a.name}</td>
+                        <td className="p-2 sm:p-4 text-slate-500 text-xs sm:text-sm">{a.head}</td>
+                        <td className="p-2 sm:p-4 text-center"><span className="text-[10px] sm:text-xs bg-slate-100 px-2 py-0.5 rounded-full font-bold text-slate-600">{a.region}</span></td>
+                        <td className="p-2 sm:p-4 text-right font-mono font-bold text-[#E51E25] text-xs sm:text-sm">{a.coins.toLocaleString()}</td>
+                        <td className="p-2 sm:p-4 text-center">
+                          <button onClick={() => toggleAgencyStatus(a.id)} className={`text-[10px] sm:text-xs font-bold px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg active:scale-95 transition-all ${a.status === 'Active' ? 'bg-red-50 text-[#E51E25] hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}>
                             {a.status === 'Active' ? 'Suspend' : 'Activate'}
                           </button>
                         </td>
@@ -1365,50 +1365,50 @@ export default function DiamondAgencyPage() {
 
       case 'distribution':
         return (
-          <div className="space-y-6">
-            <form onSubmit={handleDistribute} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-5"><Send className="w-5 h-5 text-[#E51E25]" /> Distribute Assets</h4>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="space-y-4 sm:space-y-6">
+            <form onSubmit={handleDistribute} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-4 sm:mb-5"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Distribute Assets</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency</label>
-                  <select value={distTarget} onChange={(e) => setDistTarget(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency</label>
+                  <select value={distTarget} onChange={(e) => setDistTarget(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
                     {subAgencies.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Asset</label>
-                  <select value={distAsset} onChange={(e) => setDistAsset(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Asset</label>
+                  <select value={distAsset} onChange={(e) => setDistAsset(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
                     <option>E-Rupee Coins</option><option>Blue Diamonds</option><option>Green Diamonds</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Quantity</label>
-                  <input type="number" value={distAmount} onChange={(e) => setDistAmount(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Quantity</label>
+                  <input type="number" value={distAmount} onChange={(e) => setDistAmount(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                 </div>
                 <div className="flex items-end">
-                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-2.5 px-4 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2">
-                    <Gem className="w-4 h-4" /> Transfer
+                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-2 sm:py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <Gem className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Transfer
                   </button>
                 </div>
               </div>
             </form>
             {/* Ledger */}
             <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-              <div className="p-5 border-b border-slate-100">
-                <h4 className="font-extrabold text-slate-800 text-base flex items-center gap-2"><Clock className="w-4 h-4 text-slate-400" /> Transfer Audit Ledger</h4>
+              <div className="p-4 sm:p-5 border-b border-slate-100">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2"><Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400" /> Transfer Audit Ledger</h4>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">Timestamp</th><th className="p-4">Recipient</th><th className="p-4 text-right">Volume</th><th className="p-4 text-center">Status</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">Timestamp</th><th className="p-2 sm:p-4">Recipient</th><th className="p-2 sm:p-4 text-right">Volume</th><th className="p-2 sm:p-4 text-center">Status</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {distributionLedger.map((log, idx) => (
                       <tr key={idx} className="hover:bg-slate-50/50">
-                        <td className="p-4 font-mono text-xs text-slate-500">{log.date}</td>
-                        <td className="p-4 font-semibold text-slate-800">{log.target}</td>
-                        <td className="p-4 text-right font-mono font-bold text-[#E51E25]">{log.amount}</td>
-                        <td className="p-4 text-center"><span className="bg-green-50 text-green-600 text-xs px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 w-fit mx-auto"><CheckCircle2 className="w-3 h-3" />{log.status}</span></td>
+                        <td className="p-2 sm:p-4 font-mono text-[10px] sm:text-xs text-slate-500">{log.date}</td>
+                        <td className="p-2 sm:p-4 font-semibold text-slate-800 text-xs sm:text-sm">{log.target}</td>
+                        <td className="p-2 sm:p-4 text-right font-mono font-bold text-[#E51E25] text-xs sm:text-sm">{log.amount}</td>
+                        <td className="p-2 sm:p-4 text-center"><span className="bg-green-50 text-green-600 text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1 w-fit mx-auto"><CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3" />{log.status}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -1420,46 +1420,46 @@ export default function DiamondAgencyPage() {
 
       case 'expansion':
         return (
-          <div className="space-y-6">
-            <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-2xl border border-red-100">
-              <Globe className="w-10 h-10 text-[#E51E25] shrink-0 mt-1" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-4 sm:p-6 rounded-2xl border border-red-100">
+              <Globe className="w-8 h-8 sm:w-10 sm:h-10 text-[#E51E25] shrink-0 mt-1" />
               <div>
-                <h4 className="text-lg font-extrabold text-slate-800">Network Expansion Hub</h4>
-                <p className="text-slate-500 text-sm mt-1">Monitor agency density, host acquisition, and territorial expansion analytics.</p>
+                <h4 className="text-base sm:text-lg font-extrabold text-slate-800">Network Expansion Hub</h4>
+                <p className="text-slate-500 text-[10px] sm:text-sm mt-1">Monitor agency density, host acquisition, and territorial expansion analytics.</p>
               </div>
             </div>
             <div className="flex justify-end">
-              <select value={selectedExpansionRegion} onChange={(e) => setSelectedExpansionRegion(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold focus:outline-none">
+              <select value={selectedExpansionRegion} onChange={(e) => setSelectedExpansionRegion(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold focus:outline-none">
                 <option>All Regions</option><option>Nepal</option><option>India</option>
               </select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
               {[
                 { label: 'Sub-Agencies', value: '142', icon: Building2, color: 'text-[#E51E25]' },
                 { label: 'Hosts Recruited', value: '850', icon: Users, color: 'text-[#E51E25]' },
                 { label: 'M-o-M Growth', value: '+15%', icon: TrendingUp, color: 'text-green-600' }
               ].map((item, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                  <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
-                    <item.icon className={`w-6 h-6 ${item.color}`} />
+                <div key={idx} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-50 rounded-xl flex items-center justify-center">
+                    <item.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${item.color}`} />
                   </div>
                   <div>
-                    <div className={`text-2xl font-black ${item.color}`}>{item.value}</div>
-                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{item.label}</div>
+                    <div className={`text-lg sm:text-2xl font-black ${item.color}`}>{item.value}</div>
+                    <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">{item.label}</div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-base mb-4 flex items-center gap-2"><MapPin className="w-4 h-4 text-[#E51E25]" /> Regional Density</h4>
-              <div className="space-y-4">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 flex items-center gap-2"><MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Regional Density</h4>
+              <div className="space-y-3 sm:space-y-4">
                 {[{ region: 'Nepal', agencies: 85, hosts: 420 }, { region: 'India', agencies: 52, hosts: 380 }, { region: 'Global', agencies: 5, hosts: 50 }].map((r, idx) => (
-                  <div key={idx} className="flex items-center gap-4">
-                    <span className="w-16 text-sm font-bold text-slate-600">{r.region}</span>
-                    <div className="flex-1 bg-slate-100 h-3 rounded-full overflow-hidden">
+                  <div key={idx} className="flex items-center gap-2 sm:gap-4">
+                    <span className="w-14 sm:w-16 text-xs sm:text-sm font-bold text-slate-600">{r.region}</span>
+                    <div className="flex-1 bg-slate-100 h-2 sm:h-3 rounded-full overflow-hidden">
                       <div className="bg-gradient-to-r from-[#E51E25] to-orange-400 h-full rounded-full" style={{ width: `${(r.agencies / 85) * 100}%` }}></div>
                     </div>
-                    <span className="text-xs font-mono font-bold text-slate-500 w-24 text-right">{r.agencies} agencies</span>
+                    <span className="text-[10px] sm:text-xs font-mono font-bold text-slate-500 w-20 sm:w-24 text-right">{r.agencies} agencies</span>
                   </div>
                 ))}
               </div>
@@ -1495,32 +1495,32 @@ export default function DiamondAgencyPage() {
         })
 
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Stats Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
               {[
                 { label: 'Total Revenue', value: '₹ 29.5L', sub: 'All time', icon: Banknote, color: 'text-[#E51E25]' },
                 { label: 'This Month', value: '₹ 3.8L', sub: '+22% vs last month', icon: TrendingUp, color: 'text-green-600' },
                 { label: 'Avg per Agency', value: '₹ 26.7K', sub: 'Monthly average', icon: BarChart3, color: 'text-blue-500' }
               ].map((item, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center"><item.icon className="w-5 h-5 text-[#E51E25]" /></div>
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{item.label}</span>
+                <div key={idx} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-50 rounded-xl flex items-center justify-center"><item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /></div>
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">{item.label}</span>
                   </div>
-                  <div className={`text-2xl font-black ${item.color}`}>{item.value}</div>
-                  <div className="text-xs text-green-600 font-bold mt-1">{item.sub}</div>
+                  <div className={`text-lg sm:text-2xl font-black ${item.color}`}>{item.value}</div>
+                  <div className="text-[10px] sm:text-xs text-green-600 font-bold mt-1">{item.sub}</div>
                 </div>
               ))}
             </div>
 
             {/* Pie Chart + Legend */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-base mb-6 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-[#E51E25]" /> Revenue Breakdown</h4>
-              <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-6 flex items-center gap-2"><BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Revenue Breakdown</h4>
+              <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-8">
                 {/* SVG Pie */}
                 <div className="shrink-0">
-                  <svg viewBox="0 0 200 200" width="200" height="200">
+                  <svg viewBox="0 0 200 200" width="160" height="160" className="w-40 h-40 sm:w-[200px] sm:h-[200px]">
                     {slices.map((slice, i) => (
                       <path key={i} d={slice.d} fill={slice.color} className="hover:opacity-80 transition-opacity cursor-pointer" stroke="white" strokeWidth="2" />
                     ))}
@@ -1530,19 +1530,19 @@ export default function DiamondAgencyPage() {
                   </svg>
                 </div>
                 {/* Legend */}
-                <div className="flex-1 w-full space-y-3">
+                <div className="flex-1 w-full space-y-2 sm:space-y-3">
                   {revenueData.map((d, i) => (
-                    <div key={i} className="flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: d.color }}></span>
-                        <span className="text-sm font-semibold text-slate-700 truncate">{d.label}</span>
+                    <div key={i} className="flex items-center justify-between gap-2 sm:gap-4">
+                      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+                        <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shrink-0" style={{ backgroundColor: d.color }}></span>
+                        <span className="text-xs sm:text-sm font-semibold text-slate-700 truncate">{d.label}</span>
                       </div>
-                      <div className="flex items-center gap-3 shrink-0">
-                        <div className="w-24 bg-slate-100 h-2 rounded-full overflow-hidden hidden sm:block">
+                      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <div className="w-16 sm:w-24 bg-slate-100 h-1.5 sm:h-2 rounded-full overflow-hidden hidden sm:block">
                           <div className="h-full rounded-full" style={{ width: `${d.pct}%`, backgroundColor: d.color }}></div>
                         </div>
-                        <span className="text-xs font-bold text-slate-500 w-8 text-right">{d.pct}%</span>
-                        <span className="text-sm font-extrabold text-slate-800 w-24 text-right font-mono">₹{(d.value / 100000).toFixed(1)}L</span>
+                        <span className="text-[10px] sm:text-xs font-bold text-slate-500 w-6 sm:w-8 text-right">{d.pct}%</span>
+                        <span className="text-xs sm:text-sm font-extrabold text-slate-800 w-16 sm:w-24 text-right font-mono">₹{(d.value / 100000).toFixed(1)}L</span>
                       </div>
                     </div>
                   ))}
@@ -1551,14 +1551,14 @@ export default function DiamondAgencyPage() {
             </div>
 
             {/* Monthly Bar Chart */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-base mb-6">Monthly Revenue Trend</h4>
-              <div className="h-48 flex items-end justify-between gap-2">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-6">Monthly Revenue Trend</h4>
+              <div className="h-36 sm:h-48 flex items-end justify-between gap-1 sm:gap-2">
                 {[{ m: 'Jan', v: 45 }, { m: 'Feb', v: 62 }, { m: 'Mar', v: 55 }, { m: 'Apr', v: 80 }, { m: 'May', v: 75 }, { m: 'Jun', v: 95 }, { m: 'Jul', v: 110 }, { m: 'Aug', v: 85 }, { m: 'Sep', v: 100 }].map((item, idx) => (
-                  <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                    <div className="text-[10px] font-mono font-bold text-slate-400">{item.v}K</div>
+                  <div key={idx} className="flex-1 flex flex-col items-center gap-1 sm:gap-1.5 h-full justify-end">
+                    <div className="text-[9px] sm:text-[10px] font-mono font-bold text-slate-400">{item.v}K</div>
                     <div className="bg-gradient-to-t from-[#E51E25] to-red-400 rounded-t-lg w-full hover:brightness-110 transition-all cursor-pointer" style={{ height: `${item.v}%` }}></div>
-                    <span className="text-[9px] font-bold text-slate-400">{item.m}</span>
+                    <span className="text-[8px] sm:text-[9px] font-bold text-slate-400">{item.m}</span>
                   </div>
                 ))}
               </div>
@@ -1566,13 +1566,13 @@ export default function DiamondAgencyPage() {
 
             {/* Revenue Data List */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100">
-                <h4 className="font-extrabold text-slate-800 text-base flex items-center gap-2"><FileText className="w-4 h-4 text-[#E51E25]" /> Revenue Source Breakdown</h4>
+              <div className="p-4 sm:p-5 border-b border-slate-100">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2"><FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Revenue Source Breakdown</h4>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">Source</th><th className="p-4 text-right">Amount</th><th className="p-4 text-right">Share</th><th className="p-4 text-right">vs Last Month</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">Source</th><th className="p-2 sm:p-4 text-right">Amount</th><th className="p-2 sm:p-4 text-right">Share</th><th className="p-2 sm:p-4 text-right">vs Last Month</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {[
@@ -1583,19 +1583,19 @@ export default function DiamondAgencyPage() {
                       { source: 'Other Income', amount: '₹0.88L', share: '3%', change: '0%', up: true },
                     ].map((row, i) => (
                       <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="p-4 font-semibold text-slate-800">{row.source}</td>
-                        <td className="p-4 text-right font-mono font-bold text-slate-700">{row.amount}</td>
-                        <td className="p-4 text-right font-bold text-slate-500">{row.share}</td>
-                        <td className={`p-4 text-right font-bold text-xs ${row.up ? 'text-green-600' : 'text-[#E51E25]'}`}>{row.change}</td>
+                        <td className="p-2 sm:p-4 font-semibold text-slate-800 text-xs sm:text-sm">{row.source}</td>
+                        <td className="p-2 sm:p-4 text-right font-mono font-bold text-slate-700 text-xs sm:text-sm">{row.amount}</td>
+                        <td className="p-2 sm:p-4 text-right font-bold text-slate-500 text-xs sm:text-sm">{row.share}</td>
+                        <td className={`p-2 sm:p-4 text-right font-bold text-[10px] sm:text-xs ${row.up ? 'text-green-600' : 'text-[#E51E25]'}`}>{row.change}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot className="bg-slate-50">
                     <tr>
-                      <td className="p-4 font-extrabold text-slate-800">Total</td>
-                      <td className="p-4 text-right font-extrabold font-mono text-[#E51E25]">₹29.5L</td>
-                      <td className="p-4 text-right font-extrabold text-slate-800">100%</td>
-                      <td className="p-4 text-right font-extrabold text-green-600">+9.2%</td>
+                      <td className="p-2 sm:p-4 font-extrabold text-slate-800 text-xs sm:text-sm">Total</td>
+                      <td className="p-2 sm:p-4 text-right font-extrabold font-mono text-[#E51E25] text-xs sm:text-sm">₹29.5L</td>
+                      <td className="p-2 sm:p-4 text-right font-extrabold text-slate-800 text-xs sm:text-sm">100%</td>
+                      <td className="p-2 sm:p-4 text-right font-extrabold text-green-600 text-xs sm:text-sm">+9.2%</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1623,43 +1623,43 @@ export default function DiamondAgencyPage() {
         })
 
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Header */}
-            <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-5 rounded-2xl border border-red-100">
-              <BarChart3 className="w-9 h-9 text-[#E51E25] shrink-0 mt-1" />
+            <div className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-4 sm:p-5 rounded-2xl border border-red-100">
+              <BarChart3 className="w-8 h-8 sm:w-9 sm:h-9 text-[#E51E25] shrink-0 mt-1" />
               <div>
-                <h4 className="text-lg font-extrabold text-slate-800">Performance Metrics</h4>
-                <p className="text-slate-500 text-sm mt-0.5">eRupai Diamond Agency Protocol</p>
+                <h4 className="text-base sm:text-lg font-extrabold text-slate-800">Performance Metrics</h4>
+                <p className="text-slate-500 text-[10px] sm:text-sm mt-0.5">eRupai Diamond Agency Protocol</p>
               </div>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               {[
                 { label: 'Total Agencies', value: subAgencies.length, icon: Building2, color: 'text-[#E51E25]', bg: 'bg-red-50' },
                 { label: 'On Target', value: subAgencies.filter(a => Math.floor((a.coins / 180000) * 100) >= 80).length, icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
                 { label: 'Avg Score', value: `${Math.floor(subAgencies.reduce((s, a) => s + Math.min(100, (a.coins / 180000) * 100), 0) / subAgencies.length)}%`, icon: Target, color: 'text-amber-500', bg: 'bg-amber-50' },
                 { label: 'Top Coins', value: `${Math.max(...subAgencies.map(a => a.coins)).toLocaleString()}`, icon: Gem, color: 'text-blue-500', bg: 'bg-blue-50' },
               ].map((s, i) => (
-                <div key={i} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                  <div className={`w-11 h-11 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
-                    <s.icon className={`w-5 h-5 ${s.color}`} />
+                <div key={i} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2 sm:gap-4">
+                  <div className={`w-8 h-8 sm:w-11 sm:h-11 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
+                    <s.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${s.color}`} />
                   </div>
                   <div>
-                    <div className={`text-xl font-black ${s.color}`}>{s.value}</div>
-                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wide">{s.label}</div>
+                    <div className={`text-base sm:text-xl font-black ${s.color}`}>{s.value}</div>
+                    <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wide">{s.label}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Pie Chart + Progress Bars */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
               {/* Donut Pie */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                <h4 className="font-extrabold text-slate-800 text-base mb-5 flex items-center gap-2"><Activity className="w-4 h-4 text-[#E51E25]" /> Performance Distribution</h4>
-                <div className="flex items-center gap-6">
-                  <svg viewBox="0 0 200 200" width="160" height="160" className="shrink-0">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-5 flex items-center gap-2"><Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Performance Distribution</h4>
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <svg viewBox="0 0 200 200" width="140" height="140" className="shrink-0 w-36 h-36 sm:w-[160px] sm:h-[160px]">
                     {perfSlices.map((s, i) => (
                       <path key={i} d={s.d} fill={s.color} stroke="white" strokeWidth="2" className="hover:opacity-80 transition-opacity" />
                     ))}
@@ -1667,17 +1667,17 @@ export default function DiamondAgencyPage() {
                     <text x="100" y="96" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#1e293b">Agencies</text>
                     <text x="100" y="112" textAnchor="middle" fontSize="10" fill="#64748b">{subAgencies.length} Total</text>
                   </svg>
-                  <div className="space-y-3 flex-1">
+                  <div className="space-y-2 sm:space-y-3 flex-1">
                     {perfData.map((d, i) => (
                       <div key={i} className="space-y-1">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }}></span>
-                            <span className="text-xs font-semibold text-slate-600">{d.label}</span>
+                            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full shrink-0" style={{ backgroundColor: d.color }}></span>
+                            <span className="text-[10px] sm:text-xs font-semibold text-slate-600">{d.label}</span>
                           </div>
-                          <span className="text-xs font-extrabold" style={{ color: d.color }}>{d.pct}%</span>
+                          <span className="text-[10px] sm:text-xs font-extrabold" style={{ color: d.color }}>{d.pct}%</span>
                         </div>
-                        <div className="w-full bg-slate-100 h-1.5 rounded-full">
+                        <div className="w-full bg-slate-100 h-1 sm:h-1.5 rounded-full">
                           <div className="h-full rounded-full" style={{ width: `${d.pct}%`, backgroundColor: d.color }}></div>
                         </div>
                       </div>
@@ -1687,14 +1687,14 @@ export default function DiamondAgencyPage() {
               </div>
 
               {/* Monthly Trend Bar */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                <h4 className="font-extrabold text-slate-800 text-base mb-5 flex items-center gap-2"><TrendingUp className="w-4 h-4 text-[#E51E25]" /> Monthly Coin Volume</h4>
-                <div className="h-40 flex items-end justify-between gap-1.5">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-5 flex items-center gap-2"><TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Monthly Coin Volume</h4>
+                <div className="h-32 sm:h-40 flex items-end justify-between gap-1 sm:gap-1.5">
                   {[{ m: 'Jan', v: 55 }, { m: 'Feb', v: 70 }, { m: 'Mar', v: 60 }, { m: 'Apr', v: 85 }, { m: 'May', v: 78 }, { m: 'Jun', v: 92 }, { m: 'Jul', v: 100 }].map((item, idx) => (
                     <div key={idx} className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                      <div className="text-[9px] font-mono font-bold text-slate-400">{item.v}K</div>
+                      <div className="text-[8px] sm:text-[9px] font-mono font-bold text-slate-400">{item.v}K</div>
                       <div className="w-full rounded-t-lg hover:brightness-110 transition-all" style={{ height: `${item.v}%`, background: `linear-gradient(to top, #E51E25, #f97316)` }}></div>
-                      <span className="text-[9px] font-bold text-slate-400">{item.m}</span>
+                      <span className="text-[8px] sm:text-[9px] font-bold text-slate-400">{item.m}</span>
                     </div>
                   ))}
                 </div>
@@ -1702,27 +1702,27 @@ export default function DiamondAgencyPage() {
             </div>
 
             {/* Agency Progress Bars */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-6"><BarChart3 className="w-5 h-5 text-[#E51E25]" /> Agency Target Performance</h4>
-              <div className="space-y-5">
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-4 sm:mb-6"><BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Agency Target Performance</h4>
+              <div className="space-y-3 sm:space-y-5">
                 {subAgencies.map((agency) => {
                   const pct = Math.min(100, Math.floor((agency.coins / 180000) * 100))
                   return (
                     <div key={agency.id} className="space-y-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
-                          <span className={`w-2.5 h-2.5 rounded-full ${agency.status === 'Active' ? 'bg-green-500' : 'bg-red-400'}`}></span>
-                          <span className="text-sm font-extrabold text-slate-800">{agency.name}</span>
-                          <span className="text-[10px] font-mono text-slate-400">{agency.id}</span>
+                          <span className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${agency.status === 'Active' ? 'bg-green-500' : 'bg-red-400'}`}></span>
+                          <span className="text-xs sm:text-sm font-extrabold text-slate-800">{agency.name}</span>
+                          <span className="text-[9px] sm:text-[10px] font-mono text-slate-400">{agency.id}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${pct >= 80 ? 'bg-green-50 text-green-600' : pct >= 50 ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-[#E51E25]'}`}>
+                          <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full ${pct >= 80 ? 'bg-green-50 text-green-600' : pct >= 50 ? 'bg-amber-50 text-amber-600' : 'bg-red-50 text-[#E51E25]'}`}>
                             {pct >= 80 ? 'On Target' : pct >= 50 ? 'Near Target' : 'Below Target'}
                           </span>
-                          <span className="text-sm font-black text-[#E51E25] font-mono">{pct}%</span>
+                          <span className="text-xs sm:text-sm font-black text-[#E51E25] font-mono">{pct}%</span>
                         </div>
                       </div>
-                      <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 h-2 sm:h-3 rounded-full overflow-hidden">
                         <div className={`h-full rounded-full transition-all duration-700 ${pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }}></div>
                       </div>
                     </div>
@@ -1733,19 +1733,19 @@ export default function DiamondAgencyPage() {
 
             {/* Detailed Data Table */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100">
-                <h4 className="font-extrabold text-slate-800 text-base flex items-center gap-2"><FileText className="w-4 h-4 text-[#E51E25]" /> Agency Performance Summary</h4>
+              <div className="p-4 sm:p-5 border-b border-slate-100">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2"><FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Agency Performance Summary</h4>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
                     <tr>
-                      <th className="p-4">Agency</th>
-                      <th className="p-4">Head</th>
-                      <th className="p-4 text-right">Coins</th>
-                      <th className="p-4 text-center">Score</th>
-                      <th className="p-4 text-center">Status</th>
-                      <th className="p-4 text-center">Rating</th>
+                      <th className="p-2 sm:p-4">Agency</th>
+                      <th className="p-2 sm:p-4">Head</th>
+                      <th className="p-2 sm:p-4 text-right">Coins</th>
+                      <th className="p-2 sm:p-4 text-center">Score</th>
+                      <th className="p-2 sm:p-4 text-center">Status</th>
+                      <th className="p-2 sm:p-4 text-center">Rating</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1754,16 +1754,16 @@ export default function DiamondAgencyPage() {
                       const rating = pct >= 80 ? '⭐⭐⭐' : pct >= 50 ? '⭐⭐' : '⭐'
                       return (
                         <tr key={a.id} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="p-4 font-semibold text-slate-800">{a.name}</td>
-                          <td className="p-4 text-slate-500">{a.head}</td>
-                          <td className="p-4 text-right font-mono font-bold text-[#E51E25]">{a.coins.toLocaleString()}</td>
-                          <td className="p-4 text-center">
-                            <span className={`font-extrabold text-sm ${pct >= 80 ? 'text-green-600' : pct >= 50 ? 'text-amber-500' : 'text-[#E51E25]'}`}>{pct}%</span>
+                          <td className="p-2 sm:p-4 font-semibold text-slate-800 text-xs sm:text-sm">{a.name}</td>
+                          <td className="p-2 sm:p-4 text-slate-500 text-xs sm:text-sm">{a.head}</td>
+                          <td className="p-2 sm:p-4 text-right font-mono font-bold text-[#E51E25] text-xs sm:text-sm">{a.coins.toLocaleString()}</td>
+                          <td className="p-2 sm:p-4 text-center">
+                            <span className={`font-extrabold text-xs sm:text-sm ${pct >= 80 ? 'text-green-600' : pct >= 50 ? 'text-amber-500' : 'text-[#E51E25]'}`}>{pct}%</span>
                           </td>
-                          <td className="p-4 text-center">
-                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${a.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-[#E51E25]'}`}>{a.status}</span>
+                          <td className="p-2 sm:p-4 text-center">
+                            <span className={`px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold ${a.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-[#E51E25]'}`}>{a.status}</span>
                           </td>
-                          <td className="p-4 text-center text-sm">{rating}</td>
+                          <td className="p-2 sm:p-4 text-center text-xs sm:text-sm">{rating}</td>
                         </tr>
                       )
                     })}
@@ -1779,70 +1779,70 @@ export default function DiamondAgencyPage() {
         const totalPaid = commissionHistory.filter(c => c.status === 'Paid').reduce((s, c) => s + c.beans, 0)
         const totalPending = commissionHistory.filter(c => c.status === 'Pending').reduce((s, c) => s + c.beans, 0)
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Header Banner */}
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8 rounded-2xl shadow-lg">
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-4 sm:p-8 rounded-2xl shadow-lg">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <Wallet className="w-6 h-6 text-red-400" />
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Commission Payouts</span>
+                  <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                    <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-red-400" />
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Commission Payouts</span>
                   </div>
-                  <div className="text-4xl font-black font-mono mt-2">{availableCommission.toLocaleString()} <span className="text-lg font-bold text-slate-400">Beans</span></div>
-                  <div className="text-xs text-slate-400 font-semibold mt-1">eRupai Diamond Agency Protocol</div>
+                  <div className="text-2xl sm:text-4xl font-black font-mono mt-2">{availableCommission.toLocaleString()} <span className="text-sm sm:text-lg font-bold text-slate-400">Beans</span></div>
+                  <div className="text-[10px] sm:text-xs text-slate-400 font-semibold mt-1">eRupai Diamond Agency Protocol</div>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-3 sm:gap-4">
                   <div className="text-center">
-                    <div className="text-xl font-black text-green-400">{totalPaid.toLocaleString()}</div>
-                    <div className="text-[10px] text-slate-400 font-bold uppercase">Total Paid</div>
+                    <div className="text-lg sm:text-xl font-black text-green-400">{totalPaid.toLocaleString()}</div>
+                    <div className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase">Total Paid</div>
                   </div>
                   <div className="w-px bg-slate-700"></div>
                   <div className="text-center">
-                    <div className="text-xl font-black text-amber-400">{totalPending.toLocaleString()}</div>
-                    <div className="text-[10px] text-slate-400 font-bold uppercase">Pending</div>
+                    <div className="text-lg sm:text-xl font-black text-amber-400">{totalPending.toLocaleString()}</div>
+                    <div className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase">Pending</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
               {[
                 { label: 'Total Payouts', value: commissionHistory.length, icon: FileText, color: 'text-[#E51E25]', bg: 'bg-red-50' },
                 { label: 'Paid', value: commissionHistory.filter(c => c.status === 'Paid').length, icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
                 { label: 'Pending', value: commissionHistory.filter(c => c.status === 'Pending').length, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50' },
                 { label: 'Processing', value: commissionHistory.filter(c => c.status === 'Processing').length, icon: RefreshCw, color: 'text-blue-500', bg: 'bg-blue-50' },
               ].map((s, i) => (
-                <div key={i} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                  <div className={`w-11 h-11 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
-                    <s.icon className={`w-5 h-5 ${s.color}`} />
+                <div key={i} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2 sm:gap-4">
+                  <div className={`w-8 h-8 sm:w-11 sm:h-11 ${s.bg} rounded-xl flex items-center justify-center shrink-0`}>
+                    <s.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${s.color}`} />
                   </div>
                   <div>
-                    <div className={`text-xl font-black ${s.color}`}>{s.value}</div>
-                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wide">{s.label}</div>
+                    <div className={`text-base sm:text-xl font-black ${s.color}`}>{s.value}</div>
+                    <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wide">{s.label}</div>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Two column: Withdraw Form + Add Payout Form */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
               {/* Withdrawal Request */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                <h4 className="font-extrabold text-slate-800 text-base mb-5 flex items-center gap-2"><Banknote className="w-5 h-5 text-[#E51E25]" /> Withdrawal Request</h4>
-                <div className="space-y-4">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-5 flex items-center gap-2"><Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Withdrawal Request</h4>
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Amount (Beans)</label>
-                    <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Amount (Beans)</label>
+                    <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                   </div>
-                  <div className="bg-slate-50 rounded-xl p-3 text-xs text-slate-500">
+                  <div className="bg-slate-50 rounded-xl p-2 sm:p-3 text-[10px] sm:text-xs text-slate-500">
                     <span className="font-bold text-slate-700">E-Rupee Equivalent: </span>
                     <span className="font-extrabold text-[#E51E25]">₹{(withdrawAmount / 100).toFixed(2)}</span>
                     <span className="ml-2 text-slate-400">(Rate: 100 Beans = ₹1)</span>
                   </div>
                   {withdrawAmount > availableCommission && (
-                    <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-xs font-semibold flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4" /> Insufficient balance
+                    <div className="p-2 sm:p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-[10px] sm:text-xs font-semibold flex items-center gap-2">
+                      <AlertTriangle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Insufficient balance
                     </div>
                   )}
                   <button
@@ -1852,26 +1852,26 @@ export default function DiamondAgencyPage() {
                       setCommissionHistory([{ id: `CP-${String(commissionHistory.length + 1).padStart(3,'0')}`, agency: 'Self Withdrawal', type: 'E-Rupee Conversion', beans: withdrawAmount, erupee: withdrawAmount / 100, date: new Date().toISOString().split('T')[0], status: 'Processing' }, ...commissionHistory])
                     }}
                     disabled={withdrawAmount > availableCommission}
-                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] disabled:opacity-50 text-white py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] disabled:opacity-50 text-white py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
-                    <Wallet className="w-4 h-4" /> Withdraw to E-Rupee
+                    <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Withdraw to E-Rupee
                   </button>
                 </div>
               </div>
 
               {/* Add Payout Form */}
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                <h4 className="font-extrabold text-slate-800 text-base mb-5 flex items-center gap-2"><Send className="w-5 h-5 text-[#E51E25]" /> Add Commission Payout</h4>
-                <div className="space-y-4">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-5 flex items-center gap-2"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Add Commission Payout</h4>
+                <div className="space-y-3 sm:space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency</label>
-                    <select value={payoutForm.agency} onChange={(e) => setPayoutForm({...payoutForm, agency: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Agency</label>
+                    <select value={payoutForm.agency} onChange={(e) => setPayoutForm({...payoutForm, agency: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
                       {subAgencies.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Payout Type</label>
-                    <select value={payoutForm.type} onChange={(e) => setPayoutForm({...payoutForm, type: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Payout Type</label>
+                    <select value={payoutForm.type} onChange={(e) => setPayoutForm({...payoutForm, type: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30">
                       <option>Monthly Payout</option>
                       <option>Bonus Commission</option>
                       <option>Performance Bonus</option>
@@ -1879,8 +1879,8 @@ export default function DiamondAgencyPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Beans Amount</label>
-                    <input type="number" placeholder="e.g. 50000" value={payoutForm.beans} onChange={(e) => setPayoutForm({...payoutForm, beans: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Beans Amount</label>
+                    <input type="number" placeholder="e.g. 50000" value={payoutForm.beans} onChange={(e) => setPayoutForm({...payoutForm, beans: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                   </div>
                   <button
                     onClick={() => {
@@ -1890,34 +1890,34 @@ export default function DiamondAgencyPage() {
                       setCommissionHistory([{ id: `CP-${String(commissionHistory.length + 1).padStart(3,'0')}`, agency: agency?.name || '', type: payoutForm.type, beans, erupee: beans / 100, date: new Date().toISOString().split('T')[0], status: 'Pending' }, ...commissionHistory])
                       setPayoutForm({...payoutForm, beans: ''})
                     }}
-                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
-                    <Plus className="w-4 h-4" /> Add Payout
+                    <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Add Payout
                   </button>
                 </div>
               </div>
             </div>
 
             {/* Per-Agency Breakdown */}
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-base mb-5 flex items-center gap-2"><BarChart3 className="w-4 h-4 text-[#E51E25]" /> Per-Agency Commission Breakdown</h4>
-              <div className="space-y-4">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-sm sm:text-base mb-4 sm:mb-5 flex items-center gap-2"><BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Per-Agency Commission Breakdown</h4>
+              <div className="space-y-3 sm:space-y-4">
                 {subAgencies.map((ag) => {
                   const agTotal = commissionHistory.filter(c => c.agency === ag.name).reduce((s, c) => s + c.beans, 0)
                   const maxBeans = Math.max(...subAgencies.map(a => commissionHistory.filter(c => c.agency === a.name).reduce((s, c) => s + c.beans, 0)), 1)
                   const pct = Math.round((agTotal / maxBeans) * 100)
                   return (
-                    <div key={ag.id} className="flex items-center gap-4">
-                      <div className="w-32 shrink-0">
-                        <div className="font-bold text-slate-700 text-sm truncate">{ag.name}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{ag.id}</div>
+                    <div key={ag.id} className="flex items-center gap-2 sm:gap-4">
+                      <div className="w-24 sm:w-32 shrink-0">
+                        <div className="font-bold text-slate-700 text-xs sm:text-sm truncate">{ag.name}</div>
+                        <div className="text-[9px] sm:text-[10px] text-slate-400 font-mono">{ag.id}</div>
                       </div>
-                      <div className="flex-1 bg-slate-100 h-3 rounded-full overflow-hidden">
+                      <div className="flex-1 bg-slate-100 h-2 sm:h-3 rounded-full overflow-hidden">
                         <div className="h-full rounded-full bg-gradient-to-r from-[#E51E25] to-orange-400 transition-all duration-700" style={{ width: `${pct}%` }}></div>
                       </div>
-                      <div className="w-28 text-right shrink-0">
-                        <span className="font-extrabold text-sm text-[#E51E25] font-mono">{agTotal.toLocaleString()}</span>
-                        <span className="text-xs text-slate-400 ml-1">Beans</span>
+                      <div className="w-20 sm:w-28 text-right shrink-0">
+                        <span className="font-extrabold text-xs sm:text-sm text-[#E51E25] font-mono">{agTotal.toLocaleString()}</span>
+                        <span className="text-[10px] sm:text-xs text-slate-400 ml-1">Beans</span>
                       </div>
                     </div>
                   )
@@ -1927,26 +1927,26 @@ export default function DiamondAgencyPage() {
 
             {/* Payout History List */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h4 className="font-extrabold text-slate-800 text-base flex items-center gap-2"><History className="w-4 h-4 text-[#E51E25]" /> Payout History</h4>
-                <span className="text-xs bg-red-50 text-[#E51E25] font-bold px-2.5 py-1 rounded-full">{commissionHistory.length} Records</span>
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2"><History className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Payout History</h4>
+                <span className="text-[10px] sm:text-xs bg-red-50 text-[#E51E25] font-bold px-2 sm:px-2.5 py-1 rounded-full">{commissionHistory.length} Records</span>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">ID</th><th className="p-4">Agency</th><th className="p-4">Type</th><th className="p-4 text-right">Beans</th><th className="p-4 text-right">E-Rupee</th><th className="p-4">Date</th><th className="p-4 text-center">Status</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">ID</th><th className="p-2 sm:p-4">Agency</th><th className="p-2 sm:p-4">Type</th><th className="p-2 sm:p-4 text-right">Beans</th><th className="p-2 sm:p-4 text-right">E-Rupee</th><th className="p-2 sm:p-4">Date</th><th className="p-2 sm:p-4 text-center">Status</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {commissionHistory.map((c) => (
                       <tr key={c.id} className="hover:bg-slate-50/50 transition-colors">
-                        <td className="p-4 font-mono text-xs font-bold text-slate-500">{c.id}</td>
-                        <td className="p-4 font-semibold text-slate-800">{c.agency}</td>
-                        <td className="p-4 text-slate-500">{c.type}</td>
-                        <td className="p-4 text-right font-mono font-bold text-[#E51E25]">{c.beans.toLocaleString()}</td>
-                        <td className="p-4 text-right font-mono font-bold text-slate-700">₹{c.erupee.toLocaleString()}</td>
-                        <td className="p-4 text-slate-500 font-mono text-xs">{c.date}</td>
-                        <td className="p-4 text-center">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        <td className="p-2 sm:p-4 font-mono text-[10px] sm:text-xs font-bold text-slate-500">{c.id}</td>
+                        <td className="p-2 sm:p-4 font-semibold text-slate-800 text-xs sm:text-sm">{c.agency}</td>
+                        <td className="p-2 sm:p-4 text-slate-500 text-xs sm:text-sm">{c.type}</td>
+                        <td className="p-2 sm:p-4 text-right font-mono font-bold text-[#E51E25] text-xs sm:text-sm">{c.beans.toLocaleString()}</td>
+                        <td className="p-2 sm:p-4 text-right font-mono font-bold text-slate-700 text-xs sm:text-sm">₹{c.erupee.toLocaleString()}</td>
+                        <td className="p-2 sm:p-4 text-slate-500 font-mono text-[10px] sm:text-xs">{c.date}</td>
+                        <td className="p-2 sm:p-4 text-center">
+                          <span className={`px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold ${
                             c.status === 'Paid' ? 'bg-green-50 text-green-600' :
                             c.status === 'Pending' ? 'bg-amber-50 text-amber-600' :
                             'bg-blue-50 text-blue-600'
@@ -1965,28 +1965,28 @@ export default function DiamondAgencyPage() {
       case 'target':
         const targetPct = Math.min(100, Math.floor((currentSales / targetSales) * 100))
         return (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-4"><Target className="w-5 h-5 text-[#E51E25]" /> Monthly Milestone Tracker</h4>
-              <div className="flex justify-between items-center text-sm font-bold text-slate-500 mb-3">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-3 sm:mb-4"><Target className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Monthly Milestone Tracker</h4>
+              <div className="flex justify-between items-center text-xs sm:text-sm font-bold text-slate-500 mb-2 sm:mb-3">
                 <span>Coin Target Volume</span>
-                <span className="font-mono text-[#E51E25]">{currentSales.toLocaleString()} / {targetSales.toLocaleString()}</span>
+                <span className="font-mono text-[#E51E25] text-xs sm:text-sm">{currentSales.toLocaleString()} / {targetSales.toLocaleString()}</span>
               </div>
-              <div className="w-full bg-slate-100 h-5 rounded-full overflow-hidden mb-4">
+              <div className="w-full bg-slate-100 h-4 sm:h-5 rounded-full overflow-hidden mb-3 sm:mb-4">
                 <div className="bg-gradient-to-r from-[#E51E25] to-amber-500 h-full rounded-full transition-all duration-700" style={{ width: `${targetPct}%` }}></div>
               </div>
-              <div className="text-center font-bold text-slate-700">{targetPct}% Complete — Need <span className="text-[#E51E25] font-mono">{(targetSales - currentSales).toLocaleString()}</span> more for Diamond Bonus</div>
+              <div className="text-center font-bold text-slate-700 text-xs sm:text-sm">{targetPct}% Complete — Need <span className="text-[#E51E25] font-mono">{(targetSales - currentSales).toLocaleString()}</span> more for Diamond Bonus</div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
                 { tier: 'Tier 1 (50%)', bonus: '5% Extra', reached: targetPct >= 50 },
                 { tier: 'Tier 2 (80%)', bonus: '10% Extra', reached: targetPct >= 80 },
                 { tier: 'Tier 3 (100%)', bonus: '20% Super', reached: targetPct >= 100 }
               ].map((t, idx) => (
-                <div key={idx} className={`p-4 rounded-2xl border text-center ${t.reached ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
-                  <div className="flex justify-center mb-2">{t.reached ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Award className="w-5 h-5 text-slate-300" />}</div>
-                  <div className={`text-xs font-black ${t.reached ? 'text-green-600' : 'text-slate-400'}`}>{t.tier}</div>
-                  <div className="text-[10px] font-bold text-slate-500 mt-1">{t.bonus}</div>
+                <div key={idx} className={`p-3 sm:p-4 rounded-2xl border text-center ${t.reached ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
+                  <div className="flex justify-center mb-2">{t.reached ? <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" /> : <Award className="w-4 h-4 sm:w-5 sm:h-5 text-slate-300" />}</div>
+                  <div className={`text-[10px] sm:text-xs font-black ${t.reached ? 'text-green-600' : 'text-slate-400'}`}>{t.tier}</div>
+                  <div className="text-[9px] sm:text-[10px] font-bold text-slate-500 mt-1">{t.bonus}</div>
                 </div>
               ))}
             </div>
@@ -1995,42 +1995,42 @@ export default function DiamondAgencyPage() {
 
       case 'users':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Invite User Modal */}
             {showInviteModal && (
               <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 relative">
-                  <button onClick={() => { setShowInviteModal(false); setInviteForm({ name: '', email: '', role: 'Support Agent', status: 'Active' }) }} className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 transition-colors">
-                    <XCircle className="w-6 h-6" />
+                <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-4 sm:p-8 relative">
+                  <button onClick={() => { setShowInviteModal(false); setInviteForm({ name: '', email: '', role: 'Support Agent', status: 'Active' }) }} className="absolute top-4 sm:top-5 right-4 sm:right-5 text-slate-400 hover:text-slate-700 transition-colors">
+                    <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
-                  <h3 className="text-2xl font-extrabold text-slate-800 mb-6">Invite User</h3>
-                  <div className="space-y-4">
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-slate-800 mb-4 sm:mb-6">Invite User</h3>
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Full Name</label>
+                      <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Full Name</label>
                       <input
                         type="text"
                         placeholder="e.g. Ramesh Adhikari"
                         value={inviteForm.name}
                         onChange={(e) => setInviteForm({ ...inviteForm, name: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label>
+                      <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label>
                       <input
                         type="email"
                         placeholder="e.g. ramesh@erupai.com"
                         value={inviteForm.email}
                         onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Role</label>
+                      <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Role</label>
                       <select
                         value={inviteForm.role}
                         onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                       >
                         <option>Super Admin</option>
                         <option>Regional Manager</option>
@@ -2039,10 +2039,10 @@ export default function DiamondAgencyPage() {
                       </select>
                     </div>
                   </div>
-                  <div className="flex gap-3 mt-7">
+                  <div className="flex gap-2 sm:gap-3 mt-5 sm:mt-7">
                     <button
                       onClick={() => { setShowInviteModal(false); setInviteForm({ name: '', email: '', role: 'Support Agent', status: 'Active' }) }}
-                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-bold text-sm active:scale-95 transition-all"
+                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm active:scale-95 transition-all"
                     >
                       Cancel
                     </button>
@@ -2060,9 +2060,9 @@ export default function DiamondAgencyPage() {
                         setShowInviteModal(false)
                         setInviteForm({ name: '', email: '', role: 'Support Agent', status: 'Active' })
                       }}
-                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl font-bold text-sm shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <Plus className="w-4 h-4" /> Add User
+                      <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Add User
                     </button>
                   </div>
                 </div>
@@ -2070,41 +2070,41 @@ export default function DiamondAgencyPage() {
             )}
 
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><Users className="w-5 h-5 text-[#E51E25]" /> System Users <span className="text-xs bg-red-50 text-[#E51E25] font-bold px-2.5 py-1 rounded-full ml-1">{systemUsers.length}</span></h4>
-                <button onClick={() => setShowInviteModal(true)} className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
-                  <Plus className="w-3.5 h-3.5" /> Invite User
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> System Users <span className="text-[10px] sm:text-xs bg-red-50 text-[#E51E25] font-bold px-2 sm:px-2.5 py-1 rounded-full ml-1">{systemUsers.length}</span></h4>
+                <button onClick={() => setShowInviteModal(true)} className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-3 sm:px-4 py-2 rounded-xl text-[10px] sm:text-xs font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
+                  <Plus className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Invite User
                 </button>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">User</th><th className="p-4">Role</th><th className="p-4">Email</th><th className="p-4 text-center">Status</th><th className="p-4 text-center">Action</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">User</th><th className="p-2 sm:p-4">Role</th><th className="p-2 sm:p-4">Email</th><th className="p-2 sm:p-4 text-center">Status</th><th className="p-2 sm:p-4 text-center">Action</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {systemUsers.map((u) => (
                       <tr key={u.id} className="hover:bg-slate-50/50">
-                        <td className="p-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-xs font-extrabold text-[#E51E25] shrink-0">{u.name.split(' ').map(n => n[0]).join('').slice(0,2)}</div>
-                            <span className="font-semibold text-slate-800">{u.name}</span>
+                        <td className="p-2 sm:p-4">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-red-100 flex items-center justify-center text-[10px] sm:text-xs font-extrabold text-[#E51E25] shrink-0">{u.name.split(' ').map(n => n[0]).join('').slice(0,2)}</div>
+                            <span className="font-semibold text-slate-800 text-xs sm:text-sm">{u.name}</span>
                           </div>
                         </td>
-                        <td className="p-4">
-                          <span className="text-xs font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg">{u.role}</span>
+                        <td className="p-2 sm:p-4">
+                          <span className="text-[10px] sm:text-xs font-bold bg-slate-100 text-slate-600 px-2 sm:px-2.5 py-1 rounded-lg">{u.role}</span>
                         </td>
-                        <td className="p-4 font-mono text-slate-500 text-xs">{u.email}</td>
-                        <td className="p-4 text-center">
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${u.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500'}`}>
+                        <td className="p-2 sm:p-4 font-mono text-slate-500 text-[10px] sm:text-xs">{u.email}</td>
+                        <td className="p-2 sm:p-4 text-center">
+                          <span className={`px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold ${u.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500'}`}>
                             {u.status}
                           </span>
                         </td>
-                        <td className="p-4 text-center">
+                        <td className="p-2 sm:p-4 text-center">
                           <button
                             onClick={() => setSystemUsers(systemUsers.filter(x => x.id !== u.id))}
                             className="text-slate-400 hover:text-[#E51E25] transition-colors"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                           </button>
                         </td>
                       </tr>
@@ -2118,21 +2118,21 @@ export default function DiamondAgencyPage() {
 
       case 'history':
         return (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><History className="w-5 h-5 text-[#E51E25]" /> Activity Log</h4>
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><History className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Activity Log</h4>
               </div>
               <div className="divide-y divide-slate-100">
                 {activityHistory.map((item) => (
-                  <div key={item.id} className="p-5 hover:bg-slate-50 transition-colors flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                      <Clock className="w-5 h-5 text-[#E51E25]" />
+                  <div key={item.id} className="p-4 sm:p-5 hover:bg-slate-50 transition-colors flex items-start gap-3 sm:gap-4">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                      <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" />
                     </div>
                     <div>
-                      <div className="font-bold text-slate-800 text-sm">{item.action}</div>
-                      <div className="text-slate-500 text-sm mt-0.5">{item.detail}</div>
-                      <div className="text-xs font-mono text-slate-400 mt-2">{item.date}</div>
+                      <div className="font-bold text-slate-800 text-xs sm:text-sm">{item.action}</div>
+                      <div className="text-slate-500 text-xs sm:text-sm mt-0.5">{item.detail}</div>
+                      <div className="text-[10px] sm:text-xs font-mono text-slate-400 mt-2">{item.date}</div>
                     </div>
                   </div>
                 ))}
@@ -2143,30 +2143,30 @@ export default function DiamondAgencyPage() {
 
       case 'notifications':
         return (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2"><Bell className="w-5 h-5 text-[#E51E25]" /> Inbox</h4>
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex justify-between items-center mb-3 sm:mb-4">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Bell className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Inbox</h4>
               <button
                 onClick={() => setNotifications(notifications.map(n => ({ ...n, read: true })))}
-                className="text-xs font-bold text-[#E51E25] hover:underline"
+                className="text-[10px] sm:text-xs font-bold text-[#E51E25] hover:underline"
               >
                 Mark all as read
               </button>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               {notifications.map((notif) => (
-                <div key={notif.id} className={`p-5 rounded-2xl border transition-all flex items-start gap-4 ${notif.read ? 'bg-white border-slate-100 shadow-sm' : 'bg-red-50/50 border-red-100 shadow-sm'}`}>
-                  <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${notif.read ? 'bg-slate-200' : 'bg-[#E51E25]'}`}></div>
+                <div key={notif.id} className={`p-4 sm:p-5 rounded-2xl border transition-all flex items-start gap-3 sm:gap-4 ${notif.read ? 'bg-white border-slate-100 shadow-sm' : 'bg-red-50/50 border-red-100 shadow-sm'}`}>
+                  <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-2 shrink-0 ${notif.read ? 'bg-slate-200' : 'bg-[#E51E25]'}`}></div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
-                      <div className="font-bold text-slate-800">{notif.title}</div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{notif.time}</div>
+                      <div className="font-bold text-slate-800 text-xs sm:text-sm">{notif.title}</div>
+                      <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">{notif.time}</div>
                     </div>
-                    <div className="text-sm text-slate-600 mt-1">{notif.message}</div>
+                    <div className="text-xs sm:text-sm text-slate-600 mt-1">{notif.message}</div>
                     {!notif.read && (
                       <button
                         onClick={() => setNotifications(notifications.map(n => n.id === notif.id ? { ...n, read: true } : n))}
-                        className="mt-3 text-xs font-bold text-[#E51E25] bg-red-100 px-3 py-1 rounded-lg hover:bg-red-200 transition-colors"
+                        className="mt-2 sm:mt-3 text-[10px] sm:text-xs font-bold text-[#E51E25] bg-red-100 px-2 sm:px-3 py-1 rounded-lg hover:bg-red-200 transition-colors"
                       >
                         Mark as read
                       </button>
@@ -2180,51 +2180,51 @@ export default function DiamondAgencyPage() {
 
       case 'settings':
         return (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-6"><Sliders className="w-5 h-5 text-[#E51E25]" /> General Settings</h4>
-              <div className="space-y-5 max-w-lg">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-4 sm:mb-6"><Sliders className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> General Settings</h4>
+              <div className="space-y-4 sm:space-y-5 max-w-lg">
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Contact Email</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Contact Email</label>
                   <input
                     type="email"
                     value={agencySettings.email}
                     onChange={(e) => setAgencySettings({ ...agencySettings, email: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Support Phone</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Support Phone</label>
                   <input
                     type="text"
                     value={agencySettings.phone}
                     onChange={(e) => setAgencySettings({ ...agencySettings, phone: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   />
                 </div>
-                <div className="pt-4 border-t border-slate-100">
-                  <h5 className="font-bold text-slate-800 text-sm mb-4">Notification Preferences</h5>
-                  <label className="flex items-center gap-3 mb-3 cursor-pointer">
+                <div className="pt-3 sm:pt-4 border-t border-slate-100">
+                  <h5 className="font-bold text-slate-800 text-xs sm:text-sm mb-3 sm:mb-4">Notification Preferences</h5>
+                  <label className="flex items-center gap-2 sm:gap-3 mb-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={agencySettings.notifyEmail}
                       onChange={(e) => setAgencySettings({ ...agencySettings, notifyEmail: e.target.checked })}
                       className="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer"
                     />
-                    <span className="text-sm font-semibold text-slate-600">Email Alerts</span>
+                    <span className="text-xs sm:text-sm font-semibold text-slate-600">Email Alerts</span>
                   </label>
-                  <label className="flex items-center gap-3 cursor-pointer">
+                  <label className="flex items-center gap-2 sm:gap-3 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={agencySettings.notifySms}
                       onChange={(e) => setAgencySettings({ ...agencySettings, notifySms: e.target.checked })}
                       className="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer"
                     />
-                    <span className="text-sm font-semibold text-slate-600">SMS Alerts</span>
+                    <span className="text-xs sm:text-sm font-semibold text-slate-600">SMS Alerts</span>
                   </label>
                 </div>
-                <div className="pt-4">
-                  <button className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all">
+                <div className="pt-3 sm:pt-4">
+                  <button className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all">
                     Save Changes
                   </button>
                 </div>
@@ -2235,76 +2235,76 @@ export default function DiamondAgencyPage() {
 
       case 'sys_payment':
         return (
-          <div className="space-y-6">
-            <div className="flex items-start gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-6 rounded-2xl border border-red-100">
-              <CreditCard className="w-10 h-10 text-[#E51E25] shrink-0 mt-1" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-red-50 to-orange-50 p-4 sm:p-6 rounded-2xl border border-red-100">
+              <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-[#E51E25] shrink-0 mt-1" />
               <div>
-                <h4 className="text-lg font-extrabold text-slate-800">Payment Gateway Integrations</h4>
-                <p className="text-slate-500 text-sm mt-1">Configure your payment processors for accepting diamond purchases and processing agency withdrawals.</p>
+                <h4 className="text-base sm:text-lg font-extrabold text-slate-800">Payment Gateway Integrations</h4>
+                <p className="text-slate-500 text-[10px] sm:text-sm mt-1">Configure your payment processors for accepting diamond purchases and processing agency withdrawals.</p>
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {paymentGateways.map((gw) => (
-                <div key={gw.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col h-full relative overflow-hidden">
+                <div key={gw.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6 flex flex-col h-full relative overflow-hidden">
                   {gw.status === 'Active' && <div className="absolute top-0 left-0 w-full h-1 bg-[#E51E25]"></div>}
-                  <div className="flex justify-between items-start mb-6">
+                  <div className="flex justify-between items-start mb-4 sm:mb-6">
                     <div>
-                      <div className="font-extrabold text-slate-800 text-lg">{gw.name}</div>
-                      <div className="text-xs text-slate-500 font-bold">{gw.type}</div>
+                      <div className="font-extrabold text-slate-800 text-base sm:text-lg">{gw.name}</div>
+                      <div className="text-[10px] sm:text-xs text-slate-500 font-bold">{gw.type}</div>
                     </div>
                     <button 
                       onClick={() => setPaymentGateways(paymentGateways.map(p => p.id === gw.id ? {...p, status: p.status === 'Active' ? 'Inactive' : 'Active'} : p))}
-                      className={`w-12 h-7 rounded-full relative transition-colors shrink-0 ${gw.status === 'Active' ? 'bg-[#E51E25]' : 'bg-slate-300'}`}
+                      className={`w-10 h-6 sm:w-12 sm:h-7 rounded-full relative transition-colors shrink-0 ${gw.status === 'Active' ? 'bg-[#E51E25]' : 'bg-slate-300'}`}
                     >
-                      <span className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${gw.status === 'Active' ? 'translate-x-5' : ''}`} />
+                      <span className={`absolute top-0.5 sm:top-1 left-0.5 sm:left-1 w-4 sm:w-5 h-4 sm:h-5 bg-white rounded-full shadow transition-transform ${gw.status === 'Active' ? 'translate-x-4 sm:translate-x-5' : ''}`} />
                     </button>
                   </div>
-                  <div className="space-y-4 flex-1">
+                  <div className="space-y-3 sm:space-y-4 flex-1">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Public Key / Client ID</label>
+                      <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Public Key / Client ID</label>
                       {editingGwId === gw.id ? (
                         <input
                           type="text"
                           value={editGwForm.pub}
                           onChange={(e) => setEditGwForm({...editGwForm, pub: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30"
                         />
                       ) : (
-                        <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-600">
-                          <Lock className="w-3 h-3 text-slate-400 mr-2" /> {gw.keys.pub}
+                        <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-mono font-bold text-slate-600">
+                          <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 mr-1 sm:mr-2" /> {gw.keys.pub}
                         </div>
                       )}
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Secret Key / Token</label>
+                      <label className="block text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Secret Key / Token</label>
                       {editingGwId === gw.id ? (
                         <input
                           type="text"
                           value={editGwForm.sec}
                           onChange={(e) => setEditGwForm({...editGwForm, sec: e.target.value})}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                          className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30"
                         />
                       ) : (
-                        <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono font-bold text-slate-600">
-                          <Lock className="w-3 h-3 text-slate-400 mr-2" /> {gw.keys.sec}
+                        <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-mono font-bold text-slate-600">
+                          <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-400 mr-1 sm:mr-2" /> {gw.keys.sec}
                         </div>
                       )}
                     </div>
                   </div>
                   {editingGwId === gw.id ? (
-                    <div className="mt-6 flex gap-2">
+                    <div className="mt-4 sm:mt-6 flex gap-2">
                       <button
                         onClick={() => {
                           setPaymentGateways(paymentGateways.map(p => p.id === gw.id ? {...p, keys: editGwForm} : p))
                           setEditingGwId(null)
                         }}
-                        className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+                        className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                       >
-                        <CheckSquare className="w-4 h-4" /> Save
+                        <CheckSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Save
                       </button>
                       <button
                         onClick={() => setEditingGwId(null)}
-                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center"
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center"
                       >
                          Cancel
                       </button>
@@ -2315,9 +2315,9 @@ export default function DiamondAgencyPage() {
                         setEditingGwId(gw.id)
                         setEditGwForm({ pub: gw.keys.pub, sec: gw.keys.sec })
                       }}
-                      className="w-full mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
+                      className="w-full mt-4 sm:mt-6 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <Edit className="w-4 h-4" /> Edit Configuration
+                      <Edit className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Edit Configuration
                     </button>
                   )}
                 </div>
@@ -2328,44 +2328,44 @@ export default function DiamondAgencyPage() {
 
       case 'sys_webhooks':
         return (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-              <h4 className="font-extrabold text-slate-800 text-lg flex items-center gap-2 mb-6"><Webhook className="w-5 h-5 text-[#E51E25]" /> Webhook Endpoint Configuration</h4>
-              <div className="flex flex-col md:flex-row gap-4">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-4 sm:mb-6"><Webhook className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Webhook Endpoint Configuration</h4>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div className="flex-1">
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Payload URL</label>
-                  <input type="text" value={webhooks[0].url} onChange={(e) => setWebhooks([{...webhooks[0], url: e.target.value}])} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Payload URL</label>
+                  <input type="text" value={webhooks[0].url} onChange={(e) => setWebhooks([{...webhooks[0], url: e.target.value}])} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
                 </div>
-                <div className="md:w-48">
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Status</label>
-                  <select value={webhooks[0].status} onChange={(e) => setWebhooks([{...webhooks[0], status: e.target.value}])} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30">
+                <div className="sm:w-48">
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Status</label>
+                  <select value={webhooks[0].status} onChange={(e) => setWebhooks([{...webhooks[0], status: e.target.value}])} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-bold focus:outline-none focus:ring-2 focus:ring-red-500/30">
                     <option>Active</option>
                     <option>Inactive</option>
                   </select>
                 </div>
               </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <span className="bg-red-50 text-[#E51E25] font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5"><CheckSquare className="w-3.5 h-3.5" /> package.purchased</span>
-                <span className="bg-red-50 text-[#E51E25] font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5"><CheckSquare className="w-3.5 h-3.5" /> withdrawal.requested</span>
-                <span className="bg-slate-100 text-slate-400 font-bold text-xs px-3 py-1.5 rounded-lg border border-dashed border-slate-300 hover:bg-slate-50 cursor-pointer">+ Add Event</span>
+              <div className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
+                <span className="bg-red-50 text-[#E51E25] font-bold text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg flex items-center gap-1 sm:gap-1.5"><CheckSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> package.purchased</span>
+                <span className="bg-red-50 text-[#E51E25] font-bold text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg flex items-center gap-1 sm:gap-1.5"><CheckSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> withdrawal.requested</span>
+                <span className="bg-slate-100 text-slate-400 font-bold text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-dashed border-slate-300 hover:bg-slate-50 cursor-pointer">+ Add Event</span>
               </div>
-              <div className="mt-6 flex justify-end">
-                <button className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4" /> Send Test Payload
+              <div className="mt-4 sm:mt-6 flex justify-end">
+                <button className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-95 transition-all flex items-center gap-2">
+                  <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Send Test Payload
                 </button>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-100 shadow-sm p-5 rounded-2xl">
-              <h4 className="font-extrabold text-slate-800 text-sm flex items-center gap-2 mb-4"><Terminal className="w-4 h-4 text-[#E51E25]" /> Recent Deliveries</h4>
-              <div className="space-y-3">
+            <div className="bg-white border border-slate-100 shadow-sm p-4 sm:p-5 rounded-2xl">
+              <h4 className="font-extrabold text-slate-800 text-xs sm:text-sm flex items-center gap-2 mb-3 sm:mb-4"><Terminal className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" /> Recent Deliveries</h4>
+              <div className="space-y-2 sm:space-y-3">
                 {webhookLogsList.map((log) => (
                   <div key={log.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-slate-400 font-bold font-mono text-xs">[{log.time}]</span>
-                      <span className="text-slate-700 font-semibold font-mono text-xs">{log.event}</span>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className="text-slate-400 font-bold font-mono text-[10px] sm:text-xs">[{log.time}]</span>
+                      <span className="text-slate-700 font-semibold font-mono text-[10px] sm:text-xs">{log.event}</span>
                     </div>
-                    <span className={`font-mono text-xs font-bold ${log.success ? 'text-green-600' : 'text-[#E51E25]'}`}>{log.response}</span>
+                    <span className={`font-mono text-[10px] sm:text-xs font-bold ${log.success ? 'text-green-600' : 'text-[#E51E25]'}`}>{log.response}</span>
                   </div>
                 ))}
               </div>
@@ -2375,48 +2375,48 @@ export default function DiamondAgencyPage() {
 
       case 'sys_security':
         return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-7 h-7 text-green-500" />
+          <div className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 sm:gap-5">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-5 h-5 sm:w-7 sm:h-7 text-green-500" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-slate-800 text-lg">System Secure</h4>
-                  <p className="text-xs text-slate-500 font-semibold mt-0.5">2FA is enabled for all admin accounts. 0 unauthorized attempts in the last 30 days.</p>
+                  <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">System Secure</h4>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-semibold mt-0.5">2FA is enabled for all admin accounts. 0 unauthorized attempts in the last 30 days.</p>
                 </div>
               </div>
-              <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-5">
-                <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center shrink-0">
-                  <Users className="w-7 h-7 text-[#E51E25]" />
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-3 sm:gap-5">
+                <div className="w-10 h-10 sm:w-14 sm:h-14 bg-red-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <Users className="w-5 h-5 sm:w-7 sm:h-7 text-[#E51E25]" />
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-start">
-                    <h4 className="font-extrabold text-slate-800 text-lg">3 Active Sessions</h4>
-                    <button className="text-[10px] font-bold uppercase tracking-wider text-[#E51E25] bg-red-50 hover:bg-red-100 px-2 py-1 rounded">Revoke All</button>
+                    <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">3 Active Sessions</h4>
+                    <button className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#E51E25] bg-red-50 hover:bg-red-100 px-1.5 sm:px-2 py-1 rounded">Revoke All</button>
                   </div>
-                  <p className="text-xs text-slate-500 font-semibold mt-0.5">Current IP: 192.168.1.45 (Kathmandu, NP)</p>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-semibold mt-0.5">Current IP: 192.168.1.45 (Kathmandu, NP)</p>
                 </div>
               </div>
             </div>
             
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-              <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                <h4 className="font-extrabold text-slate-800 text-base flex items-center gap-2"><Lock className="w-5 h-5 text-[#E51E25]" /> Immutable Audit Log</h4>
-                <button onClick={exportSecurityLogsToCSV} className="text-xs font-bold text-slate-600 hover:text-[#E51E25] bg-slate-50 hover:bg-slate-100 active:scale-95 px-3 py-1.5 rounded-lg border border-slate-200 transition-all">Export CSV</button>
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 text-sm sm:text-base flex items-center gap-2"><Lock className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Immutable Audit Log</h4>
+                <button onClick={exportSecurityLogsToCSV} className="text-[10px] sm:text-xs font-bold text-slate-600 hover:text-[#E51E25] bg-slate-50 hover:bg-slate-100 active:scale-95 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-slate-200 transition-all">Export CSV</button>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
-                    <tr><th className="p-4">Timestamp</th><th className="p-4">Admin / User</th><th className="p-4">Action Taken</th><th className="p-4">IP Address</th></tr>
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr><th className="p-2 sm:p-4">Timestamp</th><th className="p-2 sm:p-4">Admin / User</th><th className="p-2 sm:p-4">Action Taken</th><th className="p-2 sm:p-4">IP Address</th></tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {securityLogs.map((log) => (
                       <tr key={log.id} className="hover:bg-slate-50/50">
-                        <td className="p-4 text-xs font-mono text-slate-500">{log.date}</td>
-                        <td className="p-4 font-bold text-slate-800">{log.user}</td>
-                        <td className="p-4 text-slate-600">{log.action}</td>
-                        <td className="p-4 text-xs font-mono text-slate-400">{log.ip}</td>
+                        <td className="p-2 sm:p-4 text-[10px] sm:text-xs font-mono text-slate-500">{log.date}</td>
+                        <td className="p-2 sm:p-4 font-bold text-slate-800 text-xs sm:text-sm">{log.user}</td>
+                        <td className="p-2 sm:p-4 text-slate-600 text-xs sm:text-sm">{log.action}</td>
+                        <td className="p-2 sm:p-4 text-[10px] sm:text-xs font-mono text-slate-400">{log.ip}</td>
                       </tr>
                     ))}
                   </tbody>
