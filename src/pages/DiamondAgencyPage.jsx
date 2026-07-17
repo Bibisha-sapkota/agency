@@ -175,7 +175,8 @@ export default function DiamondAgencyPage() {
     coinAmount: '',
     rechargeType: 'Normal Coin',
     remarks: '',
-    requiresApproval: false
+    requiresApproval: false,
+    paymentVerified: false
   })
   const [showManualRechargeConfirm, setShowManualRechargeConfirm] = useState(false)
   const [manualRechargeSuccess, setManualRechargeSuccess] = useState(null)
@@ -3812,6 +3813,12 @@ export default function DiamondAgencyPage() {
             return
           }
           
+          // Check if payment is verified
+          if (!manualRechargeForm.paymentVerified) {
+            alert('Please verify payment before proceeding with recharge!')
+            return
+          }
+          
           // Check if account type is Special ID
           if (manualRechargeForm.accountType === 'Special ID') {
             setShowSpecialIdModal(true)
@@ -3913,7 +3920,8 @@ export default function DiamondAgencyPage() {
             coinAmount: '',
             rechargeType: 'Normal Coin',
             remarks: '',
-            requiresApproval: false
+            requiresApproval: false,
+            paymentVerified: false
           })
           setShowManualRechargeConfirm(false)
         }
@@ -4137,6 +4145,18 @@ export default function DiamondAgencyPage() {
                   />
                   <label htmlFor="requiresApproval" className="text-xs sm:text-sm font-semibold text-slate-600 cursor-pointer">
                     Requires Super Admin Approval (Custom Recharge)
+                  </label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="paymentVerified"
+                    checked={manualRechargeForm.paymentVerified}
+                    onChange={e=>setManualRechargeForm({...manualRechargeForm, paymentVerified: e.target.checked})}
+                    className="w-4 h-4 text-green-600 rounded focus:ring-green-500 cursor-pointer"
+                  />
+                  <label htmlFor="paymentVerified" className="text-xs sm:text-sm font-semibold text-slate-600 cursor-pointer">
+                    Payment Verification - Verify payment from agency user before recharge
                   </label>
                 </div>
                 <div className="pt-2">
