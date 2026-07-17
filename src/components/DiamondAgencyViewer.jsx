@@ -133,14 +133,28 @@ export default function DiamondAgencyPage() {
 
   // ---- Recharge History State ----
   const [rechargeHistory, setRechargeHistory] = useState([
-    { transactionId: 'TXN-001', rechargeId: 'RC-001', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Manual', coinsAdded: 500, status: 'Completed', dateTime: '2026-07-17 10:30', remarks: 'Payment verified' },
-    { transactionId: 'TXN-002', rechargeId: 'RC-002', userId: '2', userName: 'Sima Koirala', rechargeType: 'Custom', coinsAdded: 1000, status: 'Pending', dateTime: '2026-07-17 09:15', remarks: 'Awaiting approval' },
-    { transactionId: 'TXN-003', rechargeId: 'RC-003', userId: '3', userName: 'Jay Patel', rechargeType: 'Manual', coinsAdded: 250, status: 'Failed', dateTime: '2026-07-16 14:20', remarks: 'Payment declined' },
-    { transactionId: 'TXN-004', rechargeId: 'RC-004', userId: '4', userName: 'Nina Tamang', rechargeType: 'Manual', coinsAdded: 750, status: 'Completed', dateTime: '2026-07-16 11:45', remarks: 'Successful' },
-    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Custom', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
-    { transactionId: 'TXN-006', rechargeId: 'RC-006', userId: '2', userName: 'Sima Koirala', rechargeType: 'Manual', coinsAdded: 150, status: 'Completed', dateTime: '2026-07-15 08:20', remarks: 'Instant transfer' }
+    { transactionId: 'TXN-001', rechargeId: 'RC-001', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Normal Coin', coinsAdded: 500, status: 'Completed', dateTime: '2026-07-17 10:30', remarks: 'Payment verified' },
+    { transactionId: 'TXN-002', rechargeId: 'RC-002', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 1000, status: 'Pending', dateTime: '2026-07-17 09:15', remarks: 'Awaiting approval' },
+    { transactionId: 'TXN-003', rechargeId: 'RC-003', userId: '3', userName: 'Jay Patel', rechargeType: 'Green Diamond', coinsAdded: 250, status: 'Failed', dateTime: '2026-07-16 14:20', remarks: 'Payment declined' },
+    { transactionId: 'TXN-004', rechargeId: 'RC-004', userId: '4', userName: 'Nina Tamang', rechargeType: 'Normal Coin', coinsAdded: 750, status: 'Completed', dateTime: '2026-07-16 11:45', remarks: 'Successful' },
+    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Red Game Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
+    { transactionId: 'TXN-006', rechargeId: 'RC-006', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 150, status: 'Completed', dateTime: '2026-07-15 08:20', remarks: 'Instant transfer' }
   ])
   const [historyFilters, setHistoryFilters] = useState({
+    dateFilter: 'all',
+    customDate: '',
+    statusFilter: 'all',
+    userIdFilter: ''
+  })
+
+  // ---- Coin Transfer History State ----
+  const [coinTransferHistory, setCoinTransferHistory] = useState([
+    { transactionId: 'TXF-001', userId: '1', userName: 'Aarav Shrestha', coinType: 'Coin', coins: 500, transferType: 'instant', status: 'Completed', timestamp: '2026-07-17 10:30' },
+    { transactionId: 'TXF-002', userId: '2', userName: 'Sima Koirala', coinType: 'Blue Diamond', coins: 1000, transferType: 'scheduled', status: 'Completed', timestamp: '2026-07-17 09:15' },
+    { transactionId: 'TXF-003', userId: '3', userName: 'Jay Patel', coinType: 'Red Diamond', coins: 250, transferType: 'instant', status: 'Completed', timestamp: '2026-07-16 14:20' },
+    { transactionId: 'TXF-004', userId: '4', userName: 'Nina Tamang', coinType: 'Green Diamond', coins: 750, transferType: 'bulk', status: 'Completed', timestamp: '2026-07-16 11:45' }
+  ])
+  const [transferHistoryFilters, setTransferHistoryFilters] = useState({
     dateFilter: 'all',
     customDate: '',
     statusFilter: 'all',
@@ -167,6 +181,8 @@ export default function DiamondAgencyPage() {
   const [manualRechargeSuccess, setManualRechargeSuccess] = useState(null)
   const [showSpecialIdModal, setShowSpecialIdModal] = useState(false)
   const [specialIdSubType, setSpecialIdSubType] = useState('')
+  const [showAgencyIdConfirm, setShowAgencyIdConfirm] = useState(false)
+  const [pendingAgencyId, setPendingAgencyId] = useState('')
 
   // ---- Loans State ----
   const [loans] = useState([
@@ -305,6 +321,12 @@ export default function DiamondAgencyPage() {
       key: 'recharge_history'
     },
     {
+      id: 'coin_transfer_history',
+      label: 'Coin Transfer History',
+      icon: Send,
+      key: 'coin_transfer_history'
+    },
+    {
       id: 'coin_transfer',
       label: 'Coin Transfer',
       icon: Send,
@@ -322,74 +344,13 @@ export default function DiamondAgencyPage() {
       icon: User,
       key: 'profile'
     },
-    {
-      id: 'diamond_packages',
-      label: 'Diamond Packages',
-      icon: Gem,
-      subItems: [
-        { key: 'pkg_all', label: 'All Packages' },
-        { key: 'pkg_add', label: 'Add New Package' },
-        { key: 'pkg_analytics', label: 'Sales Analytics' },
-        { key: 'pkg_settings', label: 'Package Settings' }
-      ]
-    },
-    {
-      id: 'agent_wallet',
-      label: 'Agent Wallet',
-      icon: Wallet,
-      subItems: [
-        { key: 'wallet_beans', label: 'Bean Wallet' },
-        { key: 'wallet_send', label: 'Send Coin' },
-        { key: 'wallet_loans', label: 'Loan Management' }
-      ]
-    },
+
+
     {
       id: 'recharge',
       label: 'Recharge',
       icon: RefreshCw,
       key: 'recharge'
-    },
-    {
-      id: 'withdrawals',
-      label: 'Withdrawal Approvals',
-      icon: CheckSquare,
-      key: 'withdrawals'
-    },
-    {
-      id: 'agency',
-      label: 'Diamond Agency',
-      icon: Building2,
-      subItems: [
-        { key: 'platform', label: 'Platform Integration' },
-        { key: 'create', label: 'Create New Agencies' },
-        { key: 'manage', label: 'Manage Agencies' },
-        { key: 'distribution', label: 'Coin Distribution' },
-        { key: 'expansion', label: 'Business Expansion' },
-        { key: 'revenue', label: 'Revenue Generation' },
-        { key: 'performance', label: 'Performance Metrics' },
-        { key: 'commission', label: 'Commission Payouts' },
-        { key: 'target', label: 'Target Monitoring' },
-        { key: 'settings', label: 'Agency Settings' }
-      ]
-    },
-    {
-      id: 'user_management',
-      label: 'Users & Activity',
-      icon: Users,
-      subItems: [
-        { key: 'users', label: 'User Directory' },
-        { key: 'history', label: 'Activity History' },
-        { key: 'notifications', label: 'Notifications' }
-      ]
-    },
-    {
-      id: 'system_config',
-      label: 'System Config',
-      icon: Server,
-      subItems: [
-        { key: 'sys_payment', label: 'Payment Gateway' },
-        { key: 'sys_security', label: 'Security & Audit' }
-      ]
     },
     {
       id: 'blue_diamond',
@@ -1572,7 +1533,6 @@ export default function DiamondAgencyPage() {
           { name: 'Normal Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Normal Coin').length, color: '#3B82F6' },
           { name: 'Blue Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Blue Diamond').length, color: '#06B6D4' },
           { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' },
-          { name: 'Blue Asset', value: rechargeHistory.filter(r => r.rechargeType === 'Blue Asset').length, color: '#8B5CF6' },
           { name: 'Red Game Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Red Game Coin').length, color: '#EF4444' }
         ]
 
@@ -3338,7 +3298,7 @@ export default function DiamondAgencyPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Type of RC 💎</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Type of RC </label>
                   <select 
                     value={coinTransferForm.coinType}
                     onChange={e=>setCoinTransferForm({...coinTransferForm, coinType: e.target.value})}
@@ -3567,6 +3527,169 @@ export default function DiamondAgencyPage() {
                           </td>
                           <td className="p-4 text-xs text-slate-500">{record.dateTime}</td>
                           <td className="p-4 text-xs text-slate-600">{record.remarks}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'coin_transfer_history':
+        const filterTransferHistory = () => {
+          return coinTransferHistory.filter(record => {
+            // Date filter
+            let matchesDate = true
+            const recordDate = new Date(record.timestamp.split(' ')[0])
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+            
+            if (transferHistoryFilters.dateFilter === 'today') {
+              const todayDate = new Date()
+              todayDate.setHours(0, 0, 0, 0)
+              matchesDate = recordDate.toDateString() === todayDate.toDateString()
+            } else if (transferHistoryFilters.dateFilter === 'yesterday') {
+              const yesterday = new Date(today)
+              yesterday.setDate(yesterday.getDate() - 1)
+              matchesDate = recordDate.toDateString() === yesterday.toDateString()
+            } else if (transferHistoryFilters.dateFilter === 'week') {
+              const weekAgo = new Date(today)
+              weekAgo.setDate(weekAgo.getDate() - 7)
+              matchesDate = recordDate >= weekAgo
+            } else if (transferHistoryFilters.dateFilter === 'custom' && transferHistoryFilters.customDate) {
+              const customDate = new Date(transferHistoryFilters.customDate)
+              matchesDate = recordDate.toDateString() === customDate.toDateString()
+            }
+            
+            // Status filter
+            const matchesStatus = transferHistoryFilters.statusFilter === 'all' || record.status === transferHistoryFilters.statusFilter
+            
+            // User ID filter
+            const matchesUserId = !transferHistoryFilters.userIdFilter || record.userId.includes(transferHistoryFilters.userIdFilter)
+            
+            return matchesDate && matchesStatus && matchesUserId
+          })
+        }
+        
+        const filteredTransferHistory = filterTransferHistory()
+        
+        const getTransferStatusBadge = (status) => {
+          switch(status) {
+            case 'Pending': return 'bg-amber-100 text-amber-700'
+            case 'Completed': return 'bg-green-100 text-green-700'
+            case 'Failed': return 'bg-red-100 text-red-700'
+            default: return 'bg-slate-100 text-slate-700'
+          }
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Coin Transfer History</h4>
+            </div>
+            
+            {/* Filters */}
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Date Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Date Filter</label>
+                  <select 
+                    value={transferHistoryFilters.dateFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, dateFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="custom">Custom Date</option>
+                  </select>
+                </div>
+                
+                {/* Custom Date */}
+                {transferHistoryFilters.dateFilter === 'custom' && (
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Date</label>
+                    <input 
+                      type="date" 
+                      value={transferHistoryFilters.customDate}
+                      onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, customDate: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    />
+                  </div>
+                )}
+                
+                {/* Status Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Status</label>
+                  <select 
+                    value={transferHistoryFilters.statusFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, statusFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Failed">Failed</option>
+                  </select>
+                </div>
+                
+                {/* User ID Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    value={transferHistoryFilters.userIdFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, userIdFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Table */}
+            <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
+                    <tr>
+                      <th className="p-4">Transaction ID</th>
+                      <th className="p-4">User ID</th>
+                      <th className="p-4">User Name</th>
+                      <th className="p-4">Coin Type</th>
+                      <th className="p-4">Coins</th>
+                      <th className="p-4">Transfer Type</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredTransferHistory.length === 0 ? (
+                      <tr>
+                        <td colSpan="8" className="p-8 text-center text-slate-500">
+                          <Send className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
+                          <div className="text-sm font-bold">No records found</div>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredTransferHistory.map((record) => (
+                        <tr key={record.transactionId} className="hover:bg-slate-50/50">
+                          <td className="p-4 font-mono font-bold text-slate-700">{record.transactionId}</td>
+                          <td className="p-4 font-mono">{record.userId}</td>
+                          <td className="p-4 font-semibold text-slate-800">{record.userName}</td>
+                          <td className="p-4">{record.coinType}</td>
+                          <td className="p-4 font-mono font-bold">{record.coins.toLocaleString()}</td>
+                          <td className="p-4">{record.transferType}</td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${getTransferStatusBadge(record.status)}`}>
+                              {record.status}
+                            </span>
+                          </td>
+                          <td className="p-4 text-xs text-slate-500">{record.timestamp}</td>
                         </tr>
                       ))
                     )}
@@ -3812,34 +3935,80 @@ export default function DiamondAgencyPage() {
           setShowSpecialIdModal(false)
           setSpecialIdSubType('')
         }
+
+        const handleAgencyIdConfirm = () => {
+          setManualRechargeForm(prev => ({ ...prev, agencyId: pendingAgencyId }))
+          setShowAgencyIdConfirm(false)
+          setPendingAgencyId('')
+        }
+
+        const handleAgencyIdCancel = () => {
+          setShowAgencyIdConfirm(false)
+          setPendingAgencyId('')
+        }
         
         return (
           <div className="space-y-4 sm:space-y-6 max-w-2xl">
-            {/* Success Confirmation */}
+            {/* Success Confirmation - eSewa Style */}
             {manualRechargeSuccess && (
-              <div className={`${manualRechargeSuccess.requiresApproval ? 'bg-amber-50 border-amber-200' : 'bg-green-50 border-green-200'} p-4 sm:p-6 rounded-2xl shadow-sm`}>
-                <div className="flex items-start gap-3">
-                  <div className={`w-10 h-10 ${manualRechargeSuccess.requiresApproval ? 'bg-amber-500' : 'bg-green-500'} rounded-full flex items-center justify-center shrink-0`}>
-                    {manualRechargeSuccess.requiresApproval ? <AlertTriangle className="w-5 h-5 text-white" /> : <CheckCircle2 className="w-5 h-5 text-white" />}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className={`font-extrabold ${manualRechargeSuccess.requiresApproval ? 'text-amber-800' : 'text-green-800'} text-sm sm:text-base`}>
-                      {manualRechargeSuccess.requiresApproval ? 'Request Submitted for Approval!' : 'Recharge Successful!'}
-                    </h4>
-                    <div className={`mt-2 space-y-1 text-xs sm:text-sm ${manualRechargeSuccess.requiresApproval ? 'text-amber-700' : 'text-green-700'}`}>
-                      <div><strong>User ID:</strong> {manualRechargeSuccess.userId}</div>
-                      <div><strong>User Name:</strong> {manualRechargeSuccess.userName}</div>
-                      <div><strong>Coins:</strong> {manualRechargeSuccess.coins.toLocaleString()}</div>
-                      <div><strong>Recharge Type:</strong> {manualRechargeSuccess.rechargeType}</div>
-                      {manualRechargeSuccess.requiresApproval && <div><strong>Request ID:</strong> {manualRechargeSuccess.requestId}</div>}
-                      {manualRechargeSuccess.requiresApproval && <div className="mt-2 font-bold">⚠️ Super Admin Approval Required</div>}
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden">
+                  <div className="bg-white p-6 flex flex-col items-center justify-center border-b border-green-100">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                      <CheckCircle2 className="w-10 h-10 text-green-500" />
                     </div>
-                    <button 
-                      onClick={() => setManualRechargeSuccess(null)}
-                      className={`mt-3 text-xs font-bold ${manualRechargeSuccess.requiresApproval ? 'text-amber-600 hover:text-amber-800' : 'text-green-600 hover:text-green-800'}`}
-                    >
-                      Dismiss
-                    </button>
+                    <h4 className="font-extrabold text-green-500 text-lg">Transaction Successful!</h4>
+                  </div>
+                  <div className="p-6 space-y-3">
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">User ID</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.userId}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">User Name</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.userName}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Recharge Type</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.rechargeType}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Status</span>
+                      <span className="px-2 py-1 rounded-lg text-xs font-bold bg-green-50 text-green-600">Completed</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Time</span>
+                      <span className="font-semibold text-slate-800 text-sm">{new Date().toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-4">
+                      <span className="text-slate-500 text-sm">Amount</span>
+                      <span className="font-bold text-green-600 text-2xl">{manualRechargeSuccess.coins.toLocaleString()}</span>
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                      <button 
+                        onClick={() => {
+                          // Add dispute notification
+                          setNotifications(prev => [{
+                            id: Date.now(),
+                            type: 'system',
+                            title: 'Recharge Dispute Filed',
+                            message: `User ${manualRechargeSuccess.userName} (ID: ${manualRechargeSuccess.userId}) has filed a dispute for ${manualRechargeSuccess.coins.toLocaleString()} coins recharge.`,
+                            time: 'Just now',
+                            read: false
+                          }, ...prev])
+                          setManualRechargeSuccess(null)
+                        }}
+                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Dispute
+                      </button>
+                      <button 
+                        onClick={() => setManualRechargeSuccess(null)}
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Done
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -3854,12 +4023,18 @@ export default function DiamondAgencyPage() {
               <form onSubmit={handleManualRechargeSubmit} className="space-y-4 sm:space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID (Auto)</label>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID</label>
                     <input 
                       type="text" 
                       value={manualRechargeForm.agencyId}
-                      readOnly
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
+                      onChange={e => {
+                        const newAgencyId = e.target.value
+                        if (newAgencyId !== manualRechargeForm.agencyId) {
+                          setPendingAgencyId(newAgencyId)
+                          setShowAgencyIdConfirm(true)
+                        }
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
                     />
                   </div>
                   <div>
@@ -3873,7 +4048,7 @@ export default function DiamondAgencyPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID (Required)</label>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
                   <input 
                     type="text" 
                     placeholder="Enter User ID" 
@@ -3894,7 +4069,7 @@ export default function DiamondAgencyPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name (Auto Fetch)</label>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name</label>
                     <input 
                       type="text" 
                       placeholder="Enter user name" 
@@ -3904,14 +4079,17 @@ export default function DiamondAgencyPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Account Type (Auto Fetch)</label>
-                    <input 
-                      type="text" 
-                      placeholder="Account type" 
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Account Type</label>
+                    <select 
                       value={manualRechargeForm.accountType}
-                      readOnly
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
-                    />
+                      onChange={e => setManualRechargeForm({...manualRechargeForm, accountType: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    >
+                      <option value="">-- Select Account Type --</option>
+                      <option value="Personal">Personal</option>
+                      <option value="Official">Official</option>
+                      <option value="Special ID">Special ID</option>
+                    </select>
                   </div>
                 </div>
                 <div>
@@ -3936,7 +4114,6 @@ export default function DiamondAgencyPage() {
                     <option value="Normal Coin">Normal Coin</option>
                     <option value="Blue Diamond">Blue Diamond</option>
                     <option value="Green Diamond">Green Diamond</option>
-                    <option value="Blue Asset">Blue Asset</option>
                     <option value="Red Game Coin">Red Game Coin</option>
                   </select>
                 </div>
@@ -4006,9 +4183,6 @@ export default function DiamondAgencyPage() {
               <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                 <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
                   <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <AlertTriangle className="w-8 h-8 text-amber-500" />
-                    </div>
                     <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Special ID Detected</h4>
                     <p className="text-slate-600 text-sm sm:text-base">
                       Please select the account type to continue with the recharge.
@@ -4037,6 +4211,37 @@ export default function DiamondAgencyPage() {
                     </button>
                     <button 
                       onClick={handleSpecialIdCancel}
+                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Agency ID Change Confirmation Modal */}
+            {showAgencyIdConfirm && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <AlertTriangle className="w-8 h-8 text-blue-500" />
+                    </div>
+                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Confirm Agency ID Change</h4>
+                    <p className="text-slate-600 text-sm sm:text-base">
+                      Are you sure you want to change the Agency ID from <span className="font-bold">{manualRechargeForm.agencyId}</span> to <span className="font-bold text-[#E51E25]">{pendingAgencyId}</span>?
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={handleAgencyIdConfirm}
+                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Confirm Change
+                    </button>
+                    <button 
+                      onClick={handleAgencyIdCancel}
                       className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
                     >
                       Cancel

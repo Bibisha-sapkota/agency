@@ -344,74 +344,13 @@ export default function DiamondAgencyPage() {
       icon: User,
       key: 'profile'
     },
-    {
-      id: 'diamond_packages',
-      label: 'Diamond Packages',
-      icon: Gem,
-      subItems: [
-        { key: 'pkg_all', label: 'All Packages' },
-        { key: 'pkg_add', label: 'Add New Package' },
-        { key: 'pkg_analytics', label: 'Sales Analytics' },
-        { key: 'pkg_settings', label: 'Package Settings' }
-      ]
-    },
-    {
-      id: 'agent_wallet',
-      label: 'Agent Wallet',
-      icon: Wallet,
-      subItems: [
-        { key: 'wallet_beans', label: 'Bean Wallet' },
-        { key: 'wallet_send', label: 'Send Coin' },
-        { key: 'wallet_loans', label: 'Loan Management' }
-      ]
-    },
+
+
     {
       id: 'recharge',
       label: 'Recharge',
       icon: RefreshCw,
       key: 'recharge'
-    },
-    {
-      id: 'withdrawals',
-      label: 'Withdrawal Approvals',
-      icon: CheckSquare,
-      key: 'withdrawals'
-    },
-    {
-      id: 'agency',
-      label: 'Diamond Agency',
-      icon: Building2,
-      subItems: [
-        { key: 'platform', label: 'Platform Integration' },
-        { key: 'create', label: 'Create New Agencies' },
-        { key: 'manage', label: 'Manage Agencies' },
-        { key: 'distribution', label: 'Coin Distribution' },
-        { key: 'expansion', label: 'Business Expansion' },
-        { key: 'revenue', label: 'Revenue Generation' },
-        { key: 'performance', label: 'Performance Metrics' },
-        { key: 'commission', label: 'Commission Payouts' },
-        { key: 'target', label: 'Target Monitoring' },
-        { key: 'settings', label: 'Agency Settings' }
-      ]
-    },
-    {
-      id: 'user_management',
-      label: 'Users & Activity',
-      icon: Users,
-      subItems: [
-        { key: 'users', label: 'User Directory' },
-        { key: 'history', label: 'Activity History' },
-        { key: 'notifications', label: 'Notifications' }
-      ]
-    },
-    {
-      id: 'system_config',
-      label: 'System Config',
-      icon: Server,
-      subItems: [
-        { key: 'sys_payment', label: 'Payment Gateway' },
-        { key: 'sys_security', label: 'Security & Audit' }
-      ]
     },
     {
       id: 'blue_diamond',

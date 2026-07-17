@@ -21,9 +21,13 @@ export default function Header({ onSelectAgencyTab }) {
       <nav className="hidden md:flex gap-6">
   <a href="/">Home</a>
   <a href="/live">Live Streaming</a>
-        <div className="relative group cursor-pointer flex items-center gap-1 hover:text-slate-200 transition-colors py-2">
+        <div className="relative cursor-pointer flex items-center gap-1 hover:text-slate-200 transition-colors py-2">
           <button
-            onClick={() => setAgencyDropdownOpen(!agencyDropdownOpen)}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              setAgencyDropdownOpen(!agencyDropdownOpen)
+            }}
             className="flex items-center gap-1 focus:outline-none"
           >
             <span>Agency</span>
@@ -32,8 +36,9 @@ export default function Header({ onSelectAgencyTab }) {
             </svg>
           </button>
 
-          {/* Dropdown Menu - works on both hover (desktop) and click (mobile) */}
-          <div className={`absolute top-full left-0 pt-2 z-50 ${agencyDropdownOpen || 'group-hover:block'} hidden md:block`}>
+          {/* Dropdown Menu - only shows on click */}
+          {agencyDropdownOpen && (
+            <div className="absolute top-full left-0 pt-2 z-50">
           <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 w-56">
             {/* Diamond Agency - navigates to separate page */}
             <Link
@@ -64,6 +69,7 @@ export default function Header({ onSelectAgencyTab }) {
             ))}
           </div>
           </div>
+          )}
         </div>
         <a href="#gaming" className="hover:text-slate-200 transition-colors">Gaming</a>
         <a href="#photo" className="hover:text-slate-200 transition-colors">Photo/Video</a>
