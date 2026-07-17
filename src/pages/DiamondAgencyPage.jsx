@@ -8,9 +8,9 @@ import {
   MapPin, Award, AlertTriangle, LayoutDashboard,
   History, Bell, Sliders, Edit, Trash2, Plus, ChevronDown,
   Lock, FileText, CheckSquare, CreditCard, Webhook, Server,
-  Terminal, ShieldCheck, PieChart
+  Terminal, ShieldCheck, PieChart, User, Search, Receipt
 } from 'lucide-react'
-import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts'
+import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 export default function DiamondAgencyPage() {
   const [activeSideTab, setActiveSideTab] = useState('pkg_all')
@@ -84,6 +84,103 @@ export default function DiamondAgencyPage() {
   ])
   const [sendCoinForm, setSendCoinForm] = useState({ agentId: 1, amount: '', note: '' })
   
+  // ---- Recharge State ----
+  const [rechargeForm, setRechargeForm] = useState({ userId: '', userName: '', coinsToAdd: '' })
+  const [agencyWallet, setAgencyWallet] = useState({ coins: 500000 })
+  const [userWallets, setUserWallets] = useState([
+    { id: 1, name: 'Aarav Shrestha', coins: 1000, accountType: 'Normal Account' },
+    { id: 2, name: 'Sima Koirala', coins: 2500, accountType: 'Official Account' },
+    { id: 3, name: 'Jay Patel', coins: 800, accountType: 'Normal Account' },
+    { id: 4, name: 'Nina Tamang', coins: 3200, accountType: 'Special ID' }
+  ])
+  const [rechargeSuccess, setRechargeSuccess] = useState(null)
+  const [paymentVerified, setPaymentVerified] = useState(false)
+
+  // ---- Profile State ----
+  const [profile, setProfile] = useState({
+    agencyId: 'AG-001',
+    agencyName: 'Diamond Agency',
+    contactNumber: '+977-9800000000',
+    email: 'admin@diamondagency.com',
+    kycStatus: 'Verified'
+  })
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
+
+  // ---- Custom Recharge Requests State ----
+  const [customRechargeRequests, setCustomRechargeRequests] = useState([
+    { id: 'CR-001', userId: '1', userName: 'Aarav Shrestha', requestedCoins: 5000, status: 'Pending', date: '2026-07-17 10:30' },
+    { id: 'CR-002', userId: '2', userName: 'Sima Koirala', requestedCoins: 3000, status: 'Pending', date: '2026-07-17 09:15' },
+    { id: 'CR-003', userId: '3', userName: 'Jay Patel', requestedCoins: 2000, status: 'Approved', date: '2026-07-16 14:20' },
+    { id: 'CR-004', userId: '4', userName: 'Nina Tamang', requestedCoins: 4000, status: 'Rejected', date: '2026-07-16 11:45' }
+  ])
+  const [requestStatusFilter, setRequestStatusFilter] = useState('all')
+  const [requestSearchTerm, setRequestSearchTerm] = useState('')
+
+  // ---- Coin Transfer State ----
+  const [coinTransferForm, setCoinTransferForm] = useState({
+    userId: '',
+    userName: '',
+    coinAmount: '',
+    coinType: 'Coin',
+    transferType: 'instant'
+  })
+  const [showTransferConfirmation, setShowTransferConfirmation] = useState(false)
+  const [transferSuccess, setTransferSuccess] = useState(null)
+
+  // ---- Recharge History State ----
+  const [rechargeHistory, setRechargeHistory] = useState([
+    { transactionId: 'TXN-001', rechargeId: 'RC-001', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Normal Coin', coinsAdded: 500, status: 'Completed', dateTime: '2026-07-17 10:30', remarks: 'Payment verified' },
+    { transactionId: 'TXN-002', rechargeId: 'RC-002', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 1000, status: 'Pending', dateTime: '2026-07-17 09:15', remarks: 'Awaiting approval' },
+    { transactionId: 'TXN-003', rechargeId: 'RC-003', userId: '3', userName: 'Jay Patel', rechargeType: 'Green Diamond', coinsAdded: 250, status: 'Failed', dateTime: '2026-07-16 14:20', remarks: 'Payment declined' },
+    { transactionId: 'TXN-004', rechargeId: 'RC-004', userId: '4', userName: 'Nina Tamang', rechargeType: 'Normal Coin', coinsAdded: 750, status: 'Completed', dateTime: '2026-07-16 11:45', remarks: 'Successful' },
+    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Red Game Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
+    { transactionId: 'TXN-006', rechargeId: 'RC-006', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 150, status: 'Completed', dateTime: '2026-07-15 08:20', remarks: 'Instant transfer' }
+  ])
+  const [historyFilters, setHistoryFilters] = useState({
+    dateFilter: 'all',
+    customDate: '',
+    statusFilter: 'all',
+    userIdFilter: ''
+  })
+
+  // ---- Coin Transfer History State ----
+  const [coinTransferHistory, setCoinTransferHistory] = useState([
+    { transactionId: 'TXF-001', userId: '1', userName: 'Aarav Shrestha', coinType: 'Coin', coins: 500, transferType: 'instant', status: 'Completed', timestamp: '2026-07-17 10:30' },
+    { transactionId: 'TXF-002', userId: '2', userName: 'Sima Koirala', coinType: 'Blue Diamond', coins: 1000, transferType: 'scheduled', status: 'Completed', timestamp: '2026-07-17 09:15' },
+    { transactionId: 'TXF-003', userId: '3', userName: 'Jay Patel', coinType: 'Red Diamond', coins: 250, transferType: 'instant', status: 'Completed', timestamp: '2026-07-16 14:20' },
+    { transactionId: 'TXF-004', userId: '4', userName: 'Nina Tamang', coinType: 'Green Diamond', coins: 750, transferType: 'bulk', status: 'Completed', timestamp: '2026-07-16 11:45' }
+  ])
+  const [transferHistoryFilters, setTransferHistoryFilters] = useState({
+    dateFilter: 'all',
+    customDate: '',
+    statusFilter: 'all',
+    userIdFilter: ''
+  })
+
+  // ---- User Lookup State ----
+  const [userLookupSearch, setUserLookupSearch] = useState('')
+  const [userLookupResult, setUserLookupResult] = useState(null)
+
+  // ---- Manual Recharge Form State ----
+  const [manualRechargeForm, setManualRechargeForm] = useState({
+    agencyId: 'AG-001',
+    agencyName: 'Diamond Agency',
+    userId: '',
+    userName: '',
+    accountType: '',
+    coinAmount: '',
+    rechargeType: 'Normal Coin',
+    remarks: '',
+    requiresApproval: false
+  })
+  const [showManualRechargeConfirm, setShowManualRechargeConfirm] = useState(false)
+  const [manualRechargeSuccess, setManualRechargeSuccess] = useState(null)
+  const [showSpecialIdModal, setShowSpecialIdModal] = useState(false)
+  const [specialIdSubType, setSpecialIdSubType] = useState('')
+  const [showAgencyIdConfirm, setShowAgencyIdConfirm] = useState(false)
+  const [pendingAgencyId, setPendingAgencyId] = useState('')
+
   // ---- Loans State ----
   const [loans] = useState([
     { id: 'LOAN-101', agent: 'Aarav Shrestha', amount: 1200, tenor: '30 days', status: 'Active', disbursed: '05 Jul 2026' },
@@ -139,10 +236,13 @@ export default function DiamondAgencyPage() {
 
   // Notifications
   const [notifications, setNotifications] = useState([
-    { id: 1, title: 'New Agency Registered', message: 'Omega Stream Team just joined your network.', time: '2 hours ago', read: false },
-    { id: 2, title: 'Commission Processed', message: '100,000 Beans successfully converted to E-Rupee.', time: '5 hours ago', read: false },
-    { id: 3, title: 'System Alert', message: 'Scheduled maintenance this weekend.', time: '1 day ago', read: true }
+    { id: 1, type: 'recharge_approved', title: 'Recharge Approved', message: 'User ID: 1234 - 500 coins successfully added to wallet.', time: '2 hours ago', read: false },
+    { id: 2, type: 'recharge_failed', title: 'Recharge Failed', message: 'User ID: 5678 - Insufficient payment verification.', time: '3 hours ago', read: false },
+    { id: 3, type: 'custom_recharge_approved', title: 'Custom Recharge Approved', message: 'User ID: 9012 - Custom request for 1000 coins approved.', time: '5 hours ago', read: false },
+    { id: 4, type: 'system', title: 'System Notification', message: 'Scheduled maintenance this weekend from 2 AM to 4 AM.', time: '1 day ago', read: true },
+    { id: 5, type: 'recharge_approved', title: 'Recharge Approved', message: 'User ID: 3456 - 250 coins successfully added to wallet.', time: '6 hours ago', read: true }
   ])
+  const [notificationFilter, setNotificationFilter] = useState('all')
 
   // Settings
   const [agencySettings, setAgencySettings] = useState({
@@ -195,9 +295,51 @@ export default function DiamondAgencyPage() {
   const menuGroups = [
     {
       id: 'dashboard',
-      label: 'Dashboard Overview',
+      label: 'Dashboard',
       icon: LayoutDashboard,
       key: 'dashboard'
+    },
+    {
+      id: 'manual_recharge',
+      label: 'Manual Recharge',
+      icon: RefreshCw,
+      key: 'manual_recharge'
+    },
+    {
+      id: 'user_lookup',
+      label: 'User Lookup',
+      icon: Search,
+      key: 'user_lookup'
+    },
+    {
+      id: 'recharge_history',
+      label: 'Recharge History',
+      icon: History,
+      key: 'recharge_history'
+    },
+    {
+      id: 'coin_transfer_history',
+      label: 'Coin Transfer History',
+      icon: Send,
+      key: 'coin_transfer_history'
+    },
+    {
+      id: 'coin_transfer',
+      label: 'Coin Transfer',
+      icon: Send,
+      key: 'coin_transfer'
+    },
+    {
+      id: 'notifications',
+      label: 'Notifications',
+      icon: Bell,
+      key: 'notifications'
+    },
+    {
+      id: 'profile',
+      label: 'Profile',
+      icon: User,
+      key: 'profile'
     },
     {
       id: 'diamond_packages',
@@ -219,6 +361,12 @@ export default function DiamondAgencyPage() {
         { key: 'wallet_send', label: 'Send Coin' },
         { key: 'wallet_loans', label: 'Loan Management' }
       ]
+    },
+    {
+      id: 'recharge',
+      label: 'Recharge',
+      icon: RefreshCw,
+      key: 'recharge'
     },
     {
       id: 'withdrawals',
@@ -917,6 +1065,169 @@ export default function DiamondAgencyPage() {
           </div>
         )
 
+      case 'recharge':
+        const handleRecharge = (e) => {
+          e.preventDefault()
+          
+          // Validate payment verification
+          if (!paymentVerified) {
+            alert('Please verify payment first!')
+            return
+          }
+          
+          // Validate form
+          if (!rechargeForm.userId || !rechargeForm.coinsToAdd) {
+            alert('Please fill all required fields!')
+            return
+          }
+          
+          const coinsToAdd = Number(rechargeForm.coinsToAdd)
+          const userId = Number(rechargeForm.userId)
+          
+          // Check if agency has enough coins
+          if (agencyWallet.coins < coinsToAdd) {
+            alert('Insufficient coins in Agency Wallet!')
+            return
+          }
+          
+          // Deduct from agency wallet
+          setAgencyWallet(prev => ({ coins: prev.coins - coinsToAdd }))
+          
+          // Credit to user wallet
+          setUserWallets(prev => prev.map(user => {
+            if (user.id === userId) {
+              return { ...user, coins: user.coins + coinsToAdd }
+            }
+            return user
+          }))
+          
+          // Show success confirmation
+          setRechargeSuccess({
+            userId: rechargeForm.userId,
+            userName: rechargeForm.userName,
+            coins: coinsToAdd,
+            timestamp: new Date().toLocaleString()
+          })
+          
+          // Reset form
+          setRechargeForm({ userId: '', userName: '', coinsToAdd: '' })
+          setPaymentVerified(false)
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            {/* Success Confirmation */}
+            {rechargeSuccess && (
+              <div className="bg-green-50 border border-green-200 p-4 sm:p-6 rounded-2xl shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-extrabold text-green-800 text-sm sm:text-base">Recharge Successful!</h4>
+                    <div className="mt-2 space-y-1 text-xs sm:text-sm text-green-700">
+                      <div><strong>User ID:</strong> {rechargeSuccess.userId}</div>
+                      <div><strong>User Name:</strong> {rechargeSuccess.userName}</div>
+                      <div><strong>Coins Added:</strong> {rechargeSuccess.coins.toLocaleString()}</div>
+                      <div><strong>Time:</strong> {rechargeSuccess.timestamp}</div>
+                    </div>
+                    <button 
+                      onClick={() => setRechargeSuccess(null)}
+                      className="mt-3 text-xs font-bold text-green-600 hover:text-green-800"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recharge</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Add coins to a user's wallet.</p>
+              </div>
+              
+              {/* Payment Verification Step */}
+              <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-amber-800 text-sm">Payment Verification</div>
+                    <div className="text-xs text-amber-600 mt-1">Verify payment from agency user before recharge</div>
+                  </div>
+                  <button 
+                    onClick={() => setPaymentVerified(!paymentVerified)}
+                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
+                      paymentVerified 
+                        ? 'bg-green-500 text-white' 
+                        : 'bg-amber-200 text-amber-800 hover:bg-amber-300'
+                    }`}
+                  >
+                    {paymentVerified ? 'Verified ✓' : 'Verify Payment'}
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleRecharge} className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID (Required)</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    required
+                    value={rechargeForm.userId}
+                    onChange={e => {
+                      setRechargeForm({...rechargeForm, userId: e.target.value})
+                      // Auto-fetch user name based on user ID
+                      const user = userWallets.find(u => u.id === Number(e.target.value))
+                      if (user) {
+                        setRechargeForm(prev => ({ ...prev, userName: user.name }))
+                      } else {
+                        setRechargeForm(prev => ({ ...prev, userName: '' }))
+                      }
+                    }}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter user name" 
+                    value={rechargeForm.userName}
+                    onChange={e=>setRechargeForm({...rechargeForm, userName: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Coins to Add (Required)</label>
+                  <input 
+                    type="number" 
+                    placeholder="Enter coins to add" 
+                    required
+                    value={rechargeForm.coinsToAdd}
+                    onChange={e=>setRechargeForm({...rechargeForm, coinsToAdd: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div className="pt-2">
+                  <button 
+                    type="submit" 
+                    disabled={!paymentVerified}
+                    className={`w-full py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2 ${
+                      paymentVerified 
+                        ? 'bg-[#E51E25] hover:bg-[#c4161c] text-white' 
+                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    }`}
+                  >
+                    <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Recharge
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )
+
       case 'wallet_loans':
         return (
           <div className="space-y-4 sm:space-y-6">
@@ -990,50 +1301,62 @@ export default function DiamondAgencyPage() {
         )
 
       case 'dashboard':
-        // Prepare pie chart data
-        const pieData = [
-          { name: 'Active Agencies', value: subAgencies.filter(a => a.status === 'Active').length, color: '#10B981' },
-          { name: 'Suspended Agencies', value: subAgencies.filter(a => a.status === 'Suspended').length, color: '#EF4444' },
-          { name: 'Total E-Rupees', value: subAgencies.reduce((acc, a) => acc + a.coins, 0) / 1000, color: '#3B82F6' },
-          { name: 'Commission Beans', value: availableCommission / 1000, color: '#8B5CF6' }
+        // Calculate dashboard metrics
+        const totalUsersRecharged = new Set(rechargeHistory.map(r => r.userId)).size
+        const today = new Date().toISOString().split('T')[0]
+        const todayRecharge = rechargeHistory.filter(r => r.dateTime.startsWith(today)).length
+        const pendingRecharge = customRechargeRequests.filter(r => r.status === 'Pending').length
+        const completedRecharge = rechargeHistory.filter(r => r.status === 'Completed').length
+        const failedRecharge = rechargeHistory.filter(r => r.status === 'Failed').length
+        const agencyStatus = agencyWallet.coins > 100000 ? 'Active' : 'Low Balance'
+
+        // Prepare pie chart data for recharge types
+        const rechargeTypeData = [
+          { name: 'Normal Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Normal Coin').length, color: '#3B82F6' },
+          { name: 'Blue Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Blue Diamond').length, color: '#06B6D4' },
+          { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' },
+          { name: 'Red Game Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Red Game Coin').length, color: '#EF4444' }
         ]
 
-        const regionData = [
-          { name: 'Nepal', value: subAgencies.filter(a => a.region === 'Nepal').length, color: '#F59E0B' },
-          { name: 'India', value: subAgencies.filter(a => a.region === 'India').length, color: '#06B6D4' },
-          { name: 'Global', value: subAgencies.filter(a => a.region === 'Global').length, color: '#EC4899' }
+        // Prepare bar chart data for daily recharge
+        const dailyRechargeData = [
+          { name: 'Mon', value: 15 },
+          { name: 'Tue', value: 23 },
+          { name: 'Wed', value: 18 },
+          { name: 'Thu', value: 29 },
+          { name: 'Fri', value: 35 },
+          { name: 'Sat', value: 42 },
+          { name: 'Sun', value: 38 }
         ]
 
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
               {[
-                { label: 'Total Sub-Agencies', value: subAgencies.length, icon: Building2, color: 'text-blue-500', bg: 'bg-blue-50' },
-                { label: 'Total E-Rupees', value: subAgencies.reduce((acc, a) => acc + a.coins, 0).toLocaleString(), icon: Banknote, color: 'text-green-500', bg: 'bg-green-50' },
-                { label: 'Active Agencies', value: subAgencies.filter(a => a.status === 'Active').length, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-50' },
-                { label: 'Commission (Beans)', value: availableCommission.toLocaleString(), icon: Wallet, color: 'text-purple-500', bg: 'bg-purple-50' }
+                { label: 'Total Users Recharged', value: totalUsersRecharged, icon: Users, color: 'text-blue-500', bg: 'bg-blue-50' },
+                { label: "Today's Recharge", value: todayRecharge, icon: Banknote, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+                { label: 'Pending Recharge', value: pendingRecharge, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50' },
+                { label: 'Completed Recharge', value: completedRecharge, icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-50' },
+                { label: 'Failed Recharge', value: failedRecharge, icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' },
+                { label: 'Agency Status', value: agencyStatus, icon: ShieldCheck, color: agencyStatus === 'Active' ? 'text-green-500' : 'text-red-500', bg: agencyStatus === 'Active' ? 'bg-green-50' : 'bg-red-50' }
               ].map((stat, idx) => (
-                <div key={idx} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2 sm:gap-4">
-                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${stat.bg} shrink-0`}>
-                    <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-lg sm:text-2xl font-black text-slate-800 truncate">{stat.value}</div>
-                    <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">{stat.label}</div>
-                  </div>
+                <div key={idx} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center gap-1">
+                  <div className="text-lg sm:text-2xl font-black text-slate-800 truncate">{stat.value}</div>
+                  <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">{stat.label}</div>
                 </div>
               ))}
             </div>
 
+            {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              {/* Pie Chart - Agency Distribution */}
+              {/* Pie Chart - Recharge Types */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Agency Distribution</h4>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recharge Types</h4>
                 <div className="h-48 sm:h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsPieChart>
                       <Pie
-                        data={pieData}
+                        data={rechargeTypeData}
                         cx="50%"
                         cy="50%"
                         innerRadius={30}
@@ -1041,11 +1364,11 @@ export default function DiamondAgencyPage() {
                         paddingAngle={5}
                         dataKey="value"
                       >
-                        {pieData.map((entry, index) => (
+                        {rechargeTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => [value.toLocaleString(), '']} />
+                      <Tooltip formatter={(value) => [value, 'Recharges']} />
                       <Legend
                         verticalAlign="bottom"
                         height={36}
@@ -1058,166 +1381,103 @@ export default function DiamondAgencyPage() {
                 </div>
               </div>
 
-              {/* Pie Chart - Regional Distribution */}
+              {/* Bar Chart - Daily Recharge */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Regional Distribution</h4>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Daily Recharge Trend</h4>
                 <div className="h-48 sm:h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <RechartsPieChart>
-                      <Pie
-                        data={regionData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={30}
-                        outerRadius={60}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {regionData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={(value) => [value, 'Agencies']} />
-                      <Legend
-                        verticalAlign="bottom"
-                        height={36}
-                        formatter={(value, entry) => (
-                          <span className="text-[10px] sm:text-xs font-semibold text-slate-600">{value}</span>
-                        )}
-                      />
-                    </RechartsPieChart>
+                    <BarChart data={dailyRechargeData}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+                      <YAxis tick={{ fontSize: 10 }} />
+                      <Tooltip formatter={(value) => [value, 'Recharges']} />
+                      <Bar dataKey="value" fill="#E51E25" radius={[4, 4, 0, 0]} />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              {/* Recent Agencies */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recent Agencies</h4>
-                  <button onClick={() => setActiveSideTab('manage')} className="text-xs font-bold text-[#E51E25] hover:underline">View All</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {subAgencies.slice(0, 3).map(a => (
-                    <div key={a.id} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{a.name}</div>
-                        <div className="text-xs text-slate-500 truncate">{a.head} • {a.region}</div>
-                      </div>
-                      <span className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-full font-bold shrink-0 ml-2 ${a.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
-                        {a.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+            {/* Manual Recharge List */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recent Manual Recharges</h4>
+                <button onClick={() => setActiveSideTab('recharge_history')} className="text-xs font-bold text-[#E51E25] hover:underline">View All</button>
               </div>
-
-              {/* Recent Distributions */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recent Transfers</h4>
-                  <button onClick={() => setActiveSideTab('distribution')} className="text-xs font-bold text-[#E51E25] hover:underline">View Ledger</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {distributionLedger.slice(0, 3).map((log, idx) => (
-                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{log.target}</div>
-                        <div className="text-xs text-slate-500 truncate">{log.date}</div>
-                      </div>
-                      <div className="font-mono font-bold text-[#E51E25] shrink-0 ml-2 text-xs sm:text-sm">{log.amount}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Additional Data Lists */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-              {/* Commission History */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Award className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Commission History</h4>
-                  <button onClick={() => setActiveSideTab('commission')} className="text-xs font-bold text-[#E51E25] hover:underline">View All</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {commissionHistory.slice(0, 3).map((cp, idx) => (
-                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{cp.agency}</div>
-                        <div className="text-xs text-slate-500">{cp.type} • {cp.date}</div>
-                      </div>
-                      <div className="text-right shrink-0 ml-2">
-                        <div className="font-mono font-bold text-slate-800 text-xs sm:text-sm">{cp.beans.toLocaleString()} Beans</div>
-                        <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
-                          cp.status === 'Paid' ? 'bg-green-50 text-green-600' :
-                          cp.status === 'Processing' ? 'bg-blue-50 text-blue-600' :
-                          'bg-amber-50 text-amber-600'
-                        }`}>{cp.status}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Loan Status */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Loan Status</h4>
-                  <button onClick={() => setActiveSideTab('wallet_loans')} className="text-xs font-bold text-[#E51E25] hover:underline">Manage Loans</button>
-                </div>
-                <div className="divide-y divide-slate-100">
-                  {loans.slice(0, 3).map((loan, idx) => (
-                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
-                      <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{loan.agent}</div>
-                        <div className="text-xs text-slate-500">{loan.tenor} • {loan.disbursed}</div>
-                      </div>
-                      <div className="text-right shrink-0 ml-2">
-                        <div className="font-mono font-bold text-slate-800 text-xs sm:text-sm">${loan.amount.toLocaleString()}</div>
-                        <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
-                          loan.status === 'Active' ? 'bg-green-50 text-green-600' :
-                          loan.status === 'Approved' ? 'bg-blue-50 text-blue-600' :
-                          'bg-amber-50 text-amber-600'
-                        }`}>{loan.status}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr>
+                      <th className="p-3 sm:p-4">Transaction ID</th>
+                      <th className="p-3 sm:p-4">User ID</th>
+                      <th className="p-3 sm:p-4">User Name</th>
+                      <th className="p-3 sm:p-4">Recharge Type</th>
+                      <th className="p-3 sm:p-4">Coins</th>
+                      <th className="p-3 sm:p-4">Status</th>
+                      <th className="p-3 sm:p-4">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {rechargeHistory.slice(0, 5).map((record, idx) => (
+                      <tr key={idx} className="hover:bg-slate-50">
+                        <td className="p-3 sm:p-4 font-mono text-slate-600">{record.transactionId}</td>
+                        <td className="p-3 sm:p-4 font-semibold text-slate-800">{record.userId}</td>
+                        <td className="p-3 sm:p-4 text-slate-600">{record.userName}</td>
+                        <td className="p-3 sm:p-4 text-slate-600">{record.rechargeType}</td>
+                        <td className="p-3 sm:p-4 font-mono font-bold text-[#E51E25]">{record.coinsAdded.toLocaleString()}</td>
+                        <td className="p-3 sm:p-4">
+                          <span className={`px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${
+                            record.status === 'Completed' ? 'bg-green-50 text-green-600' :
+                            record.status === 'Pending' ? 'bg-amber-50 text-amber-600' :
+                            record.status === 'Failed' ? 'bg-red-50 text-red-600' :
+                            'bg-slate-50 text-slate-600'
+                          }`}>
+                            {record.status}
+                          </span>
+                        </td>
+                        <td className="p-3 sm:p-4 text-slate-500 text-[10px] sm:text-xs">{record.dateTime}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
+          </div>
+        )
 
-            {/* Performance Metrics */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
-              <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Performance Metrics</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Sales</div>
-                  <div className="text-lg sm:text-xl font-black text-slate-800">{targetSales.toLocaleString()}</div>
-                  <div className="w-full bg-slate-200 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-[#E51E25] h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min(100, (currentSales / targetSales) * 100)}%` }}
-                    ></div>
-                  </div>
-                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">{Math.round((currentSales / targetSales) * 100)}% achieved</div>
-                </div>
-                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Current Sales</div>
-                  <div className="text-lg sm:text-xl font-black text-green-600">{currentSales.toLocaleString()}</div>
-                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">vs target: {targetSales.toLocaleString()}</div>
-                </div>
-                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Packages</div>
-                  <div className="text-lg sm:text-xl font-black text-slate-800">{packages.length}</div>
-                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">{activePackages} active</div>
-                </div>
-                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Orders</div>
-                  <div className="text-lg sm:text-xl font-black text-slate-800">{totalOrders.toLocaleString()}</div>
-                  <div className="text-[10px] sm:text-xs text-green-600 mt-1">↑ vs last month</div>
-                </div>
+      case 'pkg_all':
+        return (
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Gem className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> All Packages</h4>
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Manage all diamond packages available for users.</p>
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-[10px] sm:text-xs uppercase">
+                    <tr>
+                      <th className="p-3 sm:p-4">Package Name</th>
+                    <th className="p-3 sm:p-4">Coins</th>
+                    <th className="p-3 sm:p-4">Price</th>
+                    <th className="p-3 sm:p-4">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {packages.map((pkg, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50">
+                      <td className="p-3 sm:p-4 font-semibold text-slate-800">{pkg.name}</td>
+                      <td className="p-3 sm:p-4 font-mono">{pkg.coins.toLocaleString()}</td>
+                      <td className="p-3 sm:p-4 font-mono">{pkg.price}</td>
+                      <td className="p-3 sm:p-4">
+                        <span className={`px-2 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${pkg.active ? 'bg-green-50 text-green-600' : 'bg-slate-50 text-slate-500'}`}>
+                          {pkg.active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
               </div>
             </div>
           </div>
@@ -2143,38 +2403,106 @@ export default function DiamondAgencyPage() {
         )
 
       case 'notifications':
+        const filteredNotifications = notificationFilter === 'all' 
+          ? notifications 
+          : notifications.filter(n => n.type === notificationFilter)
+        
+        const getNotificationIcon = (type) => {
+          switch(type) {
+            case 'recharge_approved': return <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+            case 'recharge_failed': return <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+            case 'custom_recharge_approved': return <Award className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+            case 'system': return <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600" />
+            default: return <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+          }
+        }
+        
+        const getNotificationColor = (type) => {
+          switch(type) {
+            case 'recharge_approved': return 'bg-green-50 border-green-200'
+            case 'recharge_failed': return 'bg-red-50 border-red-200'
+            case 'custom_recharge_approved': return 'bg-blue-50 border-blue-200'
+            case 'system': return 'bg-amber-50 border-amber-200'
+            default: return 'bg-white border-slate-100'
+          }
+        }
+        
+        const markAsRead = (id) => {
+          setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n))
+        }
+        
+        const markAllAsRead = () => {
+          setNotifications(notifications.map(n => ({ ...n, read: true })))
+        }
+        
         return (
           <div className="space-y-4 sm:space-y-6">
-            <div className="flex justify-between items-center mb-3 sm:mb-4">
-              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Bell className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Inbox</h4>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Bell className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Notifications</h4>
               <button
-                onClick={() => setNotifications(notifications.map(n => ({ ...n, read: true })))}
+                onClick={markAllAsRead}
                 className="text-[10px] sm:text-xs font-bold text-[#E51E25] hover:underline"
               >
                 Mark all as read
               </button>
             </div>
-            <div className="space-y-2 sm:space-y-3">
-              {notifications.map((notif) => (
-                <div key={notif.id} className={`p-4 sm:p-5 rounded-2xl border transition-all flex items-start gap-3 sm:gap-4 ${notif.read ? 'bg-white border-slate-100 shadow-sm' : 'bg-red-50/50 border-red-100 shadow-sm'}`}>
-                  <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full mt-2 shrink-0 ${notif.read ? 'bg-slate-200' : 'bg-[#E51E25]'}`}></div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div className="font-bold text-slate-800 text-xs sm:text-sm">{notif.title}</div>
-                      <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">{notif.time}</div>
-                    </div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-1">{notif.message}</div>
-                    {!notif.read && (
-                      <button
-                        onClick={() => setNotifications(notifications.map(n => n.id === notif.id ? { ...n, read: true } : n))}
-                        className="mt-2 sm:mt-3 text-[10px] sm:text-xs font-bold text-[#E51E25] bg-red-100 px-2 sm:px-3 py-1 rounded-lg hover:bg-red-200 transition-colors"
-                      >
-                        Mark as read
-                      </button>
-                    )}
-                  </div>
-                </div>
+            
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { value: 'all', label: 'All' },
+                { value: 'recharge_approved', label: 'Recharge Approved' },
+                { value: 'recharge_failed', label: 'Recharge Failed' },
+                { value: 'custom_recharge_approved', label: 'Custom Recharge Approved' },
+                { value: 'system', label: 'System' }
+              ].map(filter => (
+                <button
+                  key={filter.value}
+                  onClick={() => setNotificationFilter(filter.value)}
+                  className={`px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all ${
+                    notificationFilter === filter.value
+                      ? 'bg-[#E51E25] text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {filter.label}
+                </button>
               ))}
+            </div>
+            
+            <div className="space-y-2 sm:space-y-3">
+              {filteredNotifications.length === 0 ? (
+                <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm text-center">
+                  <Bell className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
+                  <div className="text-sm font-bold text-slate-500">No notifications found</div>
+                </div>
+              ) : (
+                filteredNotifications.map((notif) => (
+                  <div 
+                    key={notif.id} 
+                    className={`p-4 sm:p-5 rounded-2xl border transition-all flex items-start gap-3 sm:gap-4 ${notif.read ? 'bg-white border-slate-100 shadow-sm' : getNotificationColor(notif.type)}`}
+                  >
+                    <div className="shrink-0 mt-0.5">
+                      {getNotificationIcon(notif.type)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start">
+                        <div className="font-bold text-slate-800 text-xs sm:text-sm">{notif.title}</div>
+                        <div className="text-[9px] sm:text-[10px] font-bold text-slate-400 uppercase tracking-wider">{notif.time}</div>
+                      </div>
+                      <div className="text-xs sm:text-sm text-slate-600 mt-1">{notif.message}</div>
+                      {!notif.read && (
+                        <button
+                          onClick={() => markAsRead(notif.id)}
+                          className="mt-2 sm:mt-3 text-[10px] sm:text-xs font-bold text-[#E51E25] bg-red-100 px-2 sm:px-3 py-1 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          Mark as read
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )
@@ -2427,6 +2755,1286 @@ export default function DiamondAgencyPage() {
           </div>
         )
 
+      case 'profile':
+        const handlePasswordChange = (e) => {
+          e.preventDefault()
+          
+          // Validate password form
+          if (!passwordForm.currentPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+            alert('Please fill all password fields!')
+            return
+          }
+          
+          if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            alert('New password and confirm password do not match!')
+            return
+          }
+          
+          if (passwordForm.newPassword.length < 6) {
+            alert('Password must be at least 6 characters!')
+            return
+          }
+          
+          // Simulate password change
+          setPasswordSuccess(true)
+          setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+          
+          setTimeout(() => setPasswordSuccess(false), 3000)
+        }
+        
+        const handleProfileUpdate = (field, value) => {
+          setProfile(prev => ({ ...prev, [field]: value }))
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><User className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Profile</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Manage your agency profile information.</p>
+              </div>
+              
+              <div className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID</label>
+                  <input 
+                    type="text" 
+                    value={profile.agencyId}
+                    readOnly
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency Name</label>
+                  <input 
+                    type="text" 
+                    value={profile.agencyName}
+                    onChange={(e) => handleProfileUpdate('agencyName', e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Contact Number</label>
+                  <input 
+                    type="text" 
+                    value={profile.contactNumber}
+                    onChange={(e) => handleProfileUpdate('contactNumber', e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    value={profile.email}
+                    onChange={(e) => handleProfileUpdate('email', e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">KYC Status</label>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-3 py-1.5 rounded-lg text-xs font-bold ${
+                      profile.kycStatus === 'Verified' 
+                        ? 'bg-green-100 text-green-700' 
+                        : 'bg-amber-100 text-amber-700'
+                    }`}>
+                      {profile.kycStatus}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Password Change Section */}
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><Lock className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Password Change</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Update your account password.</p>
+              </div>
+              
+              {passwordSuccess && (
+                <div className="bg-green-50 border border-green-200 p-3 sm:p-4 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                    <span className="text-xs sm:text-sm font-bold text-green-800">Password changed successfully!</span>
+                  </div>
+                </div>
+              )}
+              
+              <form onSubmit={handlePasswordChange} className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Current Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="Enter current password"
+                    value={passwordForm.currentPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">New Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="Enter new password"
+                    value={passwordForm.newPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Confirm New Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="Confirm new password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div className="pt-2">
+                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Change Password
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )
+
+      case 'coin_transfer':
+        const handleCoinTransferConfirm = () => {
+          const coinsToTransfer = Number(coinTransferForm.coinAmount)
+          const userId = Number(coinTransferForm.userId)
+          
+          // Check if agency has enough coins
+          if (agencyWallet.coins < coinsToTransfer) {
+            alert('Insufficient coins in Agency Wallet!')
+            setShowTransferConfirmation(false)
+            return
+          }
+          
+          // Deduct from agency wallet
+          setAgencyWallet(prev => ({ coins: prev.coins - coinsToTransfer }))
+          
+          // Credit to user wallet
+          setUserWallets(prev => prev.map(user => {
+            if (user.id === userId) {
+              return { ...user, coins: user.coins + coinsToTransfer }
+            }
+            return user
+          }))
+          
+          // Show success message
+          setTransferSuccess({
+            userId: coinTransferForm.userId,
+            userName: coinTransferForm.userName,
+            coins: coinsToTransfer,
+            coinType: coinTransferForm.coinType,
+            transferType: coinTransferForm.transferType,
+            timestamp: new Date().toLocaleString()
+          })
+          
+          // Reset form and close confirmation
+          setCoinTransferForm({ userId: '', userName: '', coinAmount: '', coinType: 'Coin', transferType: 'instant' })
+          setShowTransferConfirmation(false)
+        }
+        
+        const handleCoinTransferCancel = () => {
+          setShowTransferConfirmation(false)
+        }
+        
+        const handleCoinTransferSubmit = (e) => {
+          e.preventDefault()
+          
+          // Validate form
+          if (!coinTransferForm.userId || !coinTransferForm.coinAmount) {
+            alert('Please fill all required fields!')
+            return
+          }
+          
+          if (Number(coinTransferForm.coinAmount) <= 0) {
+            alert('Coin amount must be greater than 0!')
+            return
+          }
+          
+          // Show confirmation popup
+          setShowTransferConfirmation(true)
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            {/* Success Confirmation */}
+            {transferSuccess && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden">
+                  <div className="bg-white p-6 flex flex-col items-center justify-center border-b border-green-100">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                      <CheckCircle2 className="w-10 h-10 text-green-500" />
+                    </div>
+                    <h4 className="font-extrabold text-green-500 text-lg">Transaction Successful!</h4>
+                  </div>
+                  <div className="p-6 space-y-3">
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Transferred To</span>
+                      <span className="font-semibold text-slate-800 text-sm">{transferSuccess.userName}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Coin Type</span>
+                      <span className="font-semibold text-slate-800 text-sm">{transferSuccess.coinType}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Status</span>
+                      <span className="px-2 py-1 rounded-lg text-xs font-bold bg-green-50 text-green-600">Completed</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Transfer Type</span>
+                      <span className="font-semibold text-slate-800 text-sm">{transferSuccess.transferType}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Time</span>
+                      <span className="font-semibold text-slate-800 text-sm">{transferSuccess.timestamp}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-4">
+                      <span className="text-slate-500 text-sm">Amount</span>
+                      <span className="font-bold text-green-600 text-2xl">{transferSuccess.coins.toLocaleString()}</span>
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                      <button 
+                        onClick={() => {
+                          // Add dispute notification
+                          setNotifications(prev => [{
+                            id: Date.now(),
+                            type: 'system',
+                            title: 'Transfer Dispute Filed',
+                            message: `User ${transferSuccess.userName} (ID: ${transferSuccess.userId}) has filed a dispute for ${transferSuccess.coins.toLocaleString()} coins transfer.`,
+                            time: 'Just now',
+                            read: false
+                          }, ...prev])
+                          setTransferSuccess(null)
+                        }}
+                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Dispute
+                      </button>
+                      <button 
+                        onClick={() => setTransferSuccess(null)}
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">Coin Transfer</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Transfer coins from Agency Wallet to User Wallet.</p>
+              </div>
+              
+              <form onSubmit={handleCoinTransferSubmit} className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    required
+                    value={coinTransferForm.userId}
+                    onChange={e => {
+                      setCoinTransferForm({...coinTransferForm, userId: e.target.value})
+                      // Auto-fetch user name based on user ID
+                      const user = userWallets.find(u => u.id === Number(e.target.value))
+                      if (user) {
+                        setCoinTransferForm(prev => ({ ...prev, userName: user.name }))
+                      } else {
+                        setCoinTransferForm(prev => ({ ...prev, userName: '' }))
+                      }
+                    }}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter user name" 
+                    value={coinTransferForm.userName}
+                    onChange={e=>setCoinTransferForm({...coinTransferForm, userName: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Coin Amount</label>
+                  <input 
+                    type="number" 
+                    placeholder="Enter coin amount" 
+                    required
+                    min="1"
+                    value={coinTransferForm.coinAmount}
+                    onChange={e=>setCoinTransferForm({...coinTransferForm, coinAmount: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Type of RC </label>
+                  <select 
+                    value={coinTransferForm.coinType}
+                    onChange={e=>setCoinTransferForm({...coinTransferForm, coinType: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="Coin">Coin</option>
+                    <option value="Blue Diamond">Blue Diamond 💎</option>
+                    <option value="Red Diamond">Red Diamond 💎</option>
+                    <option value="Green Diamond">Green Diamond 💎</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Transfer Type</label>
+                  <select 
+                    value={coinTransferForm.transferType}
+                    onChange={e=>setCoinTransferForm({...coinTransferForm, transferType: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="instant">Instant Transfer</option>
+                    <option value="scheduled">Scheduled Transfer</option>
+                    <option value="bulk">Bulk Transfer</option>
+                  </select>
+                </div>
+                <div className="pt-2 flex gap-3">
+                  <button 
+                    type="submit" 
+                    className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                  >
+                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Confirm
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setCoinTransferForm({ userId: '', userName: '', coinAmount: '', coinType: 'Coin', transferType: 'instant' })}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Confirmation Popup */}
+            {showTransferConfirmation && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                  <div className="text-center">
+                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Confirm Transfer</h4>
+                    <p className="text-slate-600 text-sm sm:text-base mb-6">
+                      Are you sure you want to transfer <span className="font-bold text-[#E51E25]">{Number(coinTransferForm.coinAmount).toLocaleString()} Coins</span> to User <span className="font-bold">{coinTransferForm.userName}</span> (ID: {coinTransferForm.userId})?
+                    </p>
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={handleCoinTransferConfirm}
+                        className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Yes, Transfer
+                      </button>
+                      <button 
+                        onClick={handleCoinTransferCancel}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+
+      case 'recharge_history':
+        const filterRechargeHistory = () => {
+          return rechargeHistory.filter(record => {
+            // Date filter
+            let matchesDate = true
+            const recordDate = new Date(record.dateTime.split(' ')[0])
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+            
+            if (historyFilters.dateFilter === 'today') {
+              const todayDate = new Date()
+              todayDate.setHours(0, 0, 0, 0)
+              matchesDate = recordDate.toDateString() === todayDate.toDateString()
+            } else if (historyFilters.dateFilter === 'yesterday') {
+              const yesterday = new Date(today)
+              yesterday.setDate(yesterday.getDate() - 1)
+              matchesDate = recordDate.toDateString() === yesterday.toDateString()
+            } else if (historyFilters.dateFilter === 'week') {
+              const weekAgo = new Date(today)
+              weekAgo.setDate(weekAgo.getDate() - 7)
+              matchesDate = recordDate >= weekAgo
+            } else if (historyFilters.dateFilter === 'custom' && historyFilters.customDate) {
+              const customDate = new Date(historyFilters.customDate)
+              matchesDate = recordDate.toDateString() === customDate.toDateString()
+            }
+            
+            // Status filter
+            const matchesStatus = historyFilters.statusFilter === 'all' || record.status === historyFilters.statusFilter
+            
+            // User ID filter
+            const matchesUserId = !historyFilters.userIdFilter || record.userId.includes(historyFilters.userIdFilter)
+            
+            return matchesDate && matchesStatus && matchesUserId
+          })
+        }
+        
+        const filteredHistory = filterRechargeHistory()
+        
+        const getHistoryStatusBadge = (status) => {
+          switch(status) {
+            case 'Pending': return 'bg-amber-100 text-amber-700'
+            case 'Completed': return 'bg-green-100 text-green-700'
+            case 'Failed': return 'bg-red-100 text-red-700'
+            case 'Refunded': return 'bg-slate-100 text-slate-700'
+            default: return 'bg-slate-100 text-slate-700'
+          }
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><History className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recharge History</h4>
+            </div>
+            
+            {/* Filters */}
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Date Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Date Filter</label>
+                  <select 
+                    value={historyFilters.dateFilter}
+                    onChange={(e) => setHistoryFilters({...historyFilters, dateFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="custom">Custom Date</option>
+                  </select>
+                </div>
+                
+                {/* Custom Date */}
+                {historyFilters.dateFilter === 'custom' && (
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Date</label>
+                    <input 
+                      type="date" 
+                      value={historyFilters.customDate}
+                      onChange={(e) => setHistoryFilters({...historyFilters, customDate: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    />
+                  </div>
+                )}
+                
+                {/* Status Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Status</label>
+                  <select 
+                    value={historyFilters.statusFilter}
+                    onChange={(e) => setHistoryFilters({...historyFilters, statusFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Failed">Failed</option>
+                    <option value="Refunded">Refunded</option>
+                  </select>
+                </div>
+                
+                {/* User ID Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    value={historyFilters.userIdFilter}
+                    onChange={(e) => setHistoryFilters({...historyFilters, userIdFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Table */}
+            <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
+                    <tr>
+                      <th className="p-4">Transaction ID</th>
+                      <th className="p-4">Recharge ID</th>
+                      <th className="p-4">User ID</th>
+                      <th className="p-4">User Name</th>
+                      <th className="p-4">Recharge Type</th>
+                      <th className="p-4">Coins Added</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4">Date & Time</th>
+                      <th className="p-4">Remarks</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredHistory.length === 0 ? (
+                      <tr>
+                        <td colSpan="9" className="p-8 text-center text-slate-500">
+                          <History className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
+                          <div className="text-sm font-bold">No records found</div>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredHistory.map((record) => (
+                        <tr key={record.transactionId} className="hover:bg-slate-50/50">
+                          <td className="p-4 font-mono font-bold text-slate-700">{record.transactionId}</td>
+                          <td className="p-4 font-mono">{record.rechargeId}</td>
+                          <td className="p-4 font-mono">{record.userId}</td>
+                          <td className="p-4 font-semibold text-slate-800">{record.userName}</td>
+                          <td className="p-4">{record.rechargeType}</td>
+                          <td className="p-4 font-mono font-bold">{record.coinsAdded.toLocaleString()}</td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${getHistoryStatusBadge(record.status)}`}>
+                              {record.status}
+                            </span>
+                          </td>
+                          <td className="p-4 text-xs text-slate-500">{record.dateTime}</td>
+                          <td className="p-4 text-xs text-slate-600">{record.remarks}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'coin_transfer_history':
+        const filterTransferHistory = () => {
+          return coinTransferHistory.filter(record => {
+            // Date filter
+            let matchesDate = true
+            const recordDate = new Date(record.timestamp.split(' ')[0])
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+            
+            if (transferHistoryFilters.dateFilter === 'today') {
+              const todayDate = new Date()
+              todayDate.setHours(0, 0, 0, 0)
+              matchesDate = recordDate.toDateString() === todayDate.toDateString()
+            } else if (transferHistoryFilters.dateFilter === 'yesterday') {
+              const yesterday = new Date(today)
+              yesterday.setDate(yesterday.getDate() - 1)
+              matchesDate = recordDate.toDateString() === yesterday.toDateString()
+            } else if (transferHistoryFilters.dateFilter === 'week') {
+              const weekAgo = new Date(today)
+              weekAgo.setDate(weekAgo.getDate() - 7)
+              matchesDate = recordDate >= weekAgo
+            } else if (transferHistoryFilters.dateFilter === 'custom' && transferHistoryFilters.customDate) {
+              const customDate = new Date(transferHistoryFilters.customDate)
+              matchesDate = recordDate.toDateString() === customDate.toDateString()
+            }
+            
+            // Status filter
+            const matchesStatus = transferHistoryFilters.statusFilter === 'all' || record.status === transferHistoryFilters.statusFilter
+            
+            // User ID filter
+            const matchesUserId = !transferHistoryFilters.userIdFilter || record.userId.includes(transferHistoryFilters.userIdFilter)
+            
+            return matchesDate && matchesStatus && matchesUserId
+          })
+        }
+        
+        const filteredTransferHistory = filterTransferHistory()
+        
+        const getTransferStatusBadge = (status) => {
+          switch(status) {
+            case 'Pending': return 'bg-amber-100 text-amber-700'
+            case 'Completed': return 'bg-green-100 text-green-700'
+            case 'Failed': return 'bg-red-100 text-red-700'
+            default: return 'bg-slate-100 text-slate-700'
+          }
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Coin Transfer History</h4>
+            </div>
+            
+            {/* Filters */}
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Date Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Date Filter</label>
+                  <select 
+                    value={transferHistoryFilters.dateFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, dateFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="week">This Week</option>
+                    <option value="custom">Custom Date</option>
+                  </select>
+                </div>
+                
+                {/* Custom Date */}
+                {transferHistoryFilters.dateFilter === 'custom' && (
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Date</label>
+                    <input 
+                      type="date" 
+                      value={transferHistoryFilters.customDate}
+                      onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, customDate: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    />
+                  </div>
+                )}
+                
+                {/* Status Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Status</label>
+                  <select 
+                    value={transferHistoryFilters.statusFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, statusFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Failed">Failed</option>
+                  </select>
+                </div>
+                
+                {/* User ID Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    value={transferHistoryFilters.userIdFilter}
+                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, userIdFilter: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Table */}
+            <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-50 text-slate-400 font-bold text-xs uppercase">
+                    <tr>
+                      <th className="p-4">Transaction ID</th>
+                      <th className="p-4">User ID</th>
+                      <th className="p-4">User Name</th>
+                      <th className="p-4">Coin Type</th>
+                      <th className="p-4">Coins</th>
+                      <th className="p-4">Transfer Type</th>
+                      <th className="p-4">Status</th>
+                      <th className="p-4">Time</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredTransferHistory.length === 0 ? (
+                      <tr>
+                        <td colSpan="8" className="p-8 text-center text-slate-500">
+                          <Send className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
+                          <div className="text-sm font-bold">No records found</div>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredTransferHistory.map((record) => (
+                        <tr key={record.transactionId} className="hover:bg-slate-50/50">
+                          <td className="p-4 font-mono font-bold text-slate-700">{record.transactionId}</td>
+                          <td className="p-4 font-mono">{record.userId}</td>
+                          <td className="p-4 font-semibold text-slate-800">{record.userName}</td>
+                          <td className="p-4">{record.coinType}</td>
+                          <td className="p-4 font-mono font-bold">{record.coins.toLocaleString()}</td>
+                          <td className="p-4">{record.transferType}</td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${getTransferStatusBadge(record.status)}`}>
+                              {record.status}
+                            </span>
+                          </td>
+                          <td className="p-4 text-xs text-slate-500">{record.timestamp}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )
+
+      case 'user_lookup':
+        const handleUserLookup = (e) => {
+          e.preventDefault()
+          
+          if (!userLookupSearch.trim()) {
+            alert('Please enter a User ID to search!')
+            return
+          }
+          
+          // Search user by ID
+          const user = userWallets.find(u => u.id === Number(userLookupSearch))
+          
+          if (user) {
+            // Get last recharge date from recharge history
+            const userRecharges = rechargeHistory.filter(r => r.userId === userLookupSearch)
+            const lastRecharge = userRecharges.length > 0 
+              ? userRecharges.sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))[0].dateTime
+              : 'No recharge history'
+            
+            setUserLookupResult({
+              userId: user.id,
+              userName: user.name,
+              accountStatus: 'Active',
+              lastRechargeDate: lastRecharge
+            })
+          } else {
+            setUserLookupResult(null)
+            alert('User not found!')
+          }
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><Search className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> User Lookup</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Search for user information by User ID.</p>
+              </div>
+              
+              <form onSubmit={handleUserLookup} className="space-y-4 sm:space-y-5">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    value={userLookupSearch}
+                    onChange={(e) => setUserLookupSearch(e.target.value)}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div className="pt-2">
+                  <button 
+                    type="submit" 
+                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                  >
+                    <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Search
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            {/* Search Result */}
+            {userLookupResult && (
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+                <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center">
+                    <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-extrabold text-slate-800 text-sm sm:text-base">User Found</h4>
+                    <p className="text-[10px] sm:text-xs text-slate-500">User information retrieved successfully</p>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex justify-between items-center py-2 sm:py-3 border-b border-slate-100">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">User ID</span>
+                    <span className="text-xs sm:text-sm font-mono font-bold text-slate-800">{userLookupResult.userId}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 sm:py-3 border-b border-slate-100">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">User Name</span>
+                    <span className="text-xs sm:text-sm font-semibold text-slate-800">{userLookupResult.userName}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 sm:py-3 border-b border-slate-100">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Account Status</span>
+                    <span className="px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold bg-green-100 text-green-700">{userLookupResult.accountStatus}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 sm:py-3">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Last Recharge Date</span>
+                    <span className="text-xs sm:text-sm text-slate-600">{userLookupResult.lastRechargeDate}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+
+      case 'manual_recharge':
+        const handleManualRechargeSubmit = (e) => {
+          e.preventDefault()
+          
+          // Validate form
+          if (!manualRechargeForm.userId || !manualRechargeForm.coinAmount) {
+            alert('Please fill all required fields!')
+            return
+          }
+          
+          if (Number(manualRechargeForm.coinAmount) <= 0) {
+            alert('Coin amount must be greater than 0!')
+            return
+          }
+          
+          // Check if account type is Special ID
+          if (manualRechargeForm.accountType === 'Special ID') {
+            setShowSpecialIdModal(true)
+          } else {
+            // Show confirmation popup
+            setShowManualRechargeConfirm(true)
+          }
+        }
+        
+        const handleManualRechargeConfirm = () => {
+          const coinsToRecharge = Number(manualRechargeForm.coinAmount)
+          const userId = Number(manualRechargeForm.userId)
+          
+          // If requires approval, create custom recharge request
+          if (manualRechargeForm.requiresApproval) {
+            const newRequest = {
+              id: `CR-${String(customRechargeRequests.length + 1).padStart(3, '0')}`,
+              userId: manualRechargeForm.userId,
+              userName: manualRechargeForm.userName,
+              requestedCoins: coinsToRecharge,
+              rechargeType: manualRechargeForm.rechargeType,
+              status: 'Pending',
+              date: new Date().toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+              }).replace(',', ''),
+              remarks: manualRechargeForm.remarks || 'Custom recharge request'
+            }
+            
+            setCustomRechargeRequests(prev => [newRequest, ...prev])
+            
+            setManualRechargeSuccess({
+              requestId: newRequest.id,
+              userId: manualRechargeForm.userId,
+              userName: manualRechargeForm.userName,
+              coins: coinsToRecharge,
+              rechargeType: manualRechargeForm.rechargeType,
+              requiresApproval: true
+            })
+          } else {
+            // Check if agency has enough coins
+            if (agencyWallet.coins < coinsToRecharge) {
+              alert('Insufficient coins in Agency Wallet!')
+              setShowManualRechargeConfirm(false)
+              return
+            }
+            
+            // Deduct from agency wallet
+            setAgencyWallet(prev => ({ coins: prev.coins - coinsToRecharge }))
+            
+            // Credit to user wallet
+            setUserWallets(prev => prev.map(user => {
+              if (user.id === userId) {
+                return { ...user, coins: user.coins + coinsToRecharge }
+              }
+              return user
+            }))
+            
+            // Add to recharge history
+            const newTransaction = {
+              transactionId: `TXN-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
+              rechargeId: `RC-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
+              userId: manualRechargeForm.userId,
+              userName: manualRechargeForm.userName,
+              rechargeType: manualRechargeForm.rechargeType,
+              coinsAdded: coinsToRecharge,
+              status: 'Completed',
+              dateTime: new Date().toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+              }).replace(',', ''),
+              remarks: manualRechargeForm.remarks || 'Manual recharge'
+            }
+            
+            setRechargeHistory(prev => [newTransaction, ...prev])
+            
+            setManualRechargeSuccess({
+              userId: manualRechargeForm.userId,
+              userName: manualRechargeForm.userName,
+              coins: coinsToRecharge,
+              rechargeType: manualRechargeForm.rechargeType,
+              requiresApproval: false
+            })
+          }
+          
+          // Reset form and close confirmation
+          setManualRechargeForm({
+            agencyId: 'AG-001',
+            agencyName: 'Diamond Agency',
+            userId: '',
+            userName: '',
+            accountType: '',
+            coinAmount: '',
+            rechargeType: 'Normal Coin',
+            remarks: '',
+            requiresApproval: false
+          })
+          setShowManualRechargeConfirm(false)
+        }
+        
+        const handleManualRechargeCancel = () => {
+          setShowManualRechargeConfirm(false)
+        }
+
+        const handleSpecialIdConfirm = () => {
+          if (!specialIdSubType) {
+            alert('Please select an account type!')
+            return
+          }
+          setShowSpecialIdModal(false)
+          setShowManualRechargeConfirm(true)
+        }
+
+        const handleSpecialIdCancel = () => {
+          setShowSpecialIdModal(false)
+          setSpecialIdSubType('')
+        }
+
+        const handleAgencyIdConfirm = () => {
+          setManualRechargeForm(prev => ({ ...prev, agencyId: pendingAgencyId }))
+          setShowAgencyIdConfirm(false)
+          setPendingAgencyId('')
+        }
+
+        const handleAgencyIdCancel = () => {
+          setShowAgencyIdConfirm(false)
+          setPendingAgencyId('')
+        }
+        
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-2xl">
+            {/* Success Confirmation - eSewa Style */}
+            {manualRechargeSuccess && (
+              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden">
+                  <div className="bg-white p-6 flex flex-col items-center justify-center border-b border-green-100">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
+                      <CheckCircle2 className="w-10 h-10 text-green-500" />
+                    </div>
+                    <h4 className="font-extrabold text-green-500 text-lg">Transaction Successful!</h4>
+                  </div>
+                  <div className="p-6 space-y-3">
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">User ID</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.userId}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">User Name</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.userName}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Recharge Type</span>
+                      <span className="font-semibold text-slate-800 text-sm">{manualRechargeSuccess.rechargeType}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Status</span>
+                      <span className="px-2 py-1 rounded-lg text-xs font-bold bg-green-50 text-green-600">Completed</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-slate-100">
+                      <span className="text-slate-500 text-sm">Time</span>
+                      <span className="font-semibold text-slate-800 text-sm">{new Date().toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-4">
+                      <span className="text-slate-500 text-sm">Amount</span>
+                      <span className="font-bold text-green-600 text-2xl">{manualRechargeSuccess.coins.toLocaleString()}</span>
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                      <button 
+                        onClick={() => {
+                          // Add dispute notification
+                          setNotifications(prev => [{
+                            id: Date.now(),
+                            type: 'system',
+                            title: 'Recharge Dispute Filed',
+                            message: `User ${manualRechargeSuccess.userName} (ID: ${manualRechargeSuccess.userId}) has filed a dispute for ${manualRechargeSuccess.coins.toLocaleString()} coins recharge.`,
+                            time: 'Just now',
+                            read: false
+                          }, ...prev])
+                          setManualRechargeSuccess(null)
+                        }}
+                        className="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Dispute
+                      </button>
+                      <button 
+                        onClick={() => setManualRechargeSuccess(null)}
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
+              <div>
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">Manual Recharge</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Recharge user wallet with different coin types.</p>
+              </div>
+              
+              <form onSubmit={handleManualRechargeSubmit} className="space-y-4 sm:space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID</label>
+                    <input 
+                      type="text" 
+                      value={manualRechargeForm.agencyId}
+                      onChange={e => {
+                        const newAgencyId = e.target.value
+                        if (newAgencyId !== manualRechargeForm.agencyId) {
+                          setPendingAgencyId(newAgencyId)
+                          setShowAgencyIdConfirm(true)
+                        }
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency Name (Auto)</label>
+                    <input 
+                      type="text" 
+                      value={manualRechargeForm.agencyName}
+                      readOnly
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter User ID" 
+                    required
+                    value={manualRechargeForm.userId}
+                    onChange={e => {
+                      setManualRechargeForm({...manualRechargeForm, userId: e.target.value})
+                      // Auto-fetch user name and account type based on user ID
+                      const user = userWallets.find(u => u.id === Number(e.target.value))
+                      if (user) {
+                        setManualRechargeForm(prev => ({ ...prev, userName: user.name, accountType: user.accountType }))
+                      } else {
+                        setManualRechargeForm(prev => ({ ...prev, userName: '', accountType: '' }))
+                      }
+                    }}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="Enter user name" 
+                      value={manualRechargeForm.userName}
+                      readOnly
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Account Type</label>
+                    <select 
+                      value={manualRechargeForm.accountType}
+                      onChange={e => setManualRechargeForm({...manualRechargeForm, accountType: e.target.value})}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    >
+                      <option value="">-- Select Account Type --</option>
+                      <option value="Personal">Personal</option>
+                      <option value="Official">Official</option>
+                      <option value="Special ID">Special ID</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Coin Amount</label>
+                  <input 
+                    type="number" 
+                    placeholder="Enter coin amount" 
+                    required
+                    min="1"
+                    value={manualRechargeForm.coinAmount}
+                    onChange={e=>setManualRechargeForm({...manualRechargeForm, coinAmount: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Recharge Type</label>
+                  <select 
+                    value={manualRechargeForm.rechargeType}
+                    onChange={e=>setManualRechargeForm({...manualRechargeForm, rechargeType: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="Normal Coin">Normal Coin</option>
+                    <option value="Blue Diamond">Blue Diamond</option>
+                    <option value="Green Diamond">Green Diamond</option>
+                    <option value="Red Game Coin">Red Game Coin</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Remarks (Optional)</label>
+                  <textarea 
+                    rows="3" 
+                    placeholder="Enter remarks (optional)..." 
+                    value={manualRechargeForm.remarks}
+                    onChange={e=>setManualRechargeForm({...manualRechargeForm, remarks: e.target.value})}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 resize-none" 
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <input 
+                    type="checkbox" 
+                    id="requiresApproval"
+                    checked={manualRechargeForm.requiresApproval}
+                    onChange={e=>setManualRechargeForm({...manualRechargeForm, requiresApproval: e.target.checked})}
+                    className="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer"
+                  />
+                  <label htmlFor="requiresApproval" className="text-xs sm:text-sm font-semibold text-slate-600 cursor-pointer">
+                    Requires Super Admin Approval (Custom Recharge)
+                  </label>
+                </div>
+                <div className="pt-2">
+                  <button 
+                    type="submit" 
+                    className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                  >
+                    {manualRechargeForm.requiresApproval ? 'Submit Request' : 'Recharge'}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Confirmation Popup */}
+            {showManualRechargeConfirm && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                  <div className="text-center">
+                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Confirm Recharge</h4>
+                    <p className="text-slate-600 text-sm sm:text-base mb-6">
+                      Are you sure you want to recharge <span className="font-bold text-[#E51E25]">{Number(manualRechargeForm.coinAmount).toLocaleString()}</span> {manualRechargeForm.rechargeType} to User <span className="font-bold">{manualRechargeForm.userName}</span> (ID: {manualRechargeForm.userId})?
+                    </p>
+                    <div className="flex gap-3">
+                      <button 
+                        onClick={handleManualRechargeConfirm}
+                        className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Confirm
+                      </button>
+                      <button 
+                        onClick={handleManualRechargeCancel}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Special ID Sub-Type Selection Modal */}
+            {showSpecialIdModal && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                  <div className="text-center mb-6">
+                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Special ID Detected</h4>
+                    <p className="text-slate-600 text-sm sm:text-base">
+                      Please select the account type to continue with the recharge.
+                    </p>
+                  </div>
+                  <div className="space-y-3 mb-6">
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Account Type</label>
+                    <select 
+                      value={specialIdSubType}
+                      onChange={e => setSpecialIdSubType(e.target.value)}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                    >
+                      <option value="">-- Select Account Type --</option>
+                      <option value="Official Account">Official Account</option>
+                      <option value="VIP Account">VIP Account</option>
+                      <option value="Event Account">Event Account</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={handleSpecialIdConfirm}
+                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Continue
+                    </button>
+                    <button 
+                      onClick={handleSpecialIdCancel}
+                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Agency ID Change Confirmation Modal */}
+            {showAgencyIdConfirm && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <AlertTriangle className="w-8 h-8 text-blue-500" />
+                    </div>
+                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Confirm Agency ID Change</h4>
+                    <p className="text-slate-600 text-sm sm:text-base">
+                      Are you sure you want to change the Agency ID from <span className="font-bold">{manualRechargeForm.agencyId}</span> to <span className="font-bold text-[#E51E25]">{pendingAgencyId}</span>?
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={handleAgencyIdConfirm}
+                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Confirm Change
+                    </button>
+                    <button 
+                      onClick={handleAgencyIdCancel}
+                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+
       default:
         return null
     }
@@ -2456,11 +4064,6 @@ export default function DiamondAgencyPage() {
             <Gem className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 shrink-0" />
             <span className="font-extrabold text-sm sm:text-lg tracking-tight truncate">Diamond Agency</span>
           </div>
-        </div>
-        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-bold bg-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shrink-0">
-          <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-300 animate-pulse" />
-          <span className="hidden xs:inline">System Online</span>
-          <span className="xs:hidden">Online</span>
         </div>
       </header>
 
@@ -2614,7 +4217,6 @@ export default function DiamondAgencyPage() {
             <h2 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800">
               {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label}
             </h2>
-            <p className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">eRupai Diamond Agency Protocol</p>
           </div>
           {renderPanel()}
         </main>

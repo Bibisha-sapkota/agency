@@ -43,26 +43,24 @@ export default function Header({ onSelectAgencyTab }) {
             >
               💎 Diamond Agency
             </Link>
-            {/* Other items - inline viewer */}
+            {/* Other items - direct routes */}
             {[
-              'Agency',
-              'Agent',
-              'Host',
-              'Target System',
-              'Revenue Distribution',
-              'Agency Dashboard',
-              'Agent Dashboard'
+              { name: 'Agency', tab: 'agency' },
+              { name: 'Agent', tab: 'agent' },
+              { name: 'Host', tab: 'host' },
+              { name: 'Target System', tab: 'target' },
+              { name: 'Revenue Distribution', tab: 'revenue' },
+              { name: 'Agency Dashboard', tab: 'agency-dash' },
+              { name: 'Agent Dashboard', tab: 'agent-dash' }
             ].map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  onSelectAgencyTab && onSelectAgencyTab(item)
-                  setAgencyDropdownOpen(false)
-                }}
-                className="w-full text-left px-4 py-2 text-sm font-medium hover:bg-red-50 hover:text-[#E51E25] transition-colors"
+              <Link
+                key={item.tab}
+                to={`/agency?tab=${item.tab}`}
+                onClick={() => setAgencyDropdownOpen(false)}
+                className="w-full block text-left px-4 py-2 text-sm font-medium hover:bg-red-50 hover:text-[#E51E25] transition-colors"
               >
-                {item}
-              </button>
+                {item.name}
+              </Link>
             ))}
           </div>
           </div>
@@ -126,17 +124,23 @@ export default function Header({ onSelectAgencyTab }) {
               >
                 💎 Diamond Agency
               </Link>
-              {['Agency', 'Agent', 'Host', 'Target System', 'Revenue Distribution', 'Agency Dashboard', 'Agent Dashboard'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    onSelectAgencyTab && onSelectAgencyTab(item)
-                    setMobileMenuOpen(false)
-                  }}
+              {[
+                { name: 'Agency', tab: 'agency' },
+                { name: 'Agent', tab: 'agent' },
+                { name: 'Host', tab: 'host' },
+                { name: 'Target System', tab: 'target' },
+                { name: 'Revenue Distribution', tab: 'revenue' },
+                { name: 'Agency Dashboard', tab: 'agency-dash' },
+                { name: 'Agent Dashboard', tab: 'agent-dash' }
+              ].map((item) => (
+                <Link
+                  key={item.tab}
+                  to={`/agency?tab=${item.tab}`}
+                  onClick={() => setMobileMenuOpen(false)}
                   className="block text-white hover:text-red-200 py-2 pl-4 w-full text-left"
                 >
-                  {item}
-                </button>
+                  {item.name}
+                </Link>
               ))}
             </div>
             <a href="#gaming" className="block text-white hover:text-red-200 py-2">Gaming</a>
@@ -146,6 +150,7 @@ export default function Header({ onSelectAgencyTab }) {
           </div>
         </div>
       )}
+
     </header>
   )
 }

@@ -7,6 +7,7 @@ import DownloadSection from './components/DownloadSection'
 import FeaturesGrid from './components/FeaturesGrid'
 import Footer from './components/Footer'
 import DiamondAgencyPage from './pages/DiamondAgencyPage'
+import AgencyPage from './pages/AgencyPage'
 
 function HomePage() {
   const [selectedAgencyTab, setSelectedAgencyTab] = useState(null)
@@ -55,6 +56,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/diamond-agency" element={<DiamondAgencyPage />} />
+      <Route path="/agency" element={<AgencyPage />} />
     </Routes>
   )
 }
