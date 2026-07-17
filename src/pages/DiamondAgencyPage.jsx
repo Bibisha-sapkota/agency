@@ -2434,7 +2434,7 @@ export default function DiamondAgencyPage() {
   return (
     <div className="min-h-screen bg-[#F8F8FA] flex flex-col font-sans selection:bg-red-500 selection:text-white">
       {/* Top Bar */}
-      <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between sticky top-0 z-50 shadow-md">
+      <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[100] shadow-md">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <ArrowLeft className="w-5 h-5" />
@@ -2455,7 +2455,7 @@ export default function DiamondAgencyPage() {
       {/* Main Layout: Sidebar + Content */}
       <div className="flex flex-1 w-full max-w-[1440px] mx-auto">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-slate-100 py-6 px-4 hidden lg:flex flex-col gap-1.5 sticky top-[52px] h-[calc(100vh-52px)] overflow-y-auto shrink-0">
+        <aside className="w-64 bg-white border-r border-slate-100 py-6 px-4 hidden lg:flex flex-col gap-1.5 sticky top-[52px] h-[calc(100vh-52px)] overflow-y-auto shrink-0 pt-20">
           {menuGroups.map((group) => {
             if (group.key) {
               // Single item (Dashboard)
@@ -2537,7 +2537,7 @@ export default function DiamondAgencyPage() {
         </div>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 p-6 md:p-8 pt-20 overflow-y-auto">
           <div className="mb-6">
             <h2 className="text-2xl font-black text-slate-800">
               {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label}
