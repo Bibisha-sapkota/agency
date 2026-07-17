@@ -1005,38 +1005,38 @@ export default function DiamondAgencyPage() {
 
         return (
           <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
               {[
                 { label: 'Total Sub-Agencies', value: subAgencies.length, icon: Building2, color: 'text-blue-500', bg: 'bg-blue-50' },
                 { label: 'Total E-Rupees', value: subAgencies.reduce((acc, a) => acc + a.coins, 0).toLocaleString(), icon: Banknote, color: 'text-green-500', bg: 'bg-green-50' },
                 { label: 'Active Agencies', value: subAgencies.filter(a => a.status === 'Active').length, icon: CheckCircle2, color: 'text-emerald-500', bg: 'bg-emerald-50' },
                 { label: 'Commission (Beans)', value: availableCommission.toLocaleString(), icon: Wallet, color: 'text-purple-500', bg: 'bg-purple-50' }
               ].map((stat, idx) => (
-                <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${stat.bg} shrink-0`}>
-                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                <div key={idx} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-2 sm:gap-4">
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${stat.bg} shrink-0`}>
+                    <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-2xl font-black text-slate-800 truncate">{stat.value}</div>
-                    <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">{stat.label}</div>
+                    <div className="text-lg sm:text-2xl font-black text-slate-800 truncate">{stat.value}</div>
+                    <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider">{stat.label}</div>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Pie Chart - Agency Distribution */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-6"><PieChart className="w-5 h-5 text-[#E51E25]" /> Agency Distribution</h4>
-                <div className="h-64">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><PieChart className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Agency Distribution</h4>
+                <div className="h-48 sm:h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsPieChart>
                       <Pie
                         data={pieData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={40}
-                        outerRadius={80}
+                        innerRadius={30}
+                        outerRadius={60}
                         paddingAngle={5}
                         dataKey="value"
                       >
@@ -1045,11 +1045,11 @@ export default function DiamondAgencyPage() {
                         ))}
                       </Pie>
                       <Tooltip formatter={(value) => [value.toLocaleString(), '']} />
-                      <Legend 
-                        verticalAlign="bottom" 
+                      <Legend
+                        verticalAlign="bottom"
                         height={36}
                         formatter={(value, entry) => (
-                          <span className="text-xs font-semibold text-slate-600">{value}</span>
+                          <span className="text-[10px] sm:text-xs font-semibold text-slate-600">{value}</span>
                         )}
                       />
                     </RechartsPieChart>
@@ -1058,17 +1058,17 @@ export default function DiamondAgencyPage() {
               </div>
 
               {/* Pie Chart - Regional Distribution */}
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-6"><MapPin className="w-5 h-5 text-[#E51E25]" /> Regional Distribution</h4>
-                <div className="h-64">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Regional Distribution</h4>
+                <div className="h-48 sm:h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsPieChart>
                       <Pie
                         data={regionData}
                         cx="50%"
                         cy="50%"
-                        innerRadius={40}
-                        outerRadius={80}
+                        innerRadius={30}
+                        outerRadius={60}
                         paddingAngle={5}
                         dataKey="value"
                       >
@@ -1077,11 +1077,11 @@ export default function DiamondAgencyPage() {
                         ))}
                       </Pie>
                       <Tooltip formatter={(value) => [value, 'Agencies']} />
-                      <Legend 
-                        verticalAlign="bottom" 
+                      <Legend
+                        verticalAlign="bottom"
                         height={36}
                         formatter={(value, entry) => (
-                          <span className="text-xs font-semibold text-slate-600">{value}</span>
+                          <span className="text-[10px] sm:text-xs font-semibold text-slate-600">{value}</span>
                         )}
                       />
                     </RechartsPieChart>
@@ -1090,21 +1090,21 @@ export default function DiamondAgencyPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Recent Agencies */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2"><Users className="w-5 h-5 text-[#E51E25]" /> Recent Agencies</h4>
+                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recent Agencies</h4>
                   <button onClick={() => setActiveSideTab('manage')} className="text-xs font-bold text-[#E51E25] hover:underline">View All</button>
                 </div>
                 <div className="divide-y divide-slate-100">
                   {subAgencies.slice(0, 3).map(a => (
-                    <div key={a.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div key={a.id} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate">{a.name}</div>
+                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{a.name}</div>
                         <div className="text-xs text-slate-500 truncate">{a.head} • {a.region}</div>
                       </div>
-                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold shrink-0 ml-2 ${a.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
+                      <span className={`text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 rounded-full font-bold shrink-0 ml-2 ${a.status === 'Active' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
                         {a.status}
                       </span>
                     </div>
@@ -1114,18 +1114,18 @@ export default function DiamondAgencyPage() {
 
               {/* Recent Distributions */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2"><Clock className="w-5 h-5 text-[#E51E25]" /> Recent Transfers</h4>
+                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Clock className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recent Transfers</h4>
                   <button onClick={() => setActiveSideTab('distribution')} className="text-xs font-bold text-[#E51E25] hover:underline">View Ledger</button>
                 </div>
                 <div className="divide-y divide-slate-100">
                   {distributionLedger.slice(0, 3).map((log, idx) => (
-                    <div key={idx} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate">{log.target}</div>
+                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{log.target}</div>
                         <div className="text-xs text-slate-500 truncate">{log.date}</div>
                       </div>
-                      <div className="font-mono font-bold text-[#E51E25] shrink-0 ml-2">{log.amount}</div>
+                      <div className="font-mono font-bold text-[#E51E25] shrink-0 ml-2 text-xs sm:text-sm">{log.amount}</div>
                     </div>
                   ))}
                 </div>
@@ -1133,23 +1133,23 @@ export default function DiamondAgencyPage() {
             </div>
 
             {/* Additional Data Lists */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Commission History */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2"><Award className="w-5 h-5 text-[#E51E25]" /> Commission History</h4>
+                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Award className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Commission History</h4>
                   <button onClick={() => setActiveSideTab('commission')} className="text-xs font-bold text-[#E51E25] hover:underline">View All</button>
                 </div>
                 <div className="divide-y divide-slate-100">
                   {commissionHistory.slice(0, 3).map((cp, idx) => (
-                    <div key={idx} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate">{cp.agency}</div>
+                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{cp.agency}</div>
                         <div className="text-xs text-slate-500">{cp.type} • {cp.date}</div>
                       </div>
                       <div className="text-right shrink-0 ml-2">
-                        <div className="font-mono font-bold text-slate-800">{cp.beans.toLocaleString()} Beans</div>
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
+                        <div className="font-mono font-bold text-slate-800 text-xs sm:text-sm">{cp.beans.toLocaleString()} Beans</div>
+                        <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
                           cp.status === 'Paid' ? 'bg-green-50 text-green-600' :
                           cp.status === 'Processing' ? 'bg-blue-50 text-blue-600' :
                           'bg-amber-50 text-amber-600'
@@ -1162,20 +1162,20 @@ export default function DiamondAgencyPage() {
 
               {/* Loan Status */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-slate-100 flex justify-between items-center">
-                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2"><Banknote className="w-5 h-5 text-[#E51E25]" /> Loan Status</h4>
+                <div className="p-4 sm:p-5 border-b border-slate-100 flex justify-between items-center">
+                  <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-sm sm:text-base"><Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Loan Status</h4>
                   <button onClick={() => setActiveSideTab('wallet_loans')} className="text-xs font-bold text-[#E51E25] hover:underline">Manage Loans</button>
                 </div>
                 <div className="divide-y divide-slate-100">
                   {loans.slice(0, 3).map((loan, idx) => (
-                    <div key={idx} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div key={idx} className="p-3 sm:p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                       <div className="min-w-0 flex-1">
-                        <div className="font-bold text-slate-800 truncate">{loan.agent}</div>
+                        <div className="font-bold text-slate-800 truncate text-sm sm:text-base">{loan.agent}</div>
                         <div className="text-xs text-slate-500">{loan.tenor} • {loan.disbursed}</div>
                       </div>
                       <div className="text-right shrink-0 ml-2">
-                        <div className="font-mono font-bold text-slate-800">${loan.amount.toLocaleString()}</div>
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
+                        <div className="font-mono font-bold text-slate-800 text-xs sm:text-sm">${loan.amount.toLocaleString()}</div>
+                        <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full inline-block ${
                           loan.status === 'Active' ? 'bg-green-50 text-green-600' :
                           loan.status === 'Approved' ? 'bg-blue-50 text-blue-600' :
                           'bg-amber-50 text-amber-600'
@@ -1188,34 +1188,34 @@ export default function DiamondAgencyPage() {
             </div>
 
             {/* Performance Metrics */}
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-              <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-6"><TrendingUp className="w-5 h-5 text-[#E51E25]" /> Performance Metrics</h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-slate-50 p-4 rounded-xl">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Sales</div>
-                  <div className="text-xl font-black text-slate-800">{targetSales.toLocaleString()}</div>
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 sm:p-6">
+              <h4 className="font-extrabold text-slate-800 flex items-center gap-2 mb-4 sm:mb-6 text-sm sm:text-base"><TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Performance Metrics</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Target Sales</div>
+                  <div className="text-lg sm:text-xl font-black text-slate-800">{targetSales.toLocaleString()}</div>
                   <div className="w-full bg-slate-200 rounded-full h-2 mt-2">
-                    <div 
-                      className="bg-[#E51E25] h-2 rounded-full transition-all" 
+                    <div
+                      className="bg-[#E51E25] h-2 rounded-full transition-all"
                       style={{ width: `${Math.min(100, (currentSales / targetSales) * 100)}%` }}
                     ></div>
                   </div>
-                  <div className="text-xs text-slate-500 mt-1">{Math.round((currentSales / targetSales) * 100)}% achieved</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">{Math.round((currentSales / targetSales) * 100)}% achieved</div>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Current Sales</div>
-                  <div className="text-xl font-black text-green-600">{currentSales.toLocaleString()}</div>
-                  <div className="text-xs text-slate-500 mt-1">vs target: {targetSales.toLocaleString()}</div>
+                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Current Sales</div>
+                  <div className="text-lg sm:text-xl font-black text-green-600">{currentSales.toLocaleString()}</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">vs target: {targetSales.toLocaleString()}</div>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Packages</div>
-                  <div className="text-xl font-black text-slate-800">{packages.length}</div>
-                  <div className="text-xs text-slate-500 mt-1">{activePackages} active</div>
+                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Packages</div>
+                  <div className="text-lg sm:text-xl font-black text-slate-800">{packages.length}</div>
+                  <div className="text-[10px] sm:text-xs text-slate-500 mt-1">{activePackages} active</div>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-xl">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Orders</div>
-                  <div className="text-xl font-black text-slate-800">{totalOrders.toLocaleString()}</div>
-                  <div className="text-xs text-green-600 mt-1">↑ vs last month</div>
+                <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
+                  <div className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Total Orders</div>
+                  <div className="text-lg sm:text-xl font-black text-slate-800">{totalOrders.toLocaleString()}</div>
+                  <div className="text-[10px] sm:text-xs text-green-600 mt-1">↑ vs last month</div>
                 </div>
               </div>
             </div>
@@ -2455,7 +2455,7 @@ export default function DiamondAgencyPage() {
       {/* Main Layout: Sidebar + Content */}
       <div className="flex flex-1 w-full max-w-[1440px] mx-auto">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-slate-100 py-6 px-4 hidden lg:flex flex-col gap-1.5 sticky top-[52px] h-[calc(100vh-52px)] overflow-y-auto shrink-0 pt-20">
+        <aside className="w-64 bg-white border-r border-slate-100 py-4 sm:py-6 px-3 sm:px-4 hidden lg:flex flex-col gap-1.5 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto shrink-0 pt-20">
           {menuGroups.map((group) => {
             if (group.key) {
               // Single item (Dashboard)
@@ -2518,13 +2518,13 @@ export default function DiamondAgencyPage() {
         </aside>
 
         {/* Mobile Menu */}
-        <div className="lg:hidden w-full overflow-x-auto bg-white border-b border-slate-100 px-4 py-3 flex gap-2 sticky top-[52px] z-40">
+        <div className="lg:hidden w-full overflow-x-auto bg-white border-b border-slate-100 px-3 sm:px-4 py-2 sm:py-3 flex gap-2 sticky top-[60px] z-40">
           {menuGroups.flatMap(g => g.key ? [g] : g.subItems).map((item) => {
             return (
               <button
                 key={item.key}
                 onClick={() => setActiveSideTab(item.key)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold whitespace-nowrap transition-all ${
                   activeSideTab === item.key
                     ? 'bg-[#E51E25] text-white shadow-md'
                     : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
@@ -2537,7 +2537,7 @@ export default function DiamondAgencyPage() {
         </div>
 
         {/* Content Area */}
-        <main className="flex-1 p-6 md:p-8 pt-20 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 pt-20 sm:pt-20 overflow-y-auto">
           <div className="mb-6">
             <h2 className="text-2xl font-black text-slate-800">
               {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label}

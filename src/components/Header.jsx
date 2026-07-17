@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function Header({ onSelectAgencyTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [agencyDropdownOpen, setAgencyDropdownOpen] = useState(false)
 
   return (
     <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[9999] shadow-md min-h-[60px]">
@@ -21,17 +22,23 @@ export default function Header({ onSelectAgencyTab }) {
   <a href="/">Home</a>
   <a href="/live">Live Streaming</a>
         <div className="relative group cursor-pointer flex items-center gap-1 hover:text-slate-200 transition-colors py-2">
-          <span>Agency</span>
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
-          </svg>
-          
-          {/* Dropdown Menu - pt-2 acts as invisible hover bridge */}
-          <div className="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+          <button
+            onClick={() => setAgencyDropdownOpen(!agencyDropdownOpen)}
+            className="flex items-center gap-1 focus:outline-none"
+          >
+            <span>Agency</span>
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {/* Dropdown Menu - works on both hover (desktop) and click (mobile) */}
+          <div className={`absolute top-full left-0 pt-2 z-50 ${agencyDropdownOpen || 'group-hover:block'} hidden md:block`}>
           <div className="bg-white text-slate-800 rounded-xl shadow-xl border border-slate-100 py-2 w-56">
             {/* Diamond Agency - navigates to separate page */}
             <Link
               to="/diamond-agency"
+              onClick={() => setAgencyDropdownOpen(false)}
               className="w-full block text-left px-4 py-2 text-sm font-medium hover:bg-red-50 hover:text-[#E51E25] transition-colors"
             >
               💎 Diamond Agency
@@ -48,7 +55,10 @@ export default function Header({ onSelectAgencyTab }) {
             ].map((item) => (
               <button
                 key={item}
-                onClick={() => onSelectAgencyTab && onSelectAgencyTab(item)}
+                onClick={() => {
+                  onSelectAgencyTab && onSelectAgencyTab(item)
+                  setAgencyDropdownOpen(false)
+                }}
                 className="w-full text-left px-4 py-2 text-sm font-medium hover:bg-red-50 hover:text-[#E51E25] transition-colors"
               >
                 {item}
@@ -91,7 +101,7 @@ export default function Header({ onSelectAgencyTab }) {
         </button>
 
         {/* Hamburger Menu Icon */}
-        <button 
+        <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="bg-[#B91319] hover:bg-[#a11015] p-2 rounded-lg transition-colors md:hidden"
         >
@@ -100,6 +110,42 @@ export default function Header({ onSelectAgencyTab }) {
           </svg>
         </button>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 right-0 bg-[#E51E25] border-t border-red-700 shadow-xl z-[9998]">
+          <div className="px-4 py-4 space-y-3">
+            <a href="/" className="block text-white hover:text-red-200 py-2">Home</a>
+            <a href="/live" className="block text-white hover:text-red-200 py-2">Live Streaming</a>
+            <div className="border-t border-red-700 pt-3">
+              <div className="text-white font-bold mb-2">Agency</div>
+              <Link
+                to="/diamond-agency"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-white hover:text-red-200 py-2 pl-4"
+              >
+                💎 Diamond Agency
+              </Link>
+              {['Agency', 'Agent', 'Host', 'Target System', 'Revenue Distribution', 'Agency Dashboard', 'Agent Dashboard'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    onSelectAgencyTab && onSelectAgencyTab(item)
+                    setMobileMenuOpen(false)
+                  }}
+                  className="block text-white hover:text-red-200 py-2 pl-4 w-full text-left"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <a href="#gaming" className="block text-white hover:text-red-200 py-2">Gaming</a>
+            <a href="#photo" className="block text-white hover:text-red-200 py-2">Photo/Video</a>
+            <a href="#sponsor" className="block text-white hover:text-red-200 py-2">Social ad Sponsor</a>
+            <a href="#about" className="block text-white hover:text-red-200 py-2">About</a>
+          </div>
+        </div>
+      )}
     </header>
   )
 }
