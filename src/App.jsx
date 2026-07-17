@@ -23,7 +23,7 @@ function HomePage() {
       }} />
 
       {/* Main Container */}
-      <main className="flex-1">
+      <main className="flex-1 pt-16">
         {/* Hero Section */}
         <HeroSection />
 

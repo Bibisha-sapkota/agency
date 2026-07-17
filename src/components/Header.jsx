@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Header({ onSelectAgencyTab }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
-    <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between sticky top-0 z-50 shadow-md">
+    <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[9999] shadow-md min-h-[60px]">
       {/* Left side: Logo */}
       <div className="flex items-center gap-2">
         <div className="bg-white text-[#E51E25] w-8 h-8 rounded-full flex items-center justify-center font-black text-xl select-none">
@@ -89,7 +91,10 @@ export default function Header({ onSelectAgencyTab }) {
         </button>
 
         {/* Hamburger Menu Icon */}
-        <button className="bg-[#B91319] hover:bg-[#a11015] p-2 rounded-lg transition-colors">
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="bg-[#B91319] hover:bg-[#a11015] p-2 rounded-lg transition-colors md:hidden"
+        >
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
           </svg>
