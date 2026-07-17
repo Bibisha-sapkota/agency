@@ -15,6 +15,7 @@ import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Legend, T
 export default function DiamondAgencyPage() {
   const [activeSideTab, setActiveSideTab] = useState('pkg_all')
   const [expandedGroups, setExpandedGroups] = useState({ diamond_packages: true, agency: true })
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   const toggleGroup = (groupId) => {
     setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }))
@@ -2432,33 +2433,126 @@ export default function DiamondAgencyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F8FA] flex flex-col font-sans selection:bg-red-500 selection:text-white">
+    <div className="min-h-screen bg-[#F8F8FA] flex flex-col font-sans selection:bg-red-500 selection:text-white overflow-x-hidden">
       {/* Top Bar */}
-      <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[9999] shadow-md min-h-[60px]">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-bold hidden sm:inline">Back to Home</span>
+      <header className="w-full bg-[#E51E25] text-white py-3 px-3 sm:px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[9999] shadow-md min-h-[56px] sm:min-h-[60px]">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+          {/* Mobile sidebar toggle */}
+          <button
+            onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-white/10 transition-colors shrink-0"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-80 transition-opacity shrink-0">
+            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-xs sm:text-sm font-bold hidden sm:inline">Back to Home</span>
           </Link>
-          <div className="w-px h-6 bg-white/30"></div>
-          <div className="flex items-center gap-2">
-            <Gem className="w-5 h-5 text-yellow-300" />
-            <span className="font-extrabold text-lg tracking-tight">Diamond Agency</span>
+          <div className="w-px h-5 sm:h-6 bg-white/30 hidden sm:block"></div>
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <Gem className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 shrink-0" />
+            <span className="font-extrabold text-sm sm:text-lg tracking-tight truncate">Diamond Agency</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 text-xs font-bold bg-white/10 px-3 py-1.5 rounded-full">
-          <Activity className="w-3.5 h-3.5 text-green-300 animate-pulse" />
-          <span>System Online</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs font-bold bg-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full shrink-0">
+          <Activity className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-300 animate-pulse" />
+          <span className="hidden xs:inline">System Online</span>
+          <span className="xs:hidden">Online</span>
         </div>
       </header>
 
+      {/* Mobile Sidebar Overlay */}
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[10000] lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar Drawer */}
+      <aside className={`fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-white z-[10001] transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto shadow-2xl ${
+        mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Gem className="w-5 h-5 text-[#E51E25]" />
+            <span className="font-extrabold text-base text-slate-800">Menu</span>
+          </div>
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+          >
+            <XCircle className="w-5 h-5" />
+          </button>
+        </div>
+        <div className="py-3 px-3 flex flex-col gap-1">
+          {menuGroups.map((group) => {
+            if (group.key) {
+              const Icon = group.icon
+              return (
+                <button
+                  key={group.key}
+                  onClick={() => { setActiveSideTab(group.key); setMobileSidebarOpen(false) }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl text-left text-sm font-bold transition-all active:scale-[0.98] ${
+                    activeSideTab === group.key
+                      ? 'bg-[#E51E25] text-white shadow-lg shadow-red-200/50'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                  }`}
+                >
+                  <Icon className="w-[18px] h-[18px] shrink-0" />
+                  <span className="truncate">{group.label}</span>
+                </button>
+              )
+            }
+            const Icon = group.icon
+            const isExpanded = expandedGroups[group.id]
+            const isAnyActive = group.subItems.some(i => i.key === activeSideTab)
+            return (
+              <div key={group.id} className="mb-1">
+                <button
+                  onClick={() => toggleGroup(group.id)}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left text-sm font-bold transition-all ${
+                    isAnyActive && !isExpanded ? 'text-[#E51E25] bg-red-50' : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="truncate">{group.label}</span>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                </button>
+                {isExpanded && (
+                  <div className="mt-1 flex flex-col gap-0.5 pl-[22px] border-l-2 border-slate-100 ml-6 relative">
+                    {group.subItems.map(sub => (
+                      <button
+                        key={sub.key}
+                        onClick={() => { setActiveSideTab(sub.key); setMobileSidebarOpen(false) }}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-bold transition-all ${
+                          activeSideTab === sub.key
+                            ? 'bg-[#E51E25] text-white shadow-md shadow-red-200'
+                            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'
+                        }`}
+                      >
+                        {sub.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </aside>
+
       {/* Main Layout: Sidebar + Content */}
-      <div className="flex flex-1 w-full max-w-[1440px] mx-auto">
-        {/* Sidebar */}
+      <div className="flex flex-1 w-full max-w-[1440px] mx-auto overflow-x-hidden">
+        {/* Desktop Sidebar */}
         <aside className="w-64 bg-white border-r border-slate-100 py-4 sm:py-6 px-3 sm:px-4 hidden lg:flex flex-col gap-1.5 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto shrink-0 pt-20">
           {menuGroups.map((group) => {
             if (group.key) {
-              // Single item (Dashboard)
               const Icon = group.icon
               return (
                 <button
@@ -2475,12 +2569,9 @@ export default function DiamondAgencyPage() {
                 </button>
               )
             }
-
-            // Group with sub-items
             const Icon = group.icon
             const isExpanded = expandedGroups[group.id]
             const isAnyActive = group.subItems.some(i => i.key === activeSideTab)
-
             return (
               <div key={group.id} className="mb-2">
                 <button
@@ -2517,32 +2608,13 @@ export default function DiamondAgencyPage() {
           })}
         </aside>
 
-        {/* Mobile Menu */}
-        <div className="lg:hidden w-full overflow-x-auto bg-white border-b border-slate-100 px-3 sm:px-4 py-2 sm:py-3 flex gap-2 sticky top-[60px] z-40">
-          {menuGroups.flatMap(g => g.key ? [g] : g.subItems).map((item) => {
-            return (
-              <button
-                key={item.key}
-                onClick={() => setActiveSideTab(item.key)}
-                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold whitespace-nowrap transition-all ${
-                  activeSideTab === item.key
-                    ? 'bg-[#E51E25] text-white shadow-md'
-                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                {item.label}
-              </button>
-            )
-          })}
-        </div>
-
         {/* Content Area */}
-        <main className="flex-1 p-4 sm:p-6 md:p-8 pt-20 sm:pt-20 overflow-y-auto">
-          <div className="mb-6">
-            <h2 className="text-2xl font-black text-slate-800">
+        <main className="flex-1 min-w-0 p-3 sm:p-4 md:p-6 lg:p-8 pt-16 sm:pt-18 md:pt-20 overflow-x-hidden">
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800">
               {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label}
             </h2>
-            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">eRupai Diamond Agency Protocol</p>
+            <p className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">eRupai Diamond Agency Protocol</p>
           </div>
           {renderPanel()}
         </main>
