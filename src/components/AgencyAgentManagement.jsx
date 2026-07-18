@@ -429,6 +429,60 @@ export default function AgencyAgentManagement({ subTab = 'all-agents' }) {
 
   return (
     <div className="space-y-6">
+      {/* Agent Dashboard */}
+      {activeTab === 'agent-dashboard' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+              <div className="mb-3">
+                <span className="text-xs font-bold text-slate-600 uppercase">Total Agents</span>
+              </div>
+              <div className="text-3xl font-extrabold text-slate-800">{agents.length}</div>
+              <div className="text-xs text-slate-600 mt-1">registered agents</div>
+            </div>
+            <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+              <div className="mb-3">
+                <span className="text-xs font-bold text-slate-600 uppercase">Active Agents</span>
+              </div>
+              <div className="text-3xl font-extrabold text-green-600">{agents.filter(a => a.status === 'active').length}</div>
+              <div className="text-xs text-slate-600 mt-1">currently active</div>
+            </div>
+            <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+              <div className="mb-3">
+                <span className="text-xs font-bold text-slate-600 uppercase">Suspended Agents</span>
+              </div>
+              <div className="text-3xl font-extrabold text-red-600">{agents.filter(a => a.status === 'suspended').length}</div>
+              <div className="text-xs text-slate-600 mt-1">temporarily suspended</div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-[#E51E25] to-[#c4161c] px-6 py-5">
+              <h3 className="font-extrabold text-white text-lg">Agent Dashboard</h3>
+              <p className="text-white/80 text-xs mt-1">Every agent — {agents.length} total</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wide border-b border-slate-100">
+                  <tr>
+                    <th className="px-5 py-4">Agent ID</th>
+                    <th className="px-5 py-4">Agent Name</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {agents.map((agent) => (
+                    <tr key={agent.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-5 py-4 font-mono font-bold text-[#E51E25]">{agent.id}</td>
+                      <td className="px-5 py-4 font-bold text-slate-800">{agent.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* All Agents */}
       {activeTab === 'all-agents' && (
         <div className="space-y-6">

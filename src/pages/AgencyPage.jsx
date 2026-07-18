@@ -8,15 +8,16 @@ import AgencyTargetManagement from '../components/AgencyTargetManagement'
 import AgencyCharismaContribution from '../components/AgencyCharismaContribution'
 import AgencyAgentManagement from '../components/AgencyAgentManagement'
 import AgencyHostManagement from '../components/AgencyHostManagement'
-import AgencyIncentiveLevels from '../components/AgencyIncentiveLevels'
 import AgencyProgressChart from '../components/AgencyProgressChart'
+import AgencyHourlyLiveHistory from '../components/AgencyHourlyLiveHistory'
+import AgencyPerformance from '../components/AgencyPerformance'
 import {
   Users, UserCheck, Activity, Settings, Target, ShieldAlert,
   ArrowLeft, Gem, PlusCircle, Search, Trash2, Edit, CheckSquare,
-  Award, TrendingUp, HelpCircle, BarChart3, Coins, PieChart,
+  TrendingUp, HelpCircle, BarChart3, Coins, PieChart,
   UserPlus, Play, RefreshCw, Send, DollarSign, Wallet, CheckCircle2,
   Lock, FileText, Bell, Sliders, ChevronDown, ChevronRight, XCircle, Menu,
-  LayoutDashboard, Monitor, Star, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop
+  LayoutDashboard, Monitor, Star, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop, Clock, Gauge
 } from 'lucide-react'
 import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
 
@@ -25,13 +26,6 @@ export default function AgencyPage() {
   const tabParam = searchParams.get('tab') || 'host-management-all'
   const [activeTab, setActiveTab] = useState(tabParam)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
-
-  // Sync state with URL search parameters
-  useEffect(() => {
-    if (tabParam) {
-      setActiveTab(tabParam)
-    }
-  }, [tabParam])
 
   // --- MENU CONFIG ---
   const [expandedMenus, setExpandedMenus] = useState({})
@@ -63,6 +57,7 @@ export default function AgencyPage() {
       label: 'Agent Management', 
       icon: UserCheck,
       children: [
+        { key: 'agent-management-dashboard', label: 'Agent Dashboard', subTab: 'agent-dashboard' },
         { key: 'agent-management-all', label: 'All Agents', subTab: 'all-agents' },
         { key: 'agent-management-history', label: 'Recruitment History', subTab: 'recruitment-history' },
         { key: 'agent-management-performance', label: 'Agent Performance', subTab: 'agent-performance' },
@@ -70,8 +65,9 @@ export default function AgencyPage() {
       ]
     },
     { key: 'charisma-contribution', label: 'Charisma & Contribution', icon: Star },
+    { key: 'hourly-live-history', label: 'Hourly Live History', icon: Clock },
+    { key: 'performance', label: 'Performance', icon: Gauge },
     { key: 'target-management', label: 'Target Management', icon: Target },
-    { key: 'incentive-levels', label: 'Incentive Levels', icon: Award },
     { key: 'progress-chart', label: 'Progress Chart', icon: TrendingUp },
     { key: 'analytics', label: 'Analytics', icon: BarChart3 },
     { key: 'reports', label: 'Reports', icon: FileTextIcon },
@@ -79,6 +75,26 @@ export default function AgencyPage() {
     { key: 'settings', label: 'Settings', icon: Settings },
     { key: 'recruitment', label: 'Recruitment & Commission', icon: UserPlus }
   ]
+
+  // Sync state with URL search parameters
+  useEffect(() => {
+    if (!tabParam) return
+
+    const resolvedTab = tabParam === 'agent-dash' ? 'agent-management-dashboard' : tabParam
+    setActiveTab(resolvedTab)
+
+    for (const menuItem of menuItems) {
+      const child = menuItem.children?.find(c => c.key === resolvedTab)
+      if (child?.subTab) {
+        if (menuItem.key === 'host-management') {
+          setHostManagementSubTab(child.subTab)
+        } else if (menuItem.key === 'agent-management') {
+          setAgentManagementSubTab(child.subTab)
+        }
+        break
+      }
+    }
+  }, [tabParam])
 
   const toggleMenu = (key) => {
     setExpandedMenus(prev => ({
@@ -1159,11 +1175,6 @@ export default function AgencyPage() {
             <AgencyTargetManagement />
           )}
 
-          {/* Incentive Levels Content */}
-          {activeTab === 'incentive-levels' && (
-            <AgencyIncentiveLevels />
-          )}
-
           {/* Progress Chart Content */}
           {activeTab === 'progress-chart' && (
             <AgencyProgressChart />
@@ -1172,6 +1183,16 @@ export default function AgencyPage() {
           {/* Charisma & Contribution Content */}
           {activeTab === 'charisma-contribution' && (
             <AgencyCharismaContribution />
+          )}
+
+          {/* Hourly Live History Content */}
+          {activeTab === 'hourly-live-history' && (
+            <AgencyHourlyLiveHistory />
+          )}
+
+          {/* Performance Content */}
+          {activeTab === 'performance' && (
+            <AgencyPerformance />
           )}
 
           {/* Host Management Content */}
