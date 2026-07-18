@@ -50,9 +50,10 @@ export default function Header({ onSelectAgencyTab }) {
             </Link>
             {/* Other items - direct routes */}
             {[
-              { name: 'Agency', tab: 'agency' },
+              { name: 'Host Agency', tab: 'host-agency', icon: '🎤' },
+                { name: 'Agency', tab: 'agency' },
               { name: 'Agent', tab: 'agent' },
-              { name: 'Host', tab: 'host' },
+              
               { name: 'Target System', tab: 'target' },
               { name: 'Revenue Distribution', tab: 'revenue' },
               { name: 'Agency Dashboard', tab: 'agency-dash' },
@@ -64,7 +65,7 @@ export default function Header({ onSelectAgencyTab }) {
                 onClick={() => setAgencyDropdownOpen(false)}
                 className="w-full block text-left px-4 py-2 text-sm font-medium hover:bg-red-50 hover:text-[#E51E25] transition-colors"
               >
-                {item.name}
+                {item.icon ? `${item.icon} ${item.name}` : item.name}
               </Link>
             ))}
           </div>
@@ -133,7 +134,7 @@ export default function Header({ onSelectAgencyTab }) {
               {[
                 { name: 'Agency', tab: 'agency' },
                 { name: 'Agent', tab: 'agent' },
-                { name: 'Host', tab: 'host' },
+                { name: 'Host Agency', tab: 'host-agency', icon: '🎤' },
                 { name: 'Target System', tab: 'target' },
                 { name: 'Revenue Distribution', tab: 'revenue' },
                 { name: 'Agency Dashboard', tab: 'agency-dash' },
@@ -145,7 +146,7 @@ export default function Header({ onSelectAgencyTab }) {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block text-white hover:text-red-200 py-2 pl-4 w-full text-left"
                 >
-                  {item.name}
+                  {item.icon ? `${item.icon} ${item.name}` : item.name}
                 </Link>
               ))}
             </div>

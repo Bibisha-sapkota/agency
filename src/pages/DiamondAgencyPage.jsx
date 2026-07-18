@@ -1909,9 +1909,13 @@ export default function DiamondAgencyPage() {
               </div>
             </div>
             <div className="flex justify-end">
-              <select value={selectedExpansionRegion} onChange={(e) => setSelectedExpansionRegion(e.target.value)} className="bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 text-[10px] sm:text-xs font-bold focus:outline-none">
-                <option>All Regions</option><option>Nepal</option><option>India</option>
-              </select>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E51E25]" />
+                <select value={selectedExpansionRegion} onChange={(e) => setSelectedExpansionRegion(e.target.value)} className="bg-white border border-slate-200 rounded-xl pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-[10px] sm:text-xs font-bold focus:outline-none appearance-none cursor-pointer">
+                  <option>All Regions</option><option>Nepal</option><option>India</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 pointer-events-none" />
+              </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
               {[
