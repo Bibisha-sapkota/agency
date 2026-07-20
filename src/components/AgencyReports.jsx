@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FileText, Download, Calendar, Users, DollarSign, ArrowRightLeft, Clock, TrendingUp, Filter, Search, ChevronDown } from 'lucide-react'
 
-export default function AgencyReports() {
-  const [activeReport, setActiveReport] = useState('daily')
+export default function AgencyReports({ initialReport = 'daily' }) {
+  const [activeReport, setActiveReport] = useState(initialReport)
   const [dateRange, setDateRange] = useState({ start: '', end: '' })
   const [searchQuery, setSearchQuery] = useState('')
   const [reportDropdownOpen, setReportDropdownOpen] = useState(false)
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false)
+
+  useEffect(() => {
+    setActiveReport(initialReport)
+  }, [initialReport])
 
   const reportTypes = [
     { key: 'daily', label: 'Daily Report', icon: Calendar },

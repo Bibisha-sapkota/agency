@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import AgencyNotifications from '../components/AgencyNotifications'
 import AgencyReports from '../components/AgencyReports'
+import AgencyAttendance from '../components/AgencyAttendance'
 import AgencyAnalytics from '../components/AgencyAnalytics'
 import AgencyEarnings from '../components/AgencyEarnings'
 import AgencyTargetManagement from '../components/AgencyTargetManagement'
-import AgencyCharismaContribution from '../components/AgencyCharismaContribution'
+import AgencyGifts from '../components/AgencyGifts'
+import AgencyContribution from '../components/AgencyContribution'
 import AgencyAgentManagement from '../components/AgencyAgentManagement'
 import AgencyHostManagement from '../components/AgencyHostManagement'
+import AgencyLiveMonitoring from '../components/AgencyLiveMonitoring'
+import AgencyLiveTimeDistribution from '../components/AgencyLiveTimeDistribution'
+import AgencyRanking from '../components/AgencyRanking'
+import AgencyDashboard from '../components/AgencyDashboard'
 import AgencyProgressChart from '../components/AgencyProgressChart'
 import AgencyHourlyLiveHistory from '../components/AgencyHourlyLiveHistory'
 import AgencyPerformance from '../components/AgencyPerformance'
@@ -16,81 +22,137 @@ import {
   ArrowLeft, Gem, PlusCircle, Search, Trash2, Edit, CheckSquare,
   TrendingUp, HelpCircle, BarChart3, Coins, PieChart,
   UserPlus, Play, RefreshCw, Send, DollarSign, Wallet, CheckCircle2,
-  Lock, FileText, Bell, Sliders, ChevronDown, ChevronRight, XCircle, Menu,
-  LayoutDashboard, Monitor, Star, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop, Clock, Gauge
+  Lock, FileText, Bell, Sliders, ChevronDown, ChevronRight, XCircle, Menu, Calendar,
+  LayoutDashboard, Monitor, Star, Gift, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop, Clock, Gauge
 } from 'lucide-react'
 import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 export default function AgencyPage() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const tabParam = searchParams.get('tab') || 'host-management-all'
+  const tabParam = searchParams.get('tab') || 'host-management'
   const [activeTab, setActiveTab] = useState(tabParam)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   // --- MENU CONFIG ---
   const [expandedMenus, setExpandedMenus] = useState({})
-  const [hostManagementSubTab, setHostManagementSubTab] = useState('all-hosts')
   const [agentManagementSubTab, setAgentManagementSubTab] = useState('all-agents')
-  
   const menuItems = [
-    { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { 
-      key: 'host-management', 
-      label: 'Host Management', 
-      icon: Users,
-      children: [
-        { key: 'host-management-all', label: 'All Hosts', subTab: 'all-hosts' },
-        { key: 'host-management-active', label: 'Active Hosts', subTab: 'active-hosts' },
-        { key: 'host-management-live', label: 'Live Hosts', subTab: 'live-hosts' },
-        { key: 'host-management-offline', label: 'Offline Hosts', subTab: 'offline-hosts' },
-        { key: 'host-management-inactive', label: 'Inactive Hosts', subTab: 'inactive-hosts' },
-        { key: 'host-management-vip', label: 'VIP Hosts', subTab: 'vip-hosts' },
-        { key: 'host-management-video', label: 'Video Hosts', subTab: 'video-hosts' },
-        { key: 'host-management-audio', label: 'Audio Hosts', subTab: 'audio-hosts' },
-        { key: 'host-management-new', label: 'New Hosts', subTab: 'new-hosts' },
-        { key: 'host-management-suspended', label: 'Suspended Hosts', subTab: 'suspended-hosts' },
-        { key: 'host-management-applications', label: 'Host Applications', subTab: 'host-applications' }
-      ]
-    },
-    { 
-      key: 'agent-management', 
-      label: 'Agent Management', 
-      icon: UserCheck,
-      children: [
-        { key: 'agent-management-dashboard', label: 'Agent Dashboard', subTab: 'agent-dashboard' },
-        { key: 'agent-management-all', label: 'All Agents', subTab: 'all-agents' },
-        { key: 'agent-management-history', label: 'Recruitment History', subTab: 'recruitment-history' },
-        { key: 'agent-management-performance', label: 'Agent Performance', subTab: 'agent-performance' },
-        { key: 'agent-management-host-targets', label: 'Host Targets', subTab: 'host-targets' }
-      ]
-    },
-    { key: 'charisma-contribution', label: 'Charisma & Contribution', icon: Star },
-    { key: 'hourly-live-history', label: 'Hourly Live History', icon: Clock },
-    { key: 'performance', label: 'Performance', icon: Gauge },
-    { key: 'target-management', label: 'Target Management', icon: Target },
-    { key: 'progress-chart', label: 'Progress Chart', icon: TrendingUp },
-    { key: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { key: 'reports', label: 'Reports', icon: FileTextIcon },
-    { key: 'notifications', label: 'Notifications', icon: Bell },
-    { key: 'settings', label: 'Settings', icon: Settings },
-    { key: 'recruitment', label: 'Recruitment & Commission', icon: UserPlus }
-  ]
-
+  {
+    key: 'dashboard',
+    label: ' Agency Dashboard',
+    icon: LayoutDashboard,
+  },
+  {
+    key: 'host-management',
+    label: ' Host Management',
+    icon: Users,
+  },
+  {
+    key: 'agent-management',
+    label: 'Agent Management',
+    icon: UserCheck,
+    children: [
+      { key: 'agent-management-dashboard', label: 'Agency Overview', subTab: 'overview' },
+      { key: 'agent-management-history', label: 'Recruitment History', subTab: 'recruitment-history' },
+      { key: 'agent-management-performance', label: 'Agent Performance', subTab: 'agent-performance' },
+    ],
+  },
+  {
+    key: 'gifts',
+    label: ' Gifts',
+    icon: Gift,
+  },
+ 
+  {
+    key: 'hourly-live-history',
+    label: ' Hourly Live History',
+    icon: Clock,
+  },
+  {
+    key: 'host-performance',
+    label: ' Host Performance',
+    icon: Gauge,
+  },
+  {
+    key: 'live-analysis',
+    label: ' Live Analysis',
+    icon: Monitor,
+  },
+  {
+    key: 'live-time-distribution',
+    label: ' Live Time Distribution',
+    icon: Clock,
+  },
+  {
+    key: 'ranking',
+    label: ' Ranking',
+    icon: Star,
+  },
+  {
+    key: 'performance',
+    label: ' Performance',
+    icon: Gauge,
+  },
+  {
+    key: 'target-management',
+    label: ' Target Management',
+    icon: Target,
+  },
+  {
+    key: 'progress-chart',
+    label: 'Progress Chart',
+    icon: TrendingUp,
+  },
+  {
+    key: 'analytics',
+    label: ' Analytics',
+    icon: BarChart3,
+  },
+  {
+    key: 'reports',
+    label: 'Reports',
+    icon: FileTextIcon,
+  },
+  {
+    key: 'attendance',
+    label: ' Attendance',
+    icon: Clock,
+  },
+  {
+    key: 'notifications',
+    label: ' Notifications',
+    icon: Bell,
+  },
+  {
+    key: 'settings',
+    label: 'Settings',
+    icon: Settings,
+  },
+  {
+    key: 'recruitment',
+    label: ' Recruitment & Commission',
+    icon: UserPlus,
+  },
+]
   // Sync state with URL search parameters
   useEffect(() => {
     if (!tabParam) return
 
-    const resolvedTab = tabParam === 'agent-dash' ? 'agent-management-dashboard' : tabParam
+    const resolvedTab = tabParam === 'agent-dash'
+      ? 'agent-management-dashboard'
+      : tabParam.startsWith('host-management')
+        ? 'host-management'
+        : tabParam
+
     setActiveTab(resolvedTab)
 
     for (const menuItem of menuItems) {
       const child = menuItem.children?.find(c => c.key === resolvedTab)
       if (child?.subTab) {
-        if (menuItem.key === 'host-management') {
-          setHostManagementSubTab(child.subTab)
-        } else if (menuItem.key === 'agent-management') {
+        if (menuItem.key === 'agent-management') {
           setAgentManagementSubTab(child.subTab)
         }
+        setExpandedMenus(prev => ({ ...prev, [menuItem.key]: true }))
         break
       }
     }
@@ -107,27 +169,31 @@ export default function AgencyPage() {
     setActiveTab(tab)
     setSearchParams({ tab })
     setMobileSidebarOpen(false)
-    
+
     // Handle nested menu selections
     const menuItem = menuItems.find(m => m.key === tab || m.children?.some(c => c.key === tab))
     if (menuItem?.children) {
       const child = menuItem.children.find(c => c.key === tab)
       if (child?.subTab) {
-        if (menuItem.key === 'host-management') {
-          setHostManagementSubTab(child.subTab)
-        } else if (menuItem.key === 'agent-management') {
+        if (menuItem.key === 'agent-management') {
           setAgentManagementSubTab(child.subTab)
         }
-      } else {
-        // If clicking the parent menu item, expand it and set default sub-tab
         setExpandedMenus(prev => ({ ...prev, [menuItem.key]: true }))
-        if (menuItem.key === 'host-management') {
-          setHostManagementSubTab('all-hosts')
-        } else if (menuItem.key === 'agent-management') {
-          setAgentManagementSubTab('all-agents')
-        }
       }
     }
+  }
+
+  const handleMenuItemClick = (item) => {
+    if (item.children && item.children.length > 0) {
+      const nextExpanded = !expandedMenus[item.key]
+      setExpandedMenus(prev => ({ ...prev, [item.key]: nextExpanded }))
+      if (!item.children.some(c => c.key === activeTab) && nextExpanded) {
+        selectTab(item.children[0].key)
+      }
+      return
+    }
+
+    selectTab(item.key)
   }
 
   // --- DASHBOARD STATES ---
@@ -155,8 +221,7 @@ export default function AgencyPage() {
     monthlyContribution: 2760,
     todayLiveHours: 156,
     monthlyLiveHours: 4680,
-    incentiveEarned: 45000,
-    bonusEarned: 28000,
+    monthlyIncentive: 45000,
     performanceScore: 87,
     targetCompletion: 78
   })
@@ -533,63 +598,76 @@ export default function AgencyPage() {
       )}
 
       {/* Mobile Sidebar Drawer */}
-      <aside className={`fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-white z-[10001] transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto shadow-2xl ${
+      <aside className={`fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-white z-[10001] transform transition-transform duration-300 ease-in-out lg:hidden flex flex-col justify-between shadow-2xl ${
         mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-[#E51E25]" />
-            <span className="font-black text-slate-800">Agency Portal</span>
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-[#E51E25]" />
+              <span className="font-black text-slate-800">Agency Portal</span>
+            </div>
+            <button
+              onClick={() => setMobileSidebarOpen(false)}
+              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
+            >
+              <XCircle className="w-5 h-5" />
+            </button>
           </div>
-          <button
-            onClick={() => setMobileSidebarOpen(false)}
-            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400"
-          >
-            <XCircle className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="py-3 px-3 flex flex-col gap-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon
-            const hasChildren = item.children && item.children.length > 0
-            const isExpanded = expandedMenus[item.key]
-            
-            return (
-              <div key={item.key}>
-                <button
-                  onClick={() => hasChildren ? toggleMenu(item.key) : selectTab(item.key)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold transition-all ${
-                    activeTab === item.key
-                      ? 'bg-[#E51E25] text-white shadow-lg shadow-red-200'
-                      : 'text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="flex-1">{item.label}</span>
-                  {hasChildren && (
-                    <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+          <div className="py-3 px-3 flex flex-col gap-1">
+            {menuItems.map((item) => {
+              const Icon = item.icon
+              const hasChildren = item.children && item.children.length > 0
+              const isExpanded = expandedMenus[item.key]
+              
+              return (
+                <div key={item.key}>
+                  <button
+                    onClick={() => handleMenuItemClick(item)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold transition-all ${
+                      activeTab === item.key || item.children?.some(c => c.key === activeTab)
+                        ? 'bg-[#E51E25] text-white shadow-lg shadow-red-200'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 shrink-0" />
+                    <span className="flex-1">{item.label}</span>
+                    {hasChildren && (
+                      <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                    )}
+                  </button>
+                  {hasChildren && isExpanded && (
+                    <div className="ml-4 mt-1 flex flex-col gap-1">
+                      {item.children.map((child) => (
+                        <button
+                          key={child.key}
+                          onClick={() => selectTab(child.key)}
+                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-bold transition-all ${
+                            activeTab === child.key
+                              ? 'bg-red-50 text-[#E51E25]'
+                              : 'text-slate-500 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span>{child.label}</span>
+                        </button>
+                      ))}
+                    </div>
                   )}
-                </button>
-                {hasChildren && isExpanded && (
-                  <div className="ml-4 mt-1 flex flex-col gap-1">
-                    {item.children.map((child) => (
-                      <button
-                        key={child.key}
-                        onClick={() => selectTab(child.key)}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-bold transition-all ${
-                          activeTab === child.key
-                            ? 'bg-red-50 text-[#E51E25]'
-                            : 'text-slate-500 hover:bg-slate-50'
-                        }`}
-                      >
-                        <span>{child.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Sidebar Bottom Card */}
+        <div className="p-4 border-t border-slate-100 bg-white">
+          <div className="bg-white border border-slate-200 text-slate-800 p-4 rounded-2xl flex flex-col gap-2 shadow-sm">
+            <div className="text-xs font-bold tracking-wide text-slate-700">Agency Level : {dashboardMetrics.agencyLevel || 'A'}</div>
+            <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+              <span>Status : {dashboardMetrics.agencyStatus || 'Active'}</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-sm shadow-green-500/50" />
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -598,52 +676,120 @@ export default function AgencyPage() {
       <div className="flex flex-1 w-full max-w-[1440px] mx-auto overflow-x-hidden pt-14 sm:pt-16">
 
         {/* Desktop Sidebar */}
-        <aside className="w-64 bg-white border-r border-slate-100 py-4 sm:py-6 px-3 sm:px-4 hidden lg:flex flex-col gap-1.5 sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto shrink-0 pt-20">
-          {menuItems.map((item) => {
-            const Icon = item.icon
-            const hasChildren = item.children && item.children.length > 0
-            const isExpanded = expandedMenus[item.key]
-            
-            return (
-              <div key={item.key}>
-                <button
-                  onClick={() => hasChildren ? toggleMenu(item.key) : selectTab(item.key)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-xl text-left text-sm font-bold transition-all active:scale-[0.98] ${
-                    activeTab === item.key
-                      ? 'bg-[#E51E25] text-white shadow-lg shadow-red-200/50'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
-                  }`}
-                >
-                  <Icon className="w-[18px] h-[18px] shrink-0" />
-                  <span className="flex-1 truncate">{item.label}</span>
-                  {hasChildren && (
-                    <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+        <aside className="w-64 bg-white border-r border-slate-100 py-6 px-4 hidden lg:flex flex-col shrink-0 justify-between min-h-[calc(100vh-60px)]">
+          <div className="flex flex-col gap-1.5">
+            {menuItems.map((item) => {
+              const Icon = item.icon
+              const hasChildren = item.children && item.children.length > 0
+              const isExpanded = expandedMenus[item.key]
+              
+              return (
+                <div key={item.key}>
+                  <button
+                    onClick={() => handleMenuItemClick(item)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 mb-2 rounded-xl text-left text-sm font-bold transition-all active:scale-[0.98] ${
+                      activeTab === item.key || item.children?.some(c => c.key === activeTab)
+                        ? 'bg-[#E51E25] text-white shadow-lg shadow-red-200/50'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                    }`}
+                  >
+                    <Icon className="w-[18px] h-[18px] shrink-0" />
+                    <span className="flex-1 truncate">{item.label}</span>
+                    {hasChildren && (
+                      <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                    )}
+                  </button>
+                  {hasChildren && isExpanded && (
+                    <div className="ml-6 mb-2 flex flex-col gap-1">
+                      {item.children.map((child) => (
+                        <button
+                          key={child.key}
+                          onClick={() => selectTab(child.key)}
+                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-bold transition-all ${
+                            activeTab === child.key
+                              ? 'bg-red-50 text-[#E51E25]'
+                              : 'text-slate-500 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span>{child.label}</span>
+                        </button>
+                      ))}
+                    </div>
                   )}
-                </button>
-                {hasChildren && isExpanded && (
-                  <div className="ml-6 mb-2 flex flex-col gap-1">
-                    {item.children.map((child) => (
-                      <button
-                        key={child.key}
-                        onClick={() => selectTab(child.key)}
-                        className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left text-xs font-bold transition-all ${
-                          activeTab === child.key
-                            ? 'bg-red-50 text-[#E51E25]'
-                            : 'text-slate-500 hover:bg-slate-50'
-                        }`}
-                      >
-                        <span>{child.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Sidebar Bottom Card */}
+          <div className="pt-4 mt-6 border-t border-slate-100">
+            <div className="bg-white border border-slate-200 text-slate-800 p-4 rounded-2xl flex flex-col gap-2 shadow-sm">
+              <div className="text-xs font-bold tracking-wide text-slate-700">Agency Level : {dashboardMetrics.agencyLevel || 'A'}</div>
+              <div className="flex items-center justify-between text-xs font-semibold text-slate-600">
+                <span>Status : {dashboardMetrics.agencyStatus || 'Active'}</span>
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-sm shadow-green-500/50" />
               </div>
-            )
-          })}
+            </div>
+          </div>
         </aside>
 
         {/* Dynamic Center Workstation */}
         <main className="flex-1 min-w-0 p-4 sm:p-6 md:p-8 overflow-x-hidden">
+          {/* Workstation Top Bar */}
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 sm:px-6 py-3 -mx-4 sm:-mx-6 md:-mx-8 -mt-4 sm:-mt-6 md:-mt-8 mb-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+                className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 shrink-0"
+                aria-label="Toggle menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              <div className="relative">
+                <select className="appearance-none rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-8 py-2 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer hover:bg-slate-100 transition-colors">
+                  <option>Agency : AGY1001 - Dream Star Agency</option>
+                </select>
+                <ChevronDown size={13} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              </div>
+              <div className="relative">
+                <span className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-8 py-2 text-xs font-semibold text-slate-700">
+                  <Calendar size={13} className="text-slate-500" />
+                  01 May 2025 - 31 May 2025
+                </span>
+                <ChevronDown size={13} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500" />
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 border border-green-100 rounded-full px-2.5 py-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                Real Time
+                <span className="flex items-end gap-[1.5px] ml-1 h-2.5">
+                  <span className="w-[1.5px] h-[3px] bg-green-500 rounded-sm" />
+                  <span className="w-[1.5px] h-[5px] bg-green-500 rounded-sm" />
+                  <span className="w-[1.5px] h-[7px] bg-green-500 rounded-sm" />
+                </span>
+              </span>
+              <button className="relative text-slate-500 hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-50">
+                <Bell size={18} />
+                <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-white">
+                  12
+                </span>
+              </button>
+              <div className="flex items-center gap-2 pl-2 border-l border-slate-100">
+                <img
+                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  alt="Super Admin"
+                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                />
+                <div className="hidden sm:block leading-tight text-left">
+                  <p className="text-xs font-bold text-slate-800">Super Admin</p>
+                  <p className="text-[10px] text-amber-600 font-bold">Level 10</p>
+                </div>
+                <ChevronDown size={13} className="text-slate-500 hidden sm:block" />
+              </div>
+            </div>
+          </div>
+
           <div className="mb-6">
             <h2 className="text-xl sm:text-2xl font-black text-slate-800">
               {menuItems.find(m => m.key === activeTab)?.label || 'Dashboard'}
@@ -652,190 +798,15 @@ export default function AgencyPage() {
 
           {/* Dashboard Content */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-6">
-              {/* Overview Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {/* Host Stats */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Hosts</span>
-                  <div className="text-lg font-black text-slate-800 mt-1">{dashboardMetrics.totalHosts}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Hosts</span>
-                  <div className="text-lg font-black text-green-600 mt-1">{dashboardMetrics.activeHosts}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Hosts</span>
-                  <div className="text-lg font-black text-[#E51E25] mt-1">{dashboardMetrics.liveHosts}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Offline Hosts</span>
-                  <div className="text-lg font-black text-slate-600 mt-1">{dashboardMetrics.offlineHosts}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Inactive Hosts</span>
-                  <div className="text-lg font-black text-amber-600 mt-1">{dashboardMetrics.inactiveHosts}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">VIP Hosts</span>
-                  <div className="text-lg font-black text-purple-600 mt-1">{dashboardMetrics.vipHosts}</div>
-                </div>
-
-                {/* Agent Stats */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Agents</span>
-                  <div className="text-lg font-black text-slate-800 mt-1">{dashboardMetrics.totalAgents}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Join Requests</span>
-                  <div className="text-lg font-black text-amber-600 mt-1">{dashboardMetrics.pendingJoinRequests}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Leave Requests</span>
-                  <div className="text-lg font-black text-amber-600 mt-1">{dashboardMetrics.pendingLeaveRequests}</div>
-                </div>
-                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Pending Withdraw Requests</span>
-                  <div className="text-lg font-black text-amber-600 mt-1">{dashboardMetrics.pendingWithdrawRequests}</div>
-                </div>
-
-              </div>
-
-              {/* Charts Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Live Hours Chart */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                  <h3 className="font-extrabold text-slate-800 text-sm mb-4">Live Hours Chart</h3>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <BarChart data={liveHoursChartData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="#94a3b8" />
-                      <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
-                      <Tooltip />
-                      <Bar dataKey="hours" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-                {/* Host Growth */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                  <h3 className="font-extrabold text-slate-800 text-sm mb-4">Host Growth</h3>
-                  <ResponsiveContainer width="100%" height={200}>
-                    <BarChart data={hostGrowthData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#94a3b8" />
-                      <YAxis tick={{ fontSize: 11 }} stroke="#94a3b8" />
-                      <Tooltip />
-                      <Bar dataKey="hosts" fill="#10b981" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-
-              </div>
-
-              {/* Recent Added Agents */}
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                <h3 className="font-extrabold text-slate-800 text-sm mb-4">Recent Added Agents</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-slate-50 text-slate-400 font-bold uppercase text-[10px] tracking-wide border-b border-slate-100">
-                      <tr>
-                        <th className="px-4 py-3">Agent ID</th>
-                        <th className="px-4 py-3">Name</th>
-                        <th className="px-4 py-3">Email</th>
-                        <th className="px-4 py-3">Joined Date</th>
-                        <th className="px-4 py-3">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {recentAgents.map((agent) => (
-                        <tr key={agent.id} className="hover:bg-slate-50 transition-colors">
-                          <td className="px-4 py-3 font-bold text-slate-800">{agent.id}</td>
-                          <td className="px-4 py-3 font-bold text-slate-700">{agent.name}</td>
-                          <td className="px-4 py-3 text-slate-600">{agent.email}</td>
-                          <td className="px-4 py-3 text-slate-600">{agent.joinedDate}</td>
-                          <td className="px-4 py-3">
-                            {agent.status === 'active' ? (
-                              <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold">Active</span>
-                            ) : (
-                              <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold">Pending</span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Recent Activity & Notifications */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Recent Activity */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                  <h3 className="font-extrabold text-slate-800 text-sm mb-4">Recent Activity</h3>
-                  <div className="space-y-3">
-                    {recentActivities.map((activity) => {
-                      const Icon = activity.icon
-                      return (
-                        <div key={activity.id} className="flex items-start gap-3 p-3 hover:bg-slate-50 rounded-xl transition-colors">
-                          <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                            <Icon className="w-5 h-5 text-[#E51E25]" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-slate-800 truncate">{activity.message}</p>
-                            <p className="text-xs text-slate-400 mt-1">{activity.time}</p>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                {/* Notifications */}
-                <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-extrabold text-slate-800 text-sm">Notifications</h3>
-                    <button
-                      onClick={() => setNotifications(notifications.map(n => ({ ...n, read: true })))}
-                      className="text-xs font-bold text-[#E51E25] hover:underline"
-                    >
-                      Mark all as read
-                    </button>
-                  </div>
-                  <div className="space-y-3">
-                    {notifications.map((notification) => (
-                      <div
-                        key={notification.id}
-                        className={`p-3 rounded-xl border transition-colors ${
-                          notification.read ? 'bg-slate-50 border-slate-100' : 'bg-white border-red-200'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className={`w-2 h-2 rounded-full mt-2 shrink-0 ${
-                            notification.type === 'success' ? 'bg-green-500' :
-                            notification.type === 'warning' ? 'bg-amber-500' :
-                            notification.type === 'info' ? 'bg-blue-500' : 'bg-slate-400'
-                          }`} />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-slate-800">{notification.title}</p>
-                            <p className="text-xs text-slate-500 mt-1">{notification.message}</p>
-                            <p className="text-[10px] text-slate-400 mt-2">{notification.time}</p>
-                          </div>
-                          {!notification.read && (
-                            <button
-                              onClick={() => setNotifications(notifications.map(n => n.id === notification.id ? { ...n, read: true } : n))}
-                              className="text-xs font-bold text-[#E51E25] hover:underline shrink-0"
-                            >
-                              Mark read
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <AgencyDashboard
+              dashboardMetrics={dashboardMetrics}
+              liveHoursChartData={liveHoursChartData}
+              hostGrowthData={hostGrowthData}
+              recentAgents={recentAgents}
+              recentActivities={recentActivities}
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
           )}
 
           {/* Recruitment & Commission Content */}
@@ -1160,6 +1131,11 @@ export default function AgencyPage() {
             <AgencyReports />
           )}
 
+          {/* Attendance Content */}
+          {activeTab === 'attendance' && (
+            <AgencyAttendance />
+          )}
+
           {/* Analytics Content */}
           {activeTab === 'analytics' && (
             <AgencyAnalytics />
@@ -1180,14 +1156,39 @@ export default function AgencyPage() {
             <AgencyProgressChart />
           )}
 
-          {/* Charisma & Contribution Content */}
-          {activeTab === 'charisma-contribution' && (
-            <AgencyCharismaContribution />
+          {/* Gifts Content */}
+          {activeTab === 'gifts' && (
+            <AgencyGifts />
+          )}
+
+          {/* Contribution Content */}
+          {activeTab === 'contribution' && (
+            <AgencyContribution />
           )}
 
           {/* Hourly Live History Content */}
           {activeTab === 'hourly-live-history' && (
             <AgencyHourlyLiveHistory />
+          )}
+
+          {/* Host Performance Content */}
+          {activeTab === 'host-performance' && (
+            <AgencyPerformance />
+          )}
+
+          {/* Live Analysis Content */}
+          {activeTab === 'live-analysis' && (
+            <AgencyLiveMonitoring />
+          )}
+
+          {/* Live Time Distribution Content */}
+          {activeTab === 'live-time-distribution' && (
+            <AgencyLiveTimeDistribution />
+          )}
+
+          {/* Ranking Content */}
+          {activeTab === 'ranking' && (
+            <AgencyRanking />
           )}
 
           {/* Performance Content */}
@@ -1197,7 +1198,7 @@ export default function AgencyPage() {
 
           {/* Host Management Content */}
           {(activeTab === 'host-management' || activeTab.startsWith('host-management-')) && (
-            <AgencyHostManagement subTab={hostManagementSubTab} />
+            <AgencyHostManagement />
           )}
 
           {/* Agent Management Content */}
