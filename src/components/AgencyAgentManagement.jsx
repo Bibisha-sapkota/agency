@@ -43,7 +43,7 @@ import {
   Cell,
 } from "recharts";
 
-export default function AgencyOverview({ subTab = "overview" }) {
+export default function AgencyOverview({ subTab = "overview", onViewAllAlerts, onViewAllHosts }) {
   /* ---------------- KPI summary ---------------- */
   const kpis = [
     { label: "Total Hosts", value: "1,250", change: "+12.5% vs Apr 2025", icon: Users, bg: "bg-violet-50", iconColor: "text-violet-600" },
@@ -54,22 +54,29 @@ export default function AgencyOverview({ subTab = "overview" }) {
     { label: "Total Contribution", value: "₹98,75,500", change: "+14.8% vs Apr 2025", icon: Gift, bg: "bg-orange-50", iconColor: "text-orange-600" },
   ];
 
-  /* ---------------- Chart data ---------------- */
-  const revenueData = [
-    { date: "01 May", value: 8 },
-    { date: "08 May", value: 15 },
-    { date: "15 May", value: 12 },
-    { date: "22 May", value: 26 },
-    { date: "31 May", value: 40 },
-  ];
+  /* ---------------- Period filter state ---------------- */
+  const [revenuePeriod, setRevenuePeriod] = useState("This Month");
+  const [charismaPeriod, setCharismaPeriod] = useState("This Month");
+  const [activityPeriod, setActivityPeriod] = useState("This Month");
+  const [hostsPeriod, setHostsPeriod] = useState("This Month");
+  const [sourcePeriod, setSourcePeriod] = useState("This Month");
 
-  const charismaData = [
-    { date: "01 May", value: 30 },
-    { date: "08 May", value: 55 },
-    { date: "15 May", value: 48 },
-    { date: "22 May", value: 78 },
-    { date: "31 May", value: 100 },
-  ];
+  /* ---------------- Chart data (period-aware) ---------------- */
+  const charismaDataByPeriod = {
+    "This Month":    [{ date: "01 May", value: 30 }, { date: "08 May", value: 55 }, { date: "15 May", value: 48 }, { date: "22 May", value: 78 }, { date: "31 May", value: 100 }],
+    "Last Month":    [{ date: "01 Apr", value: 20 }, { date: "08 Apr", value: 38 }, { date: "15 Apr", value: 35 }, { date: "22 Apr", value: 60 }, { date: "30 Apr", value: 80 }],
+    "This Quarter":  [{ date: "Jan", value: 60 }, { date: "Feb", value: 75 }, { date: "Mar", value: 90 }, { date: "Apr", value: 80 }, { date: "May", value: 100 }],
+    "This Year":     [{ date: "Q1", value: 75 }, { date: "Q2", value: 100 }, { date: "Q3", value: 115 }, { date: "Q4", value: 140 }],
+  };
+  const charismaData = charismaDataByPeriod[charismaPeriod] || charismaDataByPeriod["This Month"];
+
+  const revenueDataByPeriod = {
+    "This Month":    [{ date: "01 May", value: 8 }, { date: "08 May", value: 15 }, { date: "15 May", value: 12 }, { date: "22 May", value: 26 }, { date: "31 May", value: 40 }],
+    "Last Month":    [{ date: "01 Apr", value: 6 }, { date: "08 Apr", value: 11 }, { date: "15 Apr", value: 9 }, { date: "22 Apr", value: 18 }, { date: "30 Apr", value: 30 }],
+    "This Quarter":  [{ date: "Jan", value: 22 }, { date: "Feb", value: 28 }, { date: "Mar", value: 34 }, { date: "Apr", value: 30 }, { date: "May", value: 40 }],
+    "This Year":     [{ date: "Q1", value: 28 }, { date: "Q2", value: 40 }, { date: "Q3", value: 52 }, { date: "Q4", value: 68 }],
+  };
+  const revenueData = revenueDataByPeriod[revenuePeriod] || revenueDataByPeriod["This Month"];
 
   const hostActivityData = [
     { name: "Active Hosts", value: 980, pct: "78.4%", color: "#10B981" },
@@ -78,20 +85,45 @@ export default function AgencyOverview({ subTab = "overview" }) {
     { name: "Banned Hosts", value: 25, pct: "2.0%", color: "#9CA3AF" },
   ];
 
-  const revenueSourceData = [
-    { name: "Live Gifts", value: 1625600, pct: "63.4%", color: "#8B5CF6" },
-    { name: "PK Battles", value: 480200, pct: "18.8%", color: "#EC4899" },
-    { name: "Private Calls", value: 295300, pct: "11.5%", color: "#3B82F6" },
-    { name: "Other Sources", value: 159700, pct: "6.2%", color: "#F59E0B" },
-  ];
+  const revenueSourceByPeriod = {
+    "This Month":   [{ name: "Live Gifts", value: 1625600, pct: "63.4%", color: "#8B5CF6" }, { name: "PK Battles", value: 480200, pct: "18.8%", color: "#EC4899" }, { name: "Private Calls", value: 295300, pct: "11.5%", color: "#3B82F6" }, { name: "Other Sources", value: 159700, pct: "6.2%", color: "#F59E0B" }],
+    "Last Month":   [{ name: "Live Gifts", value: 1380000, pct: "61.2%", color: "#8B5CF6" }, { name: "PK Battles", value: 410000, pct: "18.2%", color: "#EC4899" }, { name: "Private Calls", value: 278000, pct: "12.3%", color: "#3B82F6" }, { name: "Other Sources", value: 188000, pct: "8.3%", color: "#F59E0B" }],
+    "This Quarter": [{ name: "Live Gifts", value: 4800000, pct: "62.0%", color: "#8B5CF6" }, { name: "PK Battles", value: 1420000, pct: "18.4%", color: "#EC4899" }, { name: "Private Calls", value: 880000, pct: "11.4%", color: "#3B82F6" }, { name: "Other Sources", value: 640000, pct: "8.2%", color: "#F59E0B" }],
+    "This Year":    [{ name: "Live Gifts", value: 18500000, pct: "64.1%", color: "#8B5CF6" }, { name: "PK Battles", value: 5200000, pct: "18.0%", color: "#EC4899" }, { name: "Private Calls", value: 3300000, pct: "11.5%", color: "#3B82F6" }, { name: "Other Sources", value: 1850000, pct: "6.4%", color: "#F59E0B" }],
+  };
+  const revenueSourceData = revenueSourceByPeriod[sourcePeriod] || revenueSourceByPeriod["This Month"];
 
-  const topHosts = [
-    { rank: 1, name: "Pooja Singh", level: 3, revenue: "₹2,45,300", charisma: "₹12,50,300" },
-    { rank: 2, name: "Anjali Sharma", level: 2, revenue: "₹2,15,600", charisma: "₹10,20,400" },
-    { rank: 3, name: "Riya Mehta", level: 2, revenue: "₹1,85,400", charisma: "₹8,60,200" },
-    { rank: 4, name: "Kavya Reddy", level: 1, revenue: "₹1,65,200", charisma: "₹7,80,100" },
-    { rank: 5, name: "Neha Patel", level: 3, revenue: "₹1,50,300", charisma: "₹6,90,400" },
-  ];
+  const topHostsByPeriod = {
+    "This Month":   [
+      { rank: 1, name: "Pooja Singh",   level: 3, revenue: "₹2,45,300",  charisma: "₹12,50,300" },
+      { rank: 2, name: "Anjali Sharma", level: 2, revenue: "₹2,15,600",  charisma: "₹10,20,400" },
+      { rank: 3, name: "Riya Mehta",    level: 2, revenue: "₹1,85,400",  charisma: "₹8,60,200" },
+      { rank: 4, name: "Kavya Reddy",   level: 1, revenue: "₹1,65,200",  charisma: "₹7,80,100" },
+      { rank: 5, name: "Neha Patel",    level: 3, revenue: "₹1,50,300",  charisma: "₹6,90,400" },
+    ],
+    "Last Month":   [
+      { rank: 1, name: "Anjali Sharma", level: 2, revenue: "₹2,05,800",  charisma: "₹9,80,500" },
+      { rank: 2, name: "Pooja Singh",   level: 3, revenue: "₹1,95,200",  charisma: "₹11,20,100" },
+      { rank: 3, name: "Neha Patel",    level: 3, revenue: "₹1,72,600",  charisma: "₹6,40,200" },
+      { rank: 4, name: "Riya Mehta",    level: 2, revenue: "₹1,60,100",  charisma: "₹7,90,800" },
+      { rank: 5, name: "Kavya Reddy",   level: 1, revenue: "₹1,38,400",  charisma: "₹6,10,300" },
+    ],
+    "This Quarter": [
+      { rank: 1, name: "Pooja Singh",   level: 3, revenue: "₹7,20,800",  charisma: "₹36,50,600" },
+      { rank: 2, name: "Anjali Sharma", level: 2, revenue: "₹6,48,300",  charisma: "₹30,80,200" },
+      { rank: 3, name: "Riya Mehta",    level: 2, revenue: "₹5,56,200",  charisma: "₹25,80,400" },
+      { rank: 4, name: "Neha Patel",    level: 3, revenue: "₹4,90,500",  charisma: "₹20,60,100" },
+      { rank: 5, name: "Kavya Reddy",   level: 1, revenue: "₹4,30,800",  charisma: "₹18,90,700" },
+    ],
+    "This Year":    [
+      { rank: 1, name: "Pooja Singh",   level: 3, revenue: "₹28,50,300", charisma: "₹1,42,50,300" },
+      { rank: 2, name: "Anjali Sharma", level: 2, revenue: "₹25,40,600", charisma: "₹1,20,20,400" },
+      { rank: 3, name: "Riya Mehta",    level: 2, revenue: "₹21,85,400", charisma: "₹98,60,200" },
+      { rank: 4, name: "Kavya Reddy",   level: 1, revenue: "₹18,65,200", charisma: "₹87,80,100" },
+      { rank: 5, name: "Neha Patel",    level: 3, revenue: "₹16,50,300", charisma: "₹76,90,400" },
+    ],
+  };
+  const topHosts = topHostsByPeriod[hostsPeriod] || topHostsByPeriod["This Month"];
 
   const summary = [
     { label: "Total Live Hours", value: "12,450h", change: "+11.4%", up: true, icon: Clock },
@@ -161,11 +193,6 @@ export default function AgencyOverview({ subTab = "overview" }) {
     setMainTab(subTab)
   }, [subTab])
 
-  const [revenuePeriod, setRevenuePeriod] = useState("This Month");
-  const [charismaPeriod, setCharismaPeriod] = useState("This Month");
-  const [activityPeriod, setActivityPeriod] = useState("This Month");
-  const [hostsPeriod, setHostsPeriod] = useState("This Month");
-  const [sourcePeriod, setSourcePeriod] = useState("This Month");
   const [toast, setToast] = useState(null);
 
   const showToast = (msg) => {
@@ -462,8 +489,8 @@ export default function AgencyOverview({ subTab = "overview" }) {
               </tbody>
             </table>
             <button
-              onClick={() => showToast("Opening all hosts...")}
-              className="flex items-center gap-1 text-xs font-semibold text-violet-600 hover:underline mt-3"
+              onClick={() => onViewAllHosts && onViewAllHosts()}
+              className="flex items-center gap-1 text-xs font-semibold text-violet-600 hover:text-violet-800 hover:underline transition-colors mt-3"
             >
               View All Hosts
               <ArrowRight size={12} />
@@ -537,8 +564,8 @@ export default function AgencyOverview({ subTab = "overview" }) {
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-black text-sm">Recent Alerts</h3>
             <button
-              onClick={() => showToast("Opening all alerts...")}
-              className="text-xs font-semibold text-violet-600 hover:underline"
+              onClick={() => onViewAllAlerts && onViewAllAlerts()}
+              className="text-xs font-semibold text-violet-600 hover:text-violet-800 hover:underline transition-colors"
             >
               View All
             </button>

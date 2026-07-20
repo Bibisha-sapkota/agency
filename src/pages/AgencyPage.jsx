@@ -23,7 +23,8 @@ import {
   TrendingUp, HelpCircle, BarChart3, Coins, PieChart,
   UserPlus, Play, RefreshCw, Send, DollarSign, Wallet, CheckCircle2,
   Lock, FileText, Bell, Sliders, ChevronDown, ChevronRight, XCircle, Menu, Calendar,
-  LayoutDashboard, Monitor, Star, Gift, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop, Clock, Gauge
+  LayoutDashboard, Monitor, Star, Gift, Package, FileText as FileTextIcon, ArrowRightLeft, Sun, Moon, Laptop, Clock, Gauge,
+  LogOut, User, Shield
 } from 'lucide-react'
 import { ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
 
@@ -32,6 +33,11 @@ export default function AgencyPage() {
   const tabParam = searchParams.get('tab') || 'host-management'
   const [activeTab, setActiveTab] = useState(tabParam)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
+  const [datePickerOpen, setDatePickerOpen] = useState(false)
+  const [dateRange, setDateRange] = useState({ label: '01 May 2025 - 31 May 2025', from: '2025-05-01', to: '2025-05-31' })
+  const [customFrom, setCustomFrom] = useState('2025-05-01')
+  const [customTo, setCustomTo] = useState('2025-05-31')
 
   // --- MENU CONFIG ---
   const [expandedMenus, setExpandedMenus] = useState({})
@@ -752,11 +758,85 @@ export default function AgencyPage() {
                 <ChevronDown size={13} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500" />
               </div>
               <div className="relative">
-                <span className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-8 py-2 text-xs font-semibold text-slate-700">
+                <button
+                  onClick={() => setDatePickerOpen(prev => !prev)}
+                  className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 pl-3 pr-8 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                >
                   <Calendar size={13} className="text-slate-500" />
-                  01 May 2025 - 31 May 2025
-                </span>
-                <ChevronDown size={13} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                  {dateRange.label}
+                </button>
+                <ChevronDown size={13} className={`pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 transition-transform duration-200 ${datePickerOpen ? 'rotate-180' : ''}`} />
+
+                {datePickerOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setDatePickerOpen(false)} />
+                    <div className="absolute left-0 top-full mt-2 w-72 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                      {/* Preset ranges */}
+                      <div className="p-2 border-b border-slate-100">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide px-2 py-1">Quick Select</p>
+                        {[
+                          { label: 'Today',          from: '2025-05-20', to: '2025-05-20', display: '20 May 2025' },
+                          { label: 'This Week',       from: '2025-05-14', to: '2025-05-20', display: '14 May - 20 May 2025' },
+                          { label: 'This Month',      from: '2025-05-01', to: '2025-05-31', display: '01 May 2025 - 31 May 2025' },
+                          { label: 'Last Month',      from: '2025-04-01', to: '2025-04-30', display: '01 Apr 2025 - 30 Apr 2025' },
+                          { label: 'This Quarter',    from: '2025-04-01', to: '2025-06-30', display: '01 Apr 2025 - 30 Jun 2025' },
+                          { label: 'This Year',       from: '2025-01-01', to: '2025-12-31', display: '01 Jan 2025 - 31 Dec 2025' },
+                        ].map(opt => (
+                          <button
+                            key={opt.label}
+                            onClick={() => { setDateRange({ label: opt.display, from: opt.from, to: opt.to }); setDatePickerOpen(false); }}
+                            className={`w-full text-left px-3 py-2 text-xs rounded-lg transition-colors ${
+                              dateRange.from === opt.from && dateRange.to === opt.to
+                                ? 'bg-violet-600 text-white font-semibold'
+                                : 'text-slate-700 hover:bg-slate-50'
+                            }`}
+                          >
+                            <span className="font-semibold">{opt.label}</span>
+                            <span className={`block text-[10px] mt-0.5 ${
+                              dateRange.from === opt.from && dateRange.to === opt.to ? 'text-violet-200' : 'text-slate-400'
+                            }`}>{opt.display}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {/* Custom range */}
+                      <div className="p-3">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Custom Range</p>
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2">
+                            <label className="text-[11px] text-slate-500 w-8 shrink-0">From</label>
+                            <input
+                              type="date"
+                              value={customFrom}
+                              onChange={e => setCustomFrom(e.target.value)}
+                              className="flex-1 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-violet-400"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <label className="text-[11px] text-slate-500 w-8 shrink-0">To</label>
+                            <input
+                              type="date"
+                              value={customTo}
+                              onChange={e => setCustomTo(e.target.value)}
+                              className="flex-1 border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-violet-400"
+                            />
+                          </div>
+                          <button
+                            onClick={() => {
+                              if (customFrom && customTo) {
+                                const fmt = d => new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+                                setDateRange({ label: `${fmt(customFrom)} - ${fmt(customTo)}`, from: customFrom, to: customTo });
+                                setDatePickerOpen(false);
+                              }
+                            }}
+                            className="w-full bg-violet-600 hover:bg-violet-700 text-white text-xs font-semibold rounded-lg py-2 transition-colors"
+                          >
+                            Apply Range
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -769,23 +849,90 @@ export default function AgencyPage() {
                   <span className="w-[1.5px] h-[7px] bg-green-500 rounded-sm" />
                 </span>
               </span>
-              <button className="relative text-slate-500 hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-50">
+              <button
+                onClick={() => setActiveTab('notifications')}
+                className="relative text-slate-500 hover:text-slate-700 transition-colors p-1.5 rounded-lg hover:bg-slate-50"
+              >
                 <Bell size={18} />
                 <span className="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-white">
                   12
                 </span>
               </button>
-              <div className="flex items-center gap-2 pl-2 border-l border-slate-100">
-                <img
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="Super Admin"
-                  className="w-8 h-8 rounded-full object-cover border border-slate-200"
-                />
-                <div className="hidden sm:block leading-tight text-left">
-                  <p className="text-xs font-bold text-slate-800">Super Admin</p>
-                  <p className="text-[10px] text-amber-600 font-bold">Level 10</p>
-                </div>
-                <ChevronDown size={13} className="text-slate-500 hidden sm:block" />
+              <div className="relative flex items-center gap-2 pl-2 border-l border-slate-100">
+                <button
+                  onClick={() => setProfileDropdownOpen(prev => !prev)}
+                  className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-slate-100 transition-colors"
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    alt="Super Admin"
+                    className="w-8 h-8 rounded-full object-cover border border-slate-200"
+                  />
+                  <div className="hidden sm:block leading-tight text-left">
+                    <p className="text-xs font-bold text-slate-800">Super Admin</p>
+                    <p className="text-[10px] text-amber-600 font-bold">Level 10</p>
+                  </div>
+                  <ChevronDown size={13} className={`text-slate-500 hidden sm:block transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {profileDropdownOpen && (
+                  <>
+                    {/* Backdrop */}
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setProfileDropdownOpen(false)}
+                    />
+                    {/* Menu */}
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                      {/* Header */}
+                      <div className="px-4 py-3 bg-slate-50 border-b border-slate-100">
+                        <p className="text-xs font-bold text-slate-800">Super Admin</p>
+                        <p className="text-[10px] text-slate-500 mt-0.5">admin@dreamstaragency.com</p>
+                      </div>
+                      {/* Options */}
+                      <div className="py-1">
+                        <button
+                          onClick={() => { setActiveTab('settings'); setProfileDropdownOpen(false); }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <User size={14} className="text-slate-500" />
+                          My Profile
+                        </button>
+                        <button
+                          onClick={() => { setActiveTab('settings'); setProfileDropdownOpen(false); }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Settings size={14} className="text-slate-500" />
+                          Settings
+                        </button>
+                        <button
+                          onClick={() => { setActiveTab('notifications'); setProfileDropdownOpen(false); }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Bell size={14} className="text-slate-500" />
+                          Notifications
+                          <span className="ml-auto bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">12</span>
+                        </button>
+                        <button
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 transition-colors"
+                        >
+                          <Shield size={14} className="text-slate-500" />
+                          Security
+                        </button>
+                      </div>
+                      {/* Logout */}
+                      <div className="border-t border-slate-100 py-1">
+                        <button
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 transition-colors font-semibold"
+                        >
+                          <LogOut size={14} />
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -806,6 +953,8 @@ export default function AgencyPage() {
               recentActivities={recentActivities}
               notifications={notifications}
               setNotifications={setNotifications}
+              onViewAllAlerts={() => setActiveTab('notifications')}
+              onViewAllActivities={() => setActiveTab('hourly-live-history')}
             />
           )}
 
@@ -1203,7 +1352,7 @@ export default function AgencyPage() {
 
           {/* Agent Management Content */}
           {(activeTab === 'agent-management' || activeTab.startsWith('agent-management-')) && (
-            <AgencyAgentManagement subTab={agentManagementSubTab} />
+            <AgencyAgentManagement subTab={agentManagementSubTab} onViewAllAlerts={() => setActiveTab('notifications')} onViewAllHosts={() => setActiveTab('performance')} />
           )}
 
           {/* Settings Content */}

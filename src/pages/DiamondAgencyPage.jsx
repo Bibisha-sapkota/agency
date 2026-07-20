@@ -14,7 +14,7 @@ import {
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
 
 export default function DiamondAgencyPage() {
-  const [activeSideTab, setActiveSideTab] = useState('pkg_all')
+  const [activeSideTab, setActiveSideTab] = useState('dashboard')
   const [blueDiamondTab, setBlueDiamondTab] = useState('overview')
   const [greenDiamondTab, setGreenDiamondTab] = useState('overview')
   const [expandedGroups, setExpandedGroups] = useState({ diamond_packages: true, agency: true })

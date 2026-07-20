@@ -467,12 +467,7 @@ export default function GiftContribution() {
           </div>
         )}
 
-        <div className="flex items-start gap-2.5 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-[12px] text-slate-600">
-          <Info className="h-4 w-4 text-black shrink-0 mt-0.5" />
-          <span>
-            <b className="text-black">Note:</b> Agency can only see target progress and summarized data. Individual gift sender/receiver details and history are visible only to the respective host on their own profile.
-          </span>
-        </div>
+
 
       </div>
     </div>

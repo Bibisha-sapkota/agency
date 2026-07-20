@@ -33,16 +33,16 @@ import {
   Cell,
 } from "recharts";
 
-export default function AgencyDashboard() {
+export default function AgencyDashboard({ onViewAllAlerts, onViewAllActivities }) {
   /* ---------------- Top KPI cards ---------------- */
   const kpis = [
-    { label: "Total Hosts", value: "1,250", icon: Users, color: "#2563eb", bg: "#EFF6FF" },
-    { label: "Active Hosts", value: "980", icon: UserCheck, color: "#ea580c", bg: "#FFF7ED" },
-    { label: "Online Hosts", value: "320", icon: Radio, color: "#16a34a", bg: "#F0FDF4" },
-    { label: "Total Live Hours", value: "12,450h", icon: Clock, color: "#0891b2", bg: "#ECFEFF" },
-    { label: "Total Contribution", value: "\u20B998,75,500", icon: Gift, color: "#d97706", bg: "#FFFBEB" },
-    { label: "Total Charisma", value: "\u20B91,25,80,300", icon: Sparkles, color: "#db2777", bg: "#FDF2F8" },
-    { label: "Agency Revenue", value: "\u20B925,60,800", icon: Wallet, color: "#7c3aed", bg: "#F5F3FF" },
+    { label: "Total Hosts",       value: "1,250",         icon: Users,    trend: "+12.5%", trendUp: true,  period: "vs Apr 2025" },
+    { label: "Active Hosts",      value: "980",           icon: UserCheck,trend: "+10.3%", trendUp: true,  period: "vs Apr 2025" },
+    { label: "Online Now",        value: "320",           icon: Radio,    trend: "+8.7%",  trendUp: true,  period: "vs Apr 2025" },
+    { label: "Total Revenue",     value: "₹25,60,800",    icon: Wallet,   trend: "+15.8%", trendUp: true,  period: "vs Apr 2025" },
+    { label: "Total Charisma",    value: "₹1,25,80,300",  icon: Sparkles, trend: "+18.2%", trendUp: true,  period: "vs Apr 2025" },
+    { label: "Total Contribution",value: "₹98,75,500",    icon: Gift,     trend: "+14.8%", trendUp: true,  period: "vs Apr 2025" },
+    { label: "Total Live Hours",  value: "12,450h",       icon: Clock,    trend: "+6.2%",  trendUp: true,  period: "vs Apr 2025" },
   ];
 
   /* ---------------- Host Targets & Levels ---------------- */
@@ -163,7 +163,7 @@ export default function AgencyDashboard() {
       subtitle: "Breakdown of hosts by status",
       rows: [
         { label: "Active Hosts", value: "980" },
-        { label: "Online Hosts", value: "320" },
+        { label: "Online Now", value: "320" },
         { label: "Inactive Hosts", value: "270" },
       ],
     },
@@ -171,29 +171,30 @@ export default function AgencyDashboard() {
       subtitle: "Top active hosts this month",
       rows: topHosts.map((h) => ({ label: h.name, value: h.level })),
     },
-    "Online Hosts": {
+    "Online Now": {
       subtitle: "Currently live hosts",
       rows: [
-        { label: "Pooja Singh", value: "Live" },
-        { label: "Anjali Sharma", value: "Live" },
-        { label: "Neha Patel", value: "Live" },
+        { label: "Pooja Singh", value: "🔴 Live" },
+        { label: "Anjali Sharma", value: "🔴 Live" },
+        { label: "Neha Patel", value: "🔴 Live" },
+        { label: "Riya Mehta", value: "🔴 Live" },
       ],
+    },
+    "Total Revenue": {
+      subtitle: "Revenue breakdown this month",
+      rows: revenue.map((r) => ({ label: r.label, value: r.value })),
+    },
+    "Total Charisma": {
+      subtitle: "Gifts received by hosts",
+      rows: charisma.map((r) => ({ label: r.label, value: r.value })),
+    },
+    "Total Contribution": {
+      subtitle: "Gifts sent to hosts",
+      rows: contribution.map((r) => ({ label: r.label, value: r.value })),
     },
     "Total Live Hours": {
       subtitle: "Live performance this month",
       rows: livePerformance.map((r) => ({ label: r.label, value: r.value })),
-    },
-    "Total Contribution": {
-      subtitle: "Gifts sent to host",
-      rows: contribution.map((r) => ({ label: r.label, value: r.value })),
-    },
-    "Total Charisma": {
-      subtitle: "Gifts received",
-      rows: charisma.map((r) => ({ label: r.label, value: r.value })),
-    },
-    "Agency Revenue": {
-      subtitle: "Revenue breakdown",
-      rows: revenue.map((r) => ({ label: r.label, value: r.value })),
     },
   };
 
@@ -279,24 +280,31 @@ export default function AgencyDashboard() {
           </div>
 
           {/* KPI cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-3">
             {kpis.map((k) => {
               const Icon = k.icon;
               return (
-                <div key={k.label} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3 bg-gray-100">
-                    <Icon size={18} className="text-gray-800" />
+                <button
+                  key={k.label}
+                  onClick={() => openKpiDetails(k)}
+                  className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm text-left hover:border-gray-400 hover:shadow-md transition-all duration-200 group cursor-pointer"
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100 group-hover:bg-gray-200 transition-colors">
+                      <Icon size={18} className="text-gray-900" />
+                    </div>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                      k.trendUp
+                        ? 'bg-green-50 text-green-600'
+                        : 'bg-red-50 text-red-500'
+                    }`}>
+                      {k.trendUp ? '↑' : '↓'} {k.trend}
+                    </span>
                   </div>
-                  <p className="text-lg font-bold text-gray-900 leading-tight">{k.value}</p>
-                  <p className="text-xs text-gray-500 mt-1">{k.label}</p>
-                  <button
-                    onClick={() => openKpiDetails(k)}
-                    className="text-xs font-medium mt-2 hover:underline"
-                    style={{ color: k.color }}
-                  >
-                    View Details
-                  </button>
-                </div>
+                  <p className="text-base font-bold text-gray-900 leading-tight truncate">{k.value}</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{k.label}</p>
+                  <p className="text-[10px] text-gray-400 mt-1">{k.period}</p>
+                </button>
               );
             })}
           </div>
@@ -529,7 +537,12 @@ export default function AgencyDashboard() {
                   );
                 })}
               </div>
-              <button className="text-xs font-semibold text-violet-600 mt-3">View All Activities</button>
+              <button
+                onClick={() => onViewAllActivities && onViewAllActivities()}
+                className="text-xs font-semibold text-violet-600 mt-3 hover:text-violet-800 hover:underline transition-colors"
+              >
+                View All Activities
+              </button>
             </div>
 
             {/* Alerts & notifications */}
@@ -554,7 +567,12 @@ export default function AgencyDashboard() {
                   );
                 })}
               </div>
-              <button className="text-xs font-semibold text-violet-600 mt-3">View All Alerts</button>
+              <button
+                onClick={() => onViewAllAlerts && onViewAllAlerts()}
+                className="text-xs font-semibold text-violet-600 mt-3 hover:text-violet-800 hover:underline transition-colors"
+              >
+                View All Alerts
+              </button>
             </div>
           </div>
         </main>
