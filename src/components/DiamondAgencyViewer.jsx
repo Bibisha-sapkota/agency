@@ -25,14 +25,49 @@ export default function DiamondAgencyPage() {
   }
 
   // ---- Diamond Packages State ----
-  const [packages, setPackages] = useState([
+  const defaultPackages = [
     { id: 'PK-1', name: 'Small Diamond Pack', diamonds: 100, price: 0.99, bonusPct: 10, sold: 110, status: 'active' },
     { id: 'PK-2', name: 'Medium Diamond Pack', diamonds: 310, price: 2.99, bonusPct: 12, sold: 347, status: 'active' },
     { id: 'PK-3', name: 'Large Diamond Pack', diamonds: 1060, price: 9.99, bonusPct: 14, sold: 1208, status: 'active' },
     { id: 'PK-4', name: 'Mega Diamond Pack', diamonds: 2200, price: 19.99, bonusPct: 18, sold: 2596, status: 'active' },
     { id: 'PK-5', name: 'Super Diamond Pack', diamonds: 5000, price: 39.99, bonusPct: 20, sold: 775, status: 'active' },
     { id: 'PK-6', name: 'Ultra Diamond Pack', diamonds: 10000, price: 79.99, bonusPct: 25, sold: 400, status: 'active' }
-  ])
+  ]
+  const [packages, setPackages] = useState(defaultPackages)
+  const [packagesLoading, setPackagesLoading] = useState(false)
+  const [packagesError, setPackagesError] = useState(null)
+
+  React.useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_URL || ''
+    if (!apiBase) return // keep mock data
+
+    const controller = new AbortController()
+    const fetchPackages = async () => {
+      setPackagesLoading(true)
+      setPackagesError(null)
+      try {
+        const res = await fetch(`${apiBase.replace(/\/$/, '')}/packages`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(import.meta.env.VITE_API_TOKEN ? { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}` } : {})
+          },
+          signal: controller.signal
+        })
+        if (!res.ok) throw new Error(`Server returned ${res.status}`)
+        const data = await res.json()
+        if (Array.isArray(data)) setPackages(data)
+        else if (Array.isArray(data.packages)) setPackages(data.packages)
+      } catch (err) {
+        if (err.name !== 'AbortError') setPackagesError(err.message || String(err))
+      } finally {
+        setPackagesLoading(false)
+      }
+    }
+
+    fetchPackages()
+    return () => controller.abort()
+  }, [])
   const [pkgSearch, setPkgSearch] = useState('')
   const [pkgStatusFilter, setPkgStatusFilter] = useState('All Status')
   const [pkgSettings, setPkgSettings] = useState({
@@ -137,7 +172,7 @@ export default function DiamondAgencyPage() {
     { transactionId: 'TXN-002', rechargeId: 'RC-002', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 1000, status: 'Pending', dateTime: '2026-07-17 09:15', remarks: 'Awaiting approval' },
     { transactionId: 'TXN-003', rechargeId: 'RC-003', userId: '3', userName: 'Jay Patel', rechargeType: 'Green Diamond', coinsAdded: 250, status: 'Failed', dateTime: '2026-07-16 14:20', remarks: 'Payment declined' },
     { transactionId: 'TXN-004', rechargeId: 'RC-004', userId: '4', userName: 'Nina Tamang', rechargeType: 'Normal Coin', coinsAdded: 750, status: 'Completed', dateTime: '2026-07-16 11:45', remarks: 'Successful' },
-    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Red Game Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
+    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Normal Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
     { transactionId: 'TXN-006', rechargeId: 'RC-006', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 150, status: 'Completed', dateTime: '2026-07-15 08:20', remarks: 'Instant transfer' }
   ])
   const [historyFilters, setHistoryFilters] = useState({
@@ -1532,8 +1567,7 @@ export default function DiamondAgencyPage() {
         const rechargeTypeData = [
           { name: 'Normal Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Normal Coin').length, color: '#3B82F6' },
           { name: 'Blue Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Blue Diamond').length, color: '#06B6D4' },
-          { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' },
-          { name: 'Red Game Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Red Game Coin').length, color: '#EF4444' }
+          { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' }
         ]
 
         // Prepare bar chart data for daily recharge
@@ -3306,7 +3340,6 @@ export default function DiamondAgencyPage() {
                   >
                     <option value="Coin">Coin</option>
                     <option value="Blue Diamond">Blue Diamond 💎</option>
-                    <option value="Red Diamond">Red Diamond 💎</option>
                     <option value="Green Diamond">Green Diamond 💎</option>
                   </select>
                 </div>
@@ -4114,7 +4147,6 @@ export default function DiamondAgencyPage() {
                     <option value="Normal Coin">Normal Coin</option>
                     <option value="Blue Diamond">Blue Diamond</option>
                     <option value="Green Diamond">Green Diamond</option>
-                    <option value="Red Game Coin">Red Game Coin</option>
                   </select>
                 </div>
                 <div>

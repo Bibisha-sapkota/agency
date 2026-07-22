@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom'
 export default function Header({ onSelectAgencyTab }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [agencyDropdownOpen, setAgencyDropdownOpen] = useState(false)
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState('English')
+
+  const languages = ['English', 'Nepali']
 
   return (
     <header className="w-full bg-[#E51E25] text-white py-3 px-4 md:px-8 flex items-center justify-between fixed top-0 left-0 right-0 z-[9999] shadow-md min-h-[60px]">
@@ -84,7 +88,7 @@ export default function Header({ onSelectAgencyTab }) {
         <a href="#about" className="hover:text-slate-200 transition-colors">About</a>
       </nav>
 
-      {/* Right side: Search, Login & Menu Icon */}
+      {/* Right side: Search, Language, Login & Menu Icon */}
       <div className="flex items-center gap-3">
         {/* Search Input */}
         <div className="relative hidden md:block">
@@ -98,6 +102,35 @@ export default function Header({ onSelectAgencyTab }) {
           </svg>
         </div>
 
+        {/* Language Selector */}
+        <div className="relative">
+          <button
+            onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
+            className="hidden md:inline-flex items-center gap-2 bg-white bg-opacity-10 border border-white/20 text-white rounded-full px-3 py-2 text-sm hover:bg-opacity-20 transition"
+          >
+            <span>{selectedLanguage}</span>
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {languageMenuOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50">
+              {languages.map((lang) => (
+                <button
+                  key={lang}
+                  onClick={() => {
+                    setSelectedLanguage(lang)
+                    setLanguageMenuOpen(false)
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Login Button */}
         <button className="text-white hover:text-red-200 p-2 transition-colors" title="Login">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +140,10 @@ export default function Header({ onSelectAgencyTab }) {
 
         {/* Hamburger Menu Icon */}
         <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => {
+            setMobileMenuOpen(!mobileMenuOpen)
+            setLanguageMenuOpen(false)
+          }}
           className="bg-[#B91319] hover:bg-[#a11015] p-2 rounded-lg transition-colors md:hidden"
         >
           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

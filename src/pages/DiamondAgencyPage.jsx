@@ -9,9 +9,12 @@ import {
   History, Bell, Sliders, Edit, Trash2, Plus, ChevronDown,
   Lock, FileText, CheckSquare, CreditCard, Webhook, Server,
   Terminal, ShieldCheck, PieChart, User, Search, Receipt,
-  ShoppingCart, Database, ArrowRightLeft, Link2, DollarSign
+  ShoppingCart, Database, ArrowRightLeft, Link2, DollarSign,
+  HelpCircle, Eye, EyeOff
+  , MessageSquare
 } from 'lucide-react'
 import { PieChart as RechartsPieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts'
+import ChatSupport from '../components/ChatSupport'
 
 export default function DiamondAgencyPage() {
   const [activeSideTab, setActiveSideTab] = useState('dashboard')
@@ -19,20 +22,67 @@ export default function DiamondAgencyPage() {
   const [greenDiamondTab, setGreenDiamondTab] = useState('overview')
   const [expandedGroups, setExpandedGroups] = useState({ diamond_packages: true, agency: true })
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [languageMenuOpen, setLanguageMenuOpen] = useState(false)
+  const [selectedLanguage, setSelectedLanguage] = useState('English')
+  const languages = ['English(Default)', 'Nepali', 'Hindi', 'Spanish', 'French']
 
   const toggleGroup = (groupId) => {
     setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }))
   }
 
-  // ---- Diamond Packages State ----
-  const [packages, setPackages] = useState([
-    { id: 'PK-1', name: 'Small Diamond Pack', diamonds: 100, price: 0.99, bonusPct: 10, sold: 110, status: 'active' },
-    { id: 'PK-2', name: 'Medium Diamond Pack', diamonds: 310, price: 2.99, bonusPct: 12, sold: 347, status: 'active' },
-    { id: 'PK-3', name: 'Large Diamond Pack', diamonds: 1060, price: 9.99, bonusPct: 14, sold: 1208, status: 'active' },
-    { id: 'PK-4', name: 'Mega Diamond Pack', diamonds: 2200, price: 19.99, bonusPct: 18, sold: 2596, status: 'active' },
-    { id: 'PK-5', name: 'Super Diamond Pack', diamonds: 5000, price: 39.99, bonusPct: 20, sold: 775, status: 'active' },
-    { id: 'PK-6', name: 'Ultra Diamond Pack', diamonds: 10000, price: 79.99, bonusPct: 25, sold: 400, status: 'active' }
+  const defaultPackages = [
+    { id: 'PK-1', name: 'Normal Coin Package', diamonds: 100, price: 0.99, bonusPct: 5, sold: 110, status: 'active' },
+    { id: 'PK-2', name: 'Blue Diamond Package', diamonds: 310, price: 2.99, bonusPct: 12, sold: 347, status: 'active' },
+    { id: 'PK-3', name: 'Green Diamond Package', diamonds: 1060, price: 9.99, bonusPct: 14, sold: 1208, status: 'active' }
+  ]
+  const [packages, setPackages] = useState(defaultPackages)
+  const [packagesLoading, setPackagesLoading] = useState(false)
+  const [packagesError, setPackagesError] = useState(null)
+  const [billingInvoices, setBillingInvoices] = useState([
+    { invoiceId: 'INV-001', client: 'Aarav Shrestha', packageName: 'Normal Coin Package', amount: 49.99, issuedDate: '2026-07-17', dueDate: '2026-07-24', status: 'Paid' },
+    { invoiceId: 'INV-002', client: 'Sima Koirala', packageName: 'Blue Diamond Package', amount: 89.99, issuedDate: '2026-07-16', dueDate: '2026-07-23', status: 'Due' },
+    { invoiceId: 'INV-003', client: 'Jay Patel', packageName: 'Green Diamond Package', amount: 199.99, issuedDate: '2026-07-15', dueDate: '2026-07-22', status: 'Overdue' },
+    { invoiceId: 'INV-004', client: 'Nina Tamang', packageName: 'Green Diamond Package', amount: 199.99, issuedDate: '2026-07-14', dueDate: '2026-07-25', status: 'Paid' }
   ])
+  const [selectedInvoice, setSelectedInvoice] = useState(null)
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false)
+  const [selectedPackageDetail, setSelectedPackageDetail] = useState(null)
+  const [showPkgDetailModal, setShowPkgDetailModal] = useState(false)
+  const [selectedRechargeRecord, setSelectedRechargeRecord] = useState(null)
+  const [showRechargeRecordModal, setShowRechargeRecordModal] = useState(false)
+
+  React.useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_URL || ''
+    if (!apiBase) return // no backend configured — keep mock data
+
+    const controller = new AbortController()
+    const fetchPackages = async () => {
+      setPackagesLoading(true)
+      setPackagesError(null)
+      try {
+        const res = await fetch(`${apiBase.replace(/\/$/, '')}/packages`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(import.meta.env.VITE_API_TOKEN ? { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}` } : {})
+          },
+          signal: controller.signal
+        })
+        if (!res.ok) throw new Error(`Server returned ${res.status}`)
+        const data = await res.json()
+        if (Array.isArray(data)) setPackages(data)
+        else if (Array.isArray(data.packages)) setPackages(data.packages)
+      } catch (err) {
+        if (err.name !== 'AbortError') setPackagesError(err.message || String(err))
+      } finally {
+        setPackagesLoading(false)
+      }
+    }
+
+    fetchPackages()
+    return () => controller.abort()
+  }, [])
   const [pkgSearch, setPkgSearch] = useState('')
   const [pkgStatusFilter, setPkgStatusFilter] = useState('All Status')
   const [pkgSettings, setPkgSettings] = useState({
@@ -94,7 +144,7 @@ export default function DiamondAgencyPage() {
     { id: 1, name: 'Aarav Shrestha', coins: 1000, accountType: 'Normal Account' },
     { id: 2, name: 'Sima Koirala', coins: 2500, accountType: 'Official Account' },
     { id: 3, name: 'Jay Patel', coins: 800, accountType: 'Normal Account' },
-    { id: 4, name: 'Nina Tamang', coins: 3200, accountType: 'Special ID' }
+    { id: 4, name: 'Nina Tamang', coins: 3200, accountType: 'Official Account' }
   ])
   const [rechargeSuccess, setRechargeSuccess] = useState(null)
   const [paymentVerified, setPaymentVerified] = useState(false)
@@ -105,8 +155,12 @@ export default function DiamondAgencyPage() {
     agencyName: 'Diamond Agency',
     contactNumber: '+977-9800000000',
     email: 'admin@diamondagency.com',
-    kycStatus: 'Verified'
+    kycStatus: 'Verified',
+    agencyPin: '8899',
+    customerPin: '123456'
   })
+  const [showAgencyPin, setShowAgencyPin] = useState(false)
+  const [showCustomerPin, setShowCustomerPin] = useState(false)
   const [passwordForm, setPasswordForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
   const [passwordSuccess, setPasswordSuccess] = useState(false)
 
@@ -137,7 +191,7 @@ export default function DiamondAgencyPage() {
     { transactionId: 'TXN-002', rechargeId: 'RC-002', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 1000, status: 'Pending', dateTime: '2026-07-17 09:15', remarks: 'Awaiting approval' },
     { transactionId: 'TXN-003', rechargeId: 'RC-003', userId: '3', userName: 'Jay Patel', rechargeType: 'Green Diamond', coinsAdded: 250, status: 'Failed', dateTime: '2026-07-16 14:20', remarks: 'Payment declined' },
     { transactionId: 'TXN-004', rechargeId: 'RC-004', userId: '4', userName: 'Nina Tamang', rechargeType: 'Normal Coin', coinsAdded: 750, status: 'Completed', dateTime: '2026-07-16 11:45', remarks: 'Successful' },
-    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Red Game Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
+    { transactionId: 'TXN-005', rechargeId: 'RC-005', userId: '1', userName: 'Aarav Shrestha', rechargeType: 'Normal Coin', coinsAdded: 2000, status: 'Refunded', dateTime: '2026-07-15 16:30', remarks: 'User requested refund' },
     { transactionId: 'TXN-006', rechargeId: 'RC-006', userId: '2', userName: 'Sima Koirala', rechargeType: 'Blue Diamond', coinsAdded: 150, status: 'Completed', dateTime: '2026-07-15 08:20', remarks: 'Instant transfer' }
   ])
   const [historyFilters, setHistoryFilters] = useState({
@@ -160,6 +214,14 @@ export default function DiamondAgencyPage() {
     statusFilter: 'all',
     userIdFilter: ''
   })
+  const [transactionHistoryFilters, setTransactionHistoryFilters] = useState({
+    dateFilter: 'all',
+    customDate: '',
+    typeFilter: 'all',
+    statusFilter: 'all',
+    userIdFilter: '',
+    searchTerm: ''
+  })
 
   // ---- User Lookup State ----
   const [userLookupSearch, setUserLookupSearch] = useState('')
@@ -174,16 +236,10 @@ export default function DiamondAgencyPage() {
     accountType: '',
     coinAmount: '',
     rechargeType: 'Normal Coin',
-    remarks: '',
-    requiresApproval: false,
-    paymentVerified: false
+    remarks: ''
   })
   const [showManualRechargeConfirm, setShowManualRechargeConfirm] = useState(false)
   const [manualRechargeSuccess, setManualRechargeSuccess] = useState(null)
-  const [showSpecialIdModal, setShowSpecialIdModal] = useState(false)
-  const [specialIdSubType, setSpecialIdSubType] = useState('')
-  const [showAgencyIdConfirm, setShowAgencyIdConfirm] = useState(false)
-  const [pendingAgencyId, setPendingAgencyId] = useState('')
 
   // ---- Loans State ----
   const [loans] = useState([
@@ -256,6 +312,20 @@ export default function DiamondAgencyPage() {
     notifySms: false
   })
 
+  // ---- Help & Support State ----
+  const [helpSearch, setHelpSearch] = useState('')
+  const [expandedFaq, setExpandedFaq] = useState(null)
+  const [supportForm, setSupportForm] = useState({ subject: '', message: '' })
+  const [supportTicketSubmitted, setSupportTicketSubmitted] = useState(false)
+
+  const faqData = [
+    { q: 'How do I recharge a user wallet?', a: 'Go to Manual Recharge or Recharge from the sidebar, enter the User ID, verify payment, and submit the coin amount.' },
+    { q: 'How do I approve a withdrawal request?', a: 'Navigate to Diamond Packages > Withdrawals, review the fraud score and KYC status, then click Review or use Bulk Approve for safe requests.' },
+    { q: 'How do I create a new diamond package?', a: 'Go to Diamond Packages > Add Diamond Package, fill in the name, diamonds, price, and bonus percentage, then publish.' },
+    { q: 'How do I add a sub-agency?', a: 'Open Agency > Create Agency, fill in the brand name, representative head, territory, and initial coin quota.' },
+    { q: 'How can I contact support?', a: "Use the Contact Support form on this page or email support@diamondagency.com." }
+  ]
+
   // ---- System Configuration State ----
   const [paymentGateways, setPaymentGateways] = useState([
     { id: 'gw_stripe', name: 'Stripe', status: 'Active', type: 'Credit Card', keys: { pub: 'pk_live_********89', sec: 'sk_live_********2x' } },
@@ -322,14 +392,26 @@ export default function DiamondAgencyPage() {
       key: 'recharge_history'
     },
     {
-      id: 'coin_transfer_history',
-      label: 'Coin Transfer History',
-      icon: Send,
-      key: 'coin_transfer_history'
+      id: 'transaction_history',
+      label: 'Transaction History',
+      icon: Receipt,
+      key: 'transaction_history'
+    },
+    {
+      id: 'billing',
+      label: 'Billing',
+      icon: CreditCard,
+      key: 'billing'
+    },
+    {
+      id: 'chat_support',
+      label: 'Chat Support',
+      icon: MessageSquare,
+      key: 'chat_support'
     },
     {
       id: 'coin_transfer',
-      label: 'Coin Transfer',
+      label: 'User Coin Recharge',
       icon: Send,
       key: 'coin_transfer'
     },
@@ -347,12 +429,7 @@ export default function DiamondAgencyPage() {
     },
 
 
-    {
-      id: 'recharge',
-      label: 'Recharge',
-      icon: RefreshCw,
-      key: 'recharge'
-    },
+
     {
       id: 'blue_diamond',
       label: 'Blue Diamond System',
@@ -705,19 +782,39 @@ export default function DiamondAgencyPage() {
         
         return (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
-              <button 
-                onClick={handleExport}
-                className="bg-white border border-slate-200 text-slate-700 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
-              >
-                Export
-              </button>
-              <button 
-                onClick={() => setActiveSideTab('pkg_add')}
-                className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm flex items-center gap-2 transition-all"
-              >
-                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Add Diamond Package
-              </button>
+            {/* Super Admin Auto-Fetch Notice Banner */}
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-100 p-4 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-red-100 text-[#E51E25] rounded-xl shrink-0">
+                  <RefreshCw className={`w-5 h-5 ${packagesLoading ? 'animate-spin' : ''}`} />
+                </div>
+                <div>
+                  <div className="font-extrabold text-slate-800 text-sm flex items-center gap-2">
+                    Packages Auto-Fetched from Super Admin
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">Auto Synced</span>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-0.5">Agency can only perform user coin recharges. Packages are configured and published by Super Admin.</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <button 
+                  onClick={handleExport}
+                  className="bg-white border border-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-1.5"
+                >
+                  Export
+                </button>
+                <button 
+                  onClick={() => {
+                    setPackagesLoading(true);
+                    setTimeout(() => { setPackages([...defaultPackages]); setPackagesLoading(false); }, 1000);
+                  }}
+                  disabled={packagesLoading}
+                  className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${packagesLoading ? 'animate-spin' : ''}`} />
+                  {packagesLoading ? 'Syncing...' : 'Sync Super Admin'}
+                </button>
+              </div>
             </div>
             
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -815,6 +912,13 @@ export default function DiamondAgencyPage() {
                             </td>
                             <td className="p-4">
                               <div className="flex items-center justify-center gap-2">
+                                <button 
+                                  onClick={() => { setSelectedPackageDetail(p); setShowPkgDetailModal(true); }}
+                                  className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                  title="View Package Details"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
                                 <button className="p-1.5 text-slate-400 hover:text-[#E51E25] hover:bg-red-50 rounded-lg transition-colors">
                                   <Edit className="w-4 h-4" />
                                 </button>
@@ -990,62 +1094,37 @@ export default function DiamondAgencyPage() {
         )
 
       case 'pkg_add':
-        const handleAddPackage = (e) => {
-          e.preventDefault()
-          if(!newPkgName) return
-          const newPkg = {
-            id: `PK-${Math.floor(100+Math.random()*900)}`,
-            name: newPkgName,
-            diamonds: newPkgDiamonds,
-            price: newPkgPrice,
-            bonusPct: newPkgBonus,
-            sold: 0,
-            status: 'active'
-          }
-          setPackages([...packages, newPkg])
-          setNewPkgName('')
-          setNewPkgDiamonds(100)
-          setNewPkgPrice(0.99)
-          setNewPkgBonus(10)
-          setActiveSideTab('pkg_all')
-        }
         return (
           <div className="space-y-4 sm:space-y-6 max-w-2xl">
-            <form onSubmit={handleAddPackage} className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
-              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Plus className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Create Diamond Package</h4>
-              <div className="space-y-4 sm:space-y-5">
-                <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Package Name</label>
-                  <input type="text" required value={newPkgName} onChange={(e) => setNewPkgName(e.target.value)} placeholder="e.g. Starter Diamond Pack" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Diamonds Base Amount</label>
-                    <input type="number" required value={newPkgDiamonds} onChange={(e) => setNewPkgDiamonds(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Price (USD)</label>
-                    <input type="number" step="0.01" required value={newPkgPrice} onChange={(e) => setNewPkgPrice(Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500/30" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wider">Bonus Diamonds (%)</label>
-                  <div className="flex items-center gap-3">
-                    <input type="range" min="0" max="100" value={newPkgBonus} onChange={(e) => setNewPkgBonus(Number(e.target.value))} className="flex-1 accent-red-600" />
-                    <span className="w-12 text-right font-mono font-bold text-slate-700">{newPkgBonus}%</span>
-                  </div>
-                </div>
-                <div className="p-4 rounded-xl border border-red-100 bg-red-50 flex justify-between items-center">
-                  <div className="font-bold text-slate-800 text-sm">Total Diamonds to User:</div>
-                  <div className="font-mono font-black text-xl text-[#E51E25]">{newPkgDiamonds + Math.floor(newPkgDiamonds * (newPkgBonus/100))}</div>
-                </div>
-                <div className="pt-2">
-                  <button type="submit" className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                    Publish Package
-                  </button>
-                </div>
+            <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-sm text-center space-y-4">
+              <div className="w-16 h-16 bg-red-50 text-[#E51E25] rounded-full flex items-center justify-center mx-auto">
+                <Gem className="w-8 h-8" />
               </div>
-            </form>
+              <h4 className="font-extrabold text-slate-800 text-lg">Packages Managed by Super Admin</h4>
+              <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                As an Agency, packages are automatically fetched from the Super Admin panel. Agency accounts cannot manually create packages and perform user coin recharges using Super Admin rates.
+              </p>
+              <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-xl text-xs font-semibold text-slate-600 max-w-md mx-auto text-left space-y-2">
+                <div className="flex items-center gap-2 text-slate-800 font-bold">
+                  <CheckCircle2 className="w-4 h-4 text-green-600" /> Auto-Sync Active
+                </div>
+                <div>All coin and diamond package rates, bonuses, and prices are set by Super Admin and update automatically.</div>
+              </div>
+              <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+                <button
+                  onClick={() => setActiveSideTab('pkg_all')}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2.5 rounded-xl text-sm font-bold transition-all"
+                >
+                  View Super Admin Packages
+                </button>
+                <button
+                  onClick={() => setActiveSideTab('manual_recharge')}
+                  className="bg-[#E51E25] hover:bg-[#c4161c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all"
+                >
+                  Go to User Coin Recharge
+                </button>
+              </div>
+            </div>
           </div>
         )
 
@@ -1284,168 +1363,7 @@ export default function DiamondAgencyPage() {
           </div>
         )
 
-      case 'recharge':
-        const handleRecharge = (e) => {
-          e.preventDefault()
-          
-          // Validate payment verification
-          if (!paymentVerified) {
-            alert('Please verify payment first!')
-            return
-          }
-          
-          // Validate form
-          if (!rechargeForm.userId || !rechargeForm.coinsToAdd) {
-            alert('Please fill all required fields!')
-            return
-          }
-          
-          const coinsToAdd = Number(rechargeForm.coinsToAdd)
-          const userId = Number(rechargeForm.userId)
-          
-          // Check if agency has enough coins
-          if (agencyWallet.coins < coinsToAdd) {
-            alert('Insufficient coins in Agency Wallet!')
-            return
-          }
-          
-          // Deduct from agency wallet
-          setAgencyWallet(prev => ({ coins: prev.coins - coinsToAdd }))
-          
-          // Credit to user wallet
-          setUserWallets(prev => prev.map(user => {
-            if (user.id === userId) {
-              return { ...user, coins: user.coins + coinsToAdd }
-            }
-            return user
-          }))
-          
-          // Show success confirmation
-          setRechargeSuccess({
-            userId: rechargeForm.userId,
-            userName: rechargeForm.userName,
-            coins: coinsToAdd,
-            timestamp: new Date().toLocaleString()
-          })
-          
-          // Reset form
-          setRechargeForm({ userId: '', userName: '', coinsToAdd: '' })
-          setPaymentVerified(false)
-        }
-        
-        return (
-          <div className="space-y-4 sm:space-y-6 max-w-2xl">
-            {/* Success Confirmation */}
-            {rechargeSuccess && (
-              <div className="bg-green-50 border border-green-200 p-4 sm:p-6 rounded-2xl shadow-sm">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-5 h-5 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-extrabold text-green-800 text-sm sm:text-base">Recharge Successful!</h4>
-                    <div className="mt-2 space-y-1 text-xs sm:text-sm text-green-700">
-                      <div><strong>User ID:</strong> {rechargeSuccess.userId}</div>
-                      <div><strong>User Name:</strong> {rechargeSuccess.userName}</div>
-                      <div><strong>Coins Added:</strong> {rechargeSuccess.coins.toLocaleString()}</div>
-                      <div><strong>Time:</strong> {rechargeSuccess.timestamp}</div>
-                    </div>
-                    <button 
-                      onClick={() => setRechargeSuccess(null)}
-                      className="mt-3 text-xs font-bold text-green-600 hover:text-green-800"
-                    >
-                      Dismiss
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
 
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
-              <div>
-                <h4 className="font-extrabold text-slate-800 flex items-center gap-2 text-base sm:text-lg"><RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Recharge</h4>
-                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Add coins to a user's wallet.</p>
-              </div>
-              
-              {/* Payment Verification Step */}
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-bold text-amber-800 text-sm">Payment Verification</div>
-                    <div className="text-xs text-amber-600 mt-1">Verify payment from agency user before recharge</div>
-                  </div>
-                  <button 
-                    onClick={() => setPaymentVerified(!paymentVerified)}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                      paymentVerified 
-                        ? 'bg-green-500 text-white' 
-                        : 'bg-amber-200 text-amber-800 hover:bg-amber-300'
-                    }`}
-                  >
-                    {paymentVerified ? 'Verified ✓' : 'Verify Payment'}
-                  </button>
-                </div>
-              </div>
-
-              <form onSubmit={handleRecharge} className="space-y-4 sm:space-y-5">
-                <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID (Required)</label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter User ID" 
-                    required
-                    value={rechargeForm.userId}
-                    onChange={e => {
-                      setRechargeForm({...rechargeForm, userId: e.target.value})
-                      // Auto-fetch user name based on user ID
-                      const user = userWallets.find(u => u.id === Number(e.target.value))
-                      if (user) {
-                        setRechargeForm(prev => ({ ...prev, userName: user.name }))
-                      } else {
-                        setRechargeForm(prev => ({ ...prev, userName: '' }))
-                      }
-                    }}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter user name" 
-                    value={rechargeForm.userName}
-                    onChange={e=>setRechargeForm({...rechargeForm, userName: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Coins to Add (Required)</label>
-                  <input 
-                    type="number" 
-                    placeholder="Enter coins to add" 
-                    required
-                    value={rechargeForm.coinsToAdd}
-                    onChange={e=>setRechargeForm({...rechargeForm, coinsToAdd: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
-                  />
-                </div>
-                <div className="pt-2">
-                  <button 
-                    type="submit" 
-                    disabled={!paymentVerified}
-                    className={`w-full py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex justify-center items-center gap-2 ${
-                      paymentVerified 
-                        ? 'bg-[#E51E25] hover:bg-[#c4161c] text-white' 
-                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                    }`}
-                  >
-                    <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Recharge
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )
 
       case 'wallet_loans':
         return (
@@ -1533,8 +1451,7 @@ export default function DiamondAgencyPage() {
         const rechargeTypeData = [
           { name: 'Normal Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Normal Coin').length, color: '#3B82F6' },
           { name: 'Blue Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Blue Diamond').length, color: '#06B6D4' },
-          { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' },
-          { name: 'Red Game Coin', value: rechargeHistory.filter(r => r.rechargeType === 'Red Game Coin').length, color: '#EF4444' }
+          { name: 'Green Diamond', value: rechargeHistory.filter(r => r.rechargeType === 'Green Diamond').length, color: '#10B981' }
         ]
 
         // Prepare bar chart data for daily recharge
@@ -1557,6 +1474,7 @@ export default function DiamondAgencyPage() {
                 { label: 'Pending Recharge', value: pendingRecharge, icon: Clock, color: 'text-amber-500', bg: 'bg-amber-50' },
                 { label: 'Completed Recharge', value: completedRecharge, icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-50' },
                 { label: 'Failed Recharge', value: failedRecharge, icon: XCircle, color: 'text-red-500', bg: 'bg-red-50' },
+                { label: 'Agency Wallet', value: `${agencyWallet.coins.toLocaleString()} Coins`, icon: Wallet, color: 'text-slate-800', bg: 'bg-slate-50' },
                 { label: 'Agency Status', value: agencyStatus, icon: ShieldCheck, color: agencyStatus === 'Active' ? 'text-green-500' : 'text-red-500', bg: agencyStatus === 'Active' ? 'bg-green-50' : 'bg-red-50' }
               ].map((stat, idx) => (
                 <div key={idx} className="bg-white p-3 sm:p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-center gap-1">
@@ -1663,6 +1581,326 @@ export default function DiamondAgencyPage() {
             </div>
           </div>
         )
+
+      case 'billing': {
+        const totalInvoiced = billingInvoices.reduce((sum, invoice) => sum + invoice.amount, 0)
+        const totalPaid = billingInvoices.filter(inv => inv.status === 'Paid').reduce((sum, invoice) => sum + invoice.amount, 0)
+        const totalDue = billingInvoices.filter(inv => inv.status === 'Due' || inv.status === 'Overdue').reduce((sum, invoice) => sum + invoice.amount, 0)
+        const overdueCount = billingInvoices.filter(inv => inv.status === 'Overdue').length
+        const upcomingDue = billingInvoices.filter(inv => inv.status === 'Due').length
+        const packageRevenue = packages.reduce((sum, pkg) => sum + (pkg.price * pkg.sold), 0)
+
+        const handleRefresh = () => {
+          setPackagesLoading(true)
+          setTimeout(() => {
+            setPackages([...defaultPackages])
+            setBillingInvoices([
+              { invoiceId: 'INV-001', client: 'Aarav Shrestha', packageName: 'Normal Coin Package', amount: 49.99, issuedDate: '2026-07-17', dueDate: '2026-07-24', status: 'Paid' },
+              { invoiceId: 'INV-002', client: 'Sima Koirala', packageName: 'Blue Diamond Package', amount: 89.99, issuedDate: '2026-07-16', dueDate: '2026-07-23', status: 'Due' },
+              { invoiceId: 'INV-003', client: 'Jay Patel', packageName: 'Green Diamond Package', amount: 199.99, issuedDate: '2026-07-15', dueDate: '2026-07-22', status: 'Overdue' },
+              { invoiceId: 'INV-004', client: 'Nina Tamang', packageName: 'Green Diamond Package', amount: 199.99, issuedDate: '2026-07-14', dueDate: '2026-07-25', status: 'Paid' },
+            ])
+            setPackagesLoading(false)
+          }, 1200)
+        }
+
+        return (
+          <div className="space-y-6">
+            <div style={{
+              background: 'linear-gradient(135deg, #7f1d1d 0%, #b91c1c 40%, #E51E25 70%, #dc2626 100%)',
+              borderRadius: '1.5rem',
+              padding: '1.75rem 2rem',
+              position: 'relative',
+              overflow: 'hidden'
+            }}>
+              <div style={{ position:'absolute', top:'-40px', right:'-40px', width:'180px', height:'180px', borderRadius:'50%', background:'rgba(255,255,255,0.12)', filter:'blur(40px)' }} />
+              <div style={{ position:'absolute', bottom:'-30px', left:'30%', width:'140px', height:'140px', borderRadius:'50%', background:'rgba(0,0,0,0.15)', filter:'blur(35px)' }} />
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" style={{ position:'relative', zIndex:1 }}>
+                <div>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:'8px', background:'rgba(0,0,0,0.2)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'999px', padding:'4px 14px', marginBottom:'10px' }}>
+                    <CreditCard style={{ width:'14px', height:'14px', color:'#000' }} />
+                    <span style={{ fontSize:'11px', fontWeight:700, letterSpacing:'0.12em', color:'#fff', textTransform:'uppercase' }}>Billing Center</span>
+                  </div>
+                  <h2 style={{ fontSize:'1.6rem', fontWeight:900, color:'#fff', margin:0, lineHeight:1.2 }}>Billing &amp; Revenue</h2>
+                  <p style={{ color:'rgba(255,255,255,0.75)', fontSize:'13px', marginTop:'6px' }}>Package billing and invoice management for Diamond Agency</p>
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={handleRefresh}
+                    disabled={packagesLoading}
+                    style={{ background:'rgba(0,0,0,0.2)', backdropFilter:'blur(8px)', border:'1px solid rgba(255,255,255,0.25)', color:'#fff', padding:'9px 18px', borderRadius:'12px', fontSize:'13px', fontWeight:700, cursor: packagesLoading ? 'not-allowed' : 'pointer', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px', opacity: packagesLoading ? 0.7 : 1 }}
+                    onMouseEnter={e => !packagesLoading && (e.currentTarget.style.background='rgba(0,0,0,0.35)')}
+                    onMouseLeave={e => (e.currentTarget.style.background='rgba(0,0,0,0.2)')}
+                  >
+                    <RefreshCw style={{ width:'13px', height:'13px', color:'#000', animation: packagesLoading ? 'spin 1s linear infinite' : 'none' }} />
+                    {packagesLoading ? 'Refreshing...' : 'Refresh'}
+                  </button>
+                  <button
+                    onClick={() => { setSelectedInvoice(billingInvoices[0] || null); setShowInvoiceModal(true); }}
+                    style={{ background:'rgba(255,255,255,0.9)', color:'#E51E25', padding:'9px 20px', borderRadius:'12px', fontSize:'13px', fontWeight:700, cursor:'pointer', border:'none', boxShadow:'0 4px 15px rgba(0,0,0,0.2)', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px' }}
+                    onMouseEnter={e => e.currentTarget.style.transform='translateY(-1px)'}
+                    onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}
+                  >
+                    <FileText style={{ width:'13px', height:'13px', color:'#000' }} /> View Invoices
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+              {[
+                { label: 'Total Invoiced', value: `$${totalInvoiced.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, grad: 'linear-gradient(135deg, #E51E25, #ff4d53)', glow: 'rgba(229,30,37,0.3)', accent: '#E51E25' },
+                { label: 'Total Paid', value: `$${totalPaid.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, grad: 'linear-gradient(135deg, #10b981, #059669)', glow: 'rgba(16,185,129,0.3)', accent: '#059669' },
+                { label: 'Amount Due', value: `$${totalDue.toLocaleString(undefined, { minimumFractionDigits: 2 })}`, grad: 'linear-gradient(135deg, #f59e0b, #d97706)', glow: 'rgba(245,158,11,0.3)', accent: '#d97706' },
+                { label: 'Overdue', value: overdueCount, grad: 'linear-gradient(135deg, #E51E25, #dc2626)', glow: 'rgba(229,30,37,0.3)', accent: '#E51E25' },
+              ].map((card, i) => (
+                <div key={i} style={{ background:'#fff', borderRadius:'1.25rem', padding:'1.4rem 1.25rem', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 2px 12px rgba(0,0,0,0.06)', position:'relative', overflow:'hidden', transition:'transform 0.2s, box-shadow 0.2s' }}
+                  onMouseEnter={e => { e.currentTarget.style.transform='translateY(-3px)'; e.currentTarget.style.boxShadow=`0 8px 24px ${card.glow}`; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 2px 12px rgba(0,0,0,0.06)'; }}
+                >
+                  <div style={{ position:'absolute', top:0, right:0, width:'70px', height:'70px', background:card.grad, borderRadius:'0 1.25rem 0 100%', opacity:0.12 }} />
+                  <div style={{ fontSize:'11px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#94a3b8', marginBottom:'6px' }}>{card.label}</div>
+                  <div style={{ fontSize:'1.5rem', fontWeight:900, color:'#0f172a' }}>{card.value}</div>
+                  <div style={{ height:'3px', width:'32px', background:card.grad, borderRadius:'99px', marginTop:'10px' }} />
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-6">
+              <div style={{ gridColumn:'span 3', background:'#fff', borderRadius:'1.5rem', border:'1px solid rgba(0,0,0,0.06)', boxShadow:'0 2px 16px rgba(0,0,0,0.07)', overflow:'hidden' }}>
+                <div style={{ padding:'1.25rem 1.5rem', borderBottom:'1px solid #f1f5f9', display:'flex', alignItems:'center', justifyContent:'space-between', background:'linear-gradient(135deg, #fafafa, #fff5f5)' }}>
+                  <div>
+                    <h4 style={{ fontWeight:800, color:'#0f172a', fontSize:'15px', margin:0 }}>Invoices</h4>
+                    <p style={{ fontSize:'11px', color:'#94a3b8', marginTop:'3px' }}>Latest billing records from auto-fetched packages.</p>
+                  </div>
+                  <span style={{ fontSize:'11px', fontWeight:700, background:'#fff0f0', color:'#E51E25', padding:'3px 10px', borderRadius:'999px', border:'1px solid #fecaca' }}>{billingInvoices.length} records</span>
+                </div>
+                <div style={{ overflowX:'auto' }}>
+                  <table style={{ width:'100%', borderCollapse:'collapse', fontSize:'13px' }}>
+                    <thead>
+                      <tr style={{ background:'linear-gradient(90deg, #f8fafc, #fff5f5)' }}>
+                        {['Invoice', 'Client', 'Package', 'Amount', 'Status', 'Due Date', 'Action'].map(h => (
+                          <th key={h} style={{ padding:'10px 16px', textAlign:'left', fontSize:'10px', fontWeight:800, letterSpacing:'0.1em', textTransform:'uppercase', color:'#94a3b8', whiteSpace:'nowrap', borderBottom:'2px solid #fee2e2' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {billingInvoices.map((invoice) => {
+                        const statusCfg = {
+                          Paid: { bg:'#dcfce7', color:'#15803d', dot:'#16a34a' },
+                          Due: { bg:'#fef9c3', color:'#a16207', dot:'#ca8a04' },
+                          Overdue: { bg:'#fee2e2', color:'#b91c1c', dot:'#ef4444' },
+                        }[invoice.status] || { bg:'#f1f5f9', color:'#475569', dot:'#94a3b8' }
+                        return (
+                          <tr key={invoice.invoiceId}
+                            style={{ borderBottom:'1px solid #f1f5f9', transition:'background 0.15s', cursor:'default' }}
+                            onMouseEnter={e => e.currentTarget.style.background='#fff5f5'}
+                            onMouseLeave={e => e.currentTarget.style.background='transparent'}
+                          >
+                            <td style={{ padding:'13px 16px' }}>
+                              <span style={{ fontFamily:'monospace', fontWeight:800, color:'#E51E25', fontSize:'12px', background:'#fff0f0', padding:'3px 8px', borderRadius:'6px', border:'1px solid #fecaca' }}>{invoice.invoiceId}</span>
+                            </td>
+                            <td style={{ padding:'13px 16px', fontWeight:600, color:'#1e293b' }}>{invoice.client}</td>
+                            <td style={{ padding:'13px 16px', color:'#64748b', fontSize:'12px' }}>{invoice.packageName}</td>
+                            <td style={{ padding:'13px 16px' }}>
+                              <span style={{ fontFamily:'monospace', fontWeight:800, color:'#0f172a', fontSize:'14px' }}>${invoice.amount.toFixed(2)}</span>
+                            </td>
+                            <td style={{ padding:'13px 16px' }}>
+                              <span style={{ display:'inline-flex', alignItems:'center', gap:'5px', padding:'4px 10px', borderRadius:'999px', background:statusCfg.bg, color:statusCfg.color, fontWeight:700, fontSize:'11px' }}>
+                                <span style={{ width:'6px', height:'6px', borderRadius:'50%', background:statusCfg.dot, flexShrink:0 }} />
+                                {invoice.status}
+                              </span>
+                            </td>
+                            <td style={{ padding:'13px 16px', color:'#94a3b8', fontSize:'12px', whiteSpace:'nowrap' }}>{invoice.dueDate}</td>
+                            <td style={{ padding:'13px 16px' }}>
+                              <button
+                                onClick={() => { setSelectedInvoice(invoice); setShowInvoiceModal(true); }}
+                                style={{ display:'inline-flex', alignItems:'center', gap:'4px', background:'linear-gradient(135deg, #E51E25, #ff4d53)', color:'#fff', border:'none', borderRadius:'8px', padding:'5px 12px', fontSize:'11px', fontWeight:700, cursor:'pointer', transition:'all 0.2s', boxShadow:'0 2px 6px rgba(229,30,37,0.35)' }}
+                                onMouseEnter={e => e.currentTarget.style.transform='scale(1.05)'}
+                                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
+                              >
+                                View
+                              </button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div style={{ gridColumn:'span 2', background:'linear-gradient(160deg, #7f1d1d 0%, #b91c1c 40%, #E51E25 100%)', borderRadius:'1.5rem', padding:'1.5rem', position:'relative', overflow:'hidden', boxShadow:'0 8px 32px rgba(229,30,37,0.4)' }}>
+                <div style={{ position:'absolute', top:'-50px', right:'-50px', width:'200px', height:'200px', borderRadius:'50%', background:'rgba(255,255,255,0.12)', filter:'blur(50px)', pointerEvents:'none' }} />
+                <div style={{ position:'absolute', bottom:'-30px', left:'-30px', width:'160px', height:'160px', borderRadius:'50%', background:'rgba(0,0,0,0.18)', filter:'blur(40px)', pointerEvents:'none' }} />
+                <div style={{ position:'relative', zIndex:1 }}>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:'6px', background:'rgba(0,0,0,0.2)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'999px', padding:'5px 14px', marginBottom:'16px' }}>
+                    <Banknote style={{ width:'13px', height:'13px', color:'#000' }} />
+                    <span style={{ fontSize:'10px', fontWeight:800, letterSpacing:'0.15em', color:'#fff', textTransform:'uppercase' }}>Revenue</span>
+                  </div>
+                  <h4 style={{ fontWeight:900, color:'#fff', fontSize:'1.4rem', margin:'0 0 6px' }}>Package Revenue</h4>
+                  <p style={{ color:'rgba(255,255,255,0.75)', fontSize:'12.5px', margin:'0 0 20px', lineHeight:1.6 }}>Calculated from auto-fetched diamond package sales and active agency package performance.</p>
+                  <div style={{ background:'rgba(0,0,0,0.2)', backdropFilter:'blur(12px)', border:'1px solid rgba(255,255,255,0.2)', borderRadius:'14px', padding:'14px 16px', marginBottom:'20px', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                    <div>
+                      <div style={{ fontSize:'10px', fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'rgba(255,255,255,0.65)' }}>Available Balance</div>
+                      <div style={{ fontWeight:900, fontSize:'1.5rem', color:'#fff', marginTop:'4px' }}>{agencyWallet.coins.toLocaleString()}</div>
+                      <div style={{ fontSize:'11px', color:'rgba(255,255,255,0.55)', marginTop:'2px' }}>Coins</div>
+                    </div>
+                    <div style={{ width:'48px', height:'48px', borderRadius:'50%', background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                      <Gem style={{ width:'22px', height:'22px', color:'#000' }} />
+                    </div>
+                  </div>
+                  <div style={{ marginBottom:'20px' }}>
+                    <div style={{ fontSize:'2.4rem', fontWeight:900, color:'#fff', letterSpacing:'-0.02em', lineHeight:1.1 }}>
+                      ${packageRevenue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                    </div>
+                    <div style={{ fontSize:'10px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.18em', color:'rgba(255,255,255,0.65)', marginTop:'6px' }}>Total Package Revenue</div>
+                  </div>
+                  <button
+                    onClick={() => { setSelectedInvoice(billingInvoices[0] || null); setShowInvoiceModal(true); }}
+                    style={{ width:'100%', background:'rgba(255,255,255,0.18)', color:'#fff', border:'1px solid rgba(255,255,255,0.3)', borderRadius:'12px', padding:'12px', fontWeight:800, fontSize:'13px', cursor:'pointer', transition:'all 0.2s', marginBottom:'16px', display:'flex', alignItems:'center', justifyContent:'center', gap:'7px' }}
+                    onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.28)'}
+                    onMouseLeave={e => e.currentTarget.style.background='rgba(255,255,255,0.18)'}
+                  >
+                    <FileText style={{ width:'14px', height:'14px', color:'#000' }} /> View Invoice
+                  </button>
+                  <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'8px' }}>
+                    {[
+                      { label: 'Total Packages', value: packages.length },
+                      { label: 'Active Packages', value: activePackages },
+                      { label: 'Pending Invoices', value: upcomingDue },
+                    ].map((s, i) => (
+                      <div key={i} style={{ background:'rgba(0,0,0,0.2)', border:'1px solid rgba(255,255,255,0.15)', borderRadius:'12px', padding:'12px 10px', textAlign:'center' }}>
+                        <div style={{ fontSize:'10px', fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:'rgba(255,255,255,0.65)', marginBottom:'6px', lineHeight:1.3 }}>{s.label}</div>
+                        <div style={{ fontWeight:900, fontSize:'1.6rem', color:'#fff' }}>{s.value}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {showInvoiceModal && selectedInvoice && (
+              <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', backdropFilter:'blur(8px)', zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem' }}>
+                <div style={{ background:'#fff', borderRadius:'1.5rem', boxShadow:'0 32px 80px rgba(0,0,0,0.35)', width:'100%', maxWidth:'560px', overflow:'hidden', animation:'slideUp 0.3s ease' }}>
+                  <div style={{ background:'linear-gradient(135deg, #7f1d1d, #b91c1c, #E51E25)', padding:'1.5rem', display:'flex', alignItems:'flex-start', justifyContent:'space-between' }}>
+                    <div>
+                      <div style={{ display:'inline-flex', alignItems:'center', gap:'6px', background:'rgba(0,0,0,0.2)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'999px', padding:'3px 12px', marginBottom:'10px' }}>
+                        <Receipt style={{ width:'11px', height:'11px', color:'#000' }} />
+                        <span style={{ fontSize:'10px', fontWeight:800, letterSpacing:'0.15em', color:'#fff', textTransform:'uppercase' }}>Invoice</span>
+                      </div>
+                      <h3 style={{ fontWeight:900, color:'#fff', fontSize:'1.3rem', margin:0 }}>Invoice Details</h3>
+                      <p style={{ color:'rgba(255,255,255,0.75)', fontSize:'12px', marginTop:'4px' }}>{selectedInvoice.invoiceId} · {selectedInvoice.client}</p>
+                    </div>
+                    <button
+                      onClick={() => setShowInvoiceModal(false)}
+                      style={{ background:'rgba(0,0,0,0.2)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'10px', padding:'6px', cursor:'pointer', color:'#fff', transition:'all 0.2s', display:'flex' }}
+                      onMouseEnter={e => e.currentTarget.style.background='rgba(0,0,0,0.35)'}
+                      onMouseLeave={e => e.currentTarget.style.background='rgba(0,0,0,0.2)'}
+                    >
+                      <XCircle style={{ width:'18px', height:'18px', color:'#000' }} />
+                    </button>
+                  </div>
+
+                  {(() => {
+                    const cfg = {
+                      Paid: { bg:'linear-gradient(90deg,#dcfce7,#bbf7d0)', color:'#166534', icon:<CheckCircle2 style={{width:'16px',height:'16px',color:'#000'}} />, text:'Payment received — Thank you!' },
+                      Due: { bg:'linear-gradient(90deg,#fef9c3,#fde68a)', color:'#92400e', icon:<Clock style={{width:'16px',height:'16px',color:'#000'}} />, text:'Payment pending — Please settle before due date.' },
+                      Overdue: { bg:'linear-gradient(90deg,#fee2e2,#fecaca)', color:'#991b1b', icon:<AlertTriangle style={{width:'16px',height:'16px',color:'#000'}} />, text:'Overdue — Immediate attention required!' },
+                    }[selectedInvoice.status] || {}
+                    return cfg.bg ? (
+                      <div style={{ background:cfg.bg, padding:'10px 20px', display:'flex', alignItems:'center', gap:'8px', color:cfg.color, fontWeight:600, fontSize:'12.5px' }}>
+                        {cfg.icon} {cfg.text}
+                      </div>
+                    ) : null
+                  })()}
+
+                  <div style={{ padding:'1.5rem' }}>
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px', marginBottom:'10px' }}>
+                      {[
+                        { label:'Invoice ID', value: selectedInvoice.invoiceId, mono: true },
+                        { label:'Status', value: selectedInvoice.status, badge: true },
+                        { label:'Client', value: selectedInvoice.client },
+                        { label:'Package', value: selectedInvoice.packageName },
+                      ].map((field, i) => (
+                        <div key={i} style={{ background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'12px', padding:'12px 14px' }}>
+                          <div style={{ fontSize:'10px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#94a3b8', marginBottom:'5px' }}>{field.label}</div>
+                          {field.badge ? (
+                            <span style={{
+                              display:'inline-flex', alignItems:'center', gap:'5px',
+                              padding:'3px 10px', borderRadius:'999px', fontSize:'12px', fontWeight:700,
+                              ...(selectedInvoice.status === 'Paid' ? { background:'#dcfce7', color:'#15803d' } :
+                                  selectedInvoice.status === 'Due' ? { background:'#fef9c3', color:'#a16207' } :
+                                  { background:'#fee2e2', color:'#b91c1c' })
+                            }}>
+                              <span style={{ width:'6px', height:'6px', borderRadius:'50%', background: selectedInvoice.status === 'Paid' ? '#16a34a' : selectedInvoice.status === 'Due' ? '#ca8a04' : '#ef4444', flexShrink:0 }} />
+                              {field.value}
+                            </span>
+                          ) : (
+                            <div style={{ fontWeight:700, color:'#0f172a', fontSize:'13.5px', fontFamily: field.mono ? 'monospace' : undefined }}>{field.value}</div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:'10px', marginBottom:'10px' }}>
+                      {[
+                        { label:'Issued', value: selectedInvoice.issuedDate },
+                        { label:'Due Date', value: selectedInvoice.dueDate },
+                        { label:'Amount', value: `$${selectedInvoice.amount.toFixed(2)}`, big: true },
+                      ].map((f, i) => (
+                        <div key={i} style={{ background: i === 2 ? 'linear-gradient(135deg,#7f1d1d,#E51E25)' : '#f8fafc', border:`1px solid ${i===2?'transparent':'#e2e8f0'}`, borderRadius:'12px', padding:'12px 14px' }}>
+                          <div style={{ fontSize:'10px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color: i === 2 ? 'rgba(255,255,255,0.75)' : '#94a3b8', marginBottom:'5px' }}>{f.label}</div>
+                          <div style={{ fontWeight: f.big ? 900 : 700, color: f.big ? '#fff' : '#0f172a', fontSize: f.big ? '1.15rem' : '13px', fontFamily: f.big ? 'monospace' : undefined }}>{f.value}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div style={{ background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'12px', padding:'12px 14px', marginBottom:'16px' }}>
+                      <div style={{ fontSize:'10px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#94a3b8', marginBottom:'6px' }}>Notes</div>
+                      <div style={{ fontSize:'12.5px', color:'#64748b', lineHeight:1.6 }}>This invoice is generated from the auto-fetched package billing system. Payment terms are 7 days from issuance.</div>
+                    </div>
+
+                    <div style={{ display:'flex', justifyContent:'flex-end', gap:'10px' }}>
+                      <button
+                        onClick={() => setShowInvoiceModal(false)}
+                        style={{ background:'#f1f5f9', color:'#475569', border:'1px solid #e2e8f0', padding:'9px 20px', borderRadius:'10px', fontWeight:700, fontSize:'13px', cursor:'pointer', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px' }}
+                        onMouseEnter={e => e.currentTarget.style.background='#e2e8f0'}
+                        onMouseLeave={e => e.currentTarget.style.background='#f1f5f9'}
+                      >
+                        <XCircle style={{ width:'13px', height:'13px', color:'#000' }} /> Close
+                      </button>
+                      {selectedInvoice.status !== 'Paid' ? (
+                        <button
+                          onClick={() => {
+                            setBillingInvoices(prev => prev.map(inv =>
+                              inv.invoiceId === selectedInvoice.invoiceId ? { ...inv, status: 'Paid' } : inv
+                            ))
+                            setSelectedInvoice(prev => ({ ...prev, status: 'Paid' }))
+                          }}
+                          style={{ background:'linear-gradient(135deg,#E51E25,#ff4d53)', color:'#fff', border:'none', padding:'9px 20px', borderRadius:'10px', fontWeight:700, fontSize:'13px', cursor:'pointer', boxShadow:'0 4px 12px rgba(229,30,37,0.4)', transition:'all 0.2s', display:'flex', alignItems:'center', gap:'6px' }}
+                          onMouseEnter={e => e.currentTarget.style.transform='translateY(-1px)'}
+                          onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}
+                        >
+                          <CheckCircle2 style={{ width:'13px', height:'13px', color:'#000' }} /> Mark as Paid
+                        </button>
+                      ) : (
+                        <div style={{ display:'flex', alignItems:'center', gap:'6px', background:'#dcfce7', color:'#15803d', border:'1px solid #bbf7d0', padding:'9px 16px', borderRadius:'10px', fontWeight:700, fontSize:'13px' }}>
+                          <CheckCircle2 style={{ width:'14px', height:'14px', color:'#000' }} /> Already Paid
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <style>{`
+                    @keyframes slideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+                    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+                  `}</style>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+      }
 
       case 'pkg_all':
         return (
@@ -2785,6 +3023,103 @@ export default function DiamondAgencyPage() {
           </div>
         )
 
+      case 'help': {
+        const filteredFaqs = faqData.filter(f =>
+          f.q.toLowerCase().includes(helpSearch.toLowerCase()) ||
+          f.a.toLowerCase().includes(helpSearch.toLowerCase())
+        )
+        const handleSupportSubmit = (e) => {
+          e.preventDefault()
+          if (!supportForm.subject || !supportForm.message) return
+          setSupportTicketSubmitted(true)
+          setSupportForm({ subject: '', message: '' })
+          setTimeout(() => setSupportTicketSubmitted(false), 4000)
+        }
+        return (
+          <div className="space-y-4 sm:space-y-6 max-w-3xl">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-4">
+                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Frequently Asked Questions
+              </h4>
+              <input
+                type="text"
+                placeholder="Search help topics..."
+                value={helpSearch}
+                onChange={(e) => setHelpSearch(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-red-500/30"
+              />
+              <div className="space-y-2">
+                {filteredFaqs.length === 0 ? (
+                  <div className="text-center py-8 text-slate-400 text-xs sm:text-sm">No matching help topics found</div>
+                ) : (
+                  filteredFaqs.map((faq, idx) => (
+                    <div key={idx} className="border border-slate-100 rounded-xl overflow-hidden">
+                      <button
+                        onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
+                        className="w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 text-left bg-slate-50 hover:bg-slate-100 transition-colors"
+                      >
+                        <span className="text-xs sm:text-sm font-bold text-slate-700">{faq.q}</span>
+                        <ChevronDown className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0 transition-transform ${expandedFaq === idx ? 'rotate-180' : ''}`} />
+                      </button>
+                      {expandedFaq === idx && (
+                        <div className="px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-600 bg-white">{faq.a}</div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm">
+              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2 mb-1">
+                <Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Contact Support
+              </h4>
+              <p className="text-[10px] sm:text-xs text-slate-500 mb-4">Can't find what you're looking for? Send us a message.</p>
+
+              {supportTicketSubmitted && (
+                <div className="bg-green-50 border border-green-200 p-3 sm:p-4 rounded-xl mb-4 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                  <span className="text-xs sm:text-sm font-bold text-green-800">Support request sent! Our team will get back to you soon.</span>
+                </div>
+              )}
+
+              <form onSubmit={handleSupportSubmit} className="space-y-3 sm:space-y-4">
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Subject</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Issue with withdrawal approval"
+                    value={supportForm.subject}
+                    onChange={(e) => setSupportForm({ ...supportForm, subject: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Message</label>
+                  <textarea
+                    rows="4"
+                    required
+                    placeholder="Describe your issue..."
+                    value={supportForm.message}
+                    onChange={(e) => setSupportForm({ ...supportForm, message: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 resize-none"
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button type="submit" className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Send Request
+                  </button>
+                  <a href="mailto:support@diamondagency.com" className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    Email Us Directly
+                  </a>
+                </div>
+              </form>
+            </div>
+          </div>
+        )
+      }
+
       case 'sys_payment':
         return (
           <div className="space-y-4 sm:space-y-6">
@@ -3066,6 +3401,48 @@ export default function DiamondAgencyPage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Agency PIN & Customer PIN Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency PIN</label>
+                    <div className="relative flex items-center">
+                      <input 
+                        type={showAgencyPin ? "text" : "password"} 
+                        value={profile.agencyPin}
+                        onChange={(e) => handleProfileUpdate('agencyPin', e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 sm:pl-4 pr-10 py-2 sm:py-3 text-xs sm:text-sm font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowAgencyPin(!showAgencyPin)} 
+                        className="absolute right-3 text-slate-400 hover:text-[#E51E25] transition-colors"
+                        title={showAgencyPin ? "Hide PIN" : "Show PIN"}
+                      >
+                        {showAgencyPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Customer PIN</label>
+                    <div className="relative flex items-center">
+                      <input 
+                        type={showCustomerPin ? "text" : "password"} 
+                        value={profile.customerPin}
+                        onChange={(e) => handleProfileUpdate('customerPin', e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-3 sm:pl-4 pr-10 py-2 sm:py-3 text-xs sm:text-sm font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/30" 
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowCustomerPin(!showCustomerPin)} 
+                        className="absolute right-3 text-slate-400 hover:text-blue-600 transition-colors"
+                        title={showCustomerPin ? "Hide PIN" : "Show PIN"}
+                      >
+                        {showCustomerPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -3255,8 +3632,8 @@ export default function DiamondAgencyPage() {
 
             <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 sm:space-y-6">
               <div>
-                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">Coin Transfer</h4>
-                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Transfer coins from Agency Wallet to User Wallet.</p>
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg">User Coin Recharge</h4>
+                <p className="text-[10px] sm:text-xs text-slate-500 mt-1">Recharge user wallet with coins directly from Agency Wallet balance.</p>
               </div>
               
               <form onSubmit={handleCoinTransferSubmit} className="space-y-4 sm:space-y-5">
@@ -3311,7 +3688,6 @@ export default function DiamondAgencyPage() {
                   >
                     <option value="Coin">Coin</option>
                     <option value="Blue Diamond">Blue Diamond 💎</option>
-                    <option value="Red Diamond">Red Diamond 💎</option>
                     <option value="Green Diamond">Green Diamond 💎</option>
                   </select>
                 </div>
@@ -3518,7 +3894,12 @@ export default function DiamondAgencyPage() {
                       </tr>
                     ) : (
                       filteredHistory.map((record) => (
-                        <tr key={record.transactionId} className="hover:bg-slate-50/50">
+                        <tr 
+                          key={record.transactionId} 
+                          className="hover:bg-slate-50/50 cursor-pointer transition-colors"
+                          onClick={() => { setSelectedRechargeRecord(record); setShowRechargeRecordModal(true); }}
+                          title="Click to view associated package details"
+                        >
                           <td className="p-4 font-mono font-bold text-slate-700">{record.transactionId}</td>
                           <td className="p-4 font-mono">{record.rechargeId}</td>
                           <td className="p-4 font-mono">{record.userId}</td>
@@ -3542,68 +3923,138 @@ export default function DiamondAgencyPage() {
           </div>
         )
 
-      case 'coin_transfer_history':
-        const filterTransferHistory = () => {
-          return coinTransferHistory.filter(record => {
-            // Date filter
+      case 'transaction_history':
+        const mergedTransactionHistory = [
+          ...rechargeHistory.map((record) => ({
+            transactionId: record.transactionId,
+            userId: record.userId,
+            userName: record.userName,
+            type: 'Recharge',
+            coinsAdded: record.coinsAdded,
+            status: record.status,
+            dateTime: record.dateTime,
+            remarks: record.remarks
+          })),
+          ...coinTransferHistory.map((record) => ({
+            transactionId: record.transactionId,
+            userId: record.userId,
+            userName: record.userName,
+            type: 'User RC',
+            coinsAdded: record.coins,
+            status: record.status,
+            dateTime: record.timestamp,
+            remarks: `${record.coinType} • ${record.transferType}`
+          }))
+        ].filter((record, index, all) => all.findIndex((item) => item.transactionId === record.transactionId) === index)
+
+        const filterTransactionHistory = () => {
+          return mergedTransactionHistory.filter((record) => {
             let matchesDate = true
-            const recordDate = new Date(record.timestamp.split(' ')[0])
+            const recordDate = new Date(record.dateTime.split(' ')[0])
             const today = new Date()
             today.setHours(0, 0, 0, 0)
-            
-            if (transferHistoryFilters.dateFilter === 'today') {
+
+            if (transactionHistoryFilters.dateFilter === 'today') {
               const todayDate = new Date()
               todayDate.setHours(0, 0, 0, 0)
               matchesDate = recordDate.toDateString() === todayDate.toDateString()
-            } else if (transferHistoryFilters.dateFilter === 'yesterday') {
+            } else if (transactionHistoryFilters.dateFilter === 'yesterday') {
               const yesterday = new Date(today)
               yesterday.setDate(yesterday.getDate() - 1)
               matchesDate = recordDate.toDateString() === yesterday.toDateString()
-            } else if (transferHistoryFilters.dateFilter === 'week') {
+            } else if (transactionHistoryFilters.dateFilter === 'week') {
               const weekAgo = new Date(today)
-              weekAgo.setDate(weekAgo.getDate() - 7)
+              weekAgo.setDate(weekAgo.getDate() - 1)
               matchesDate = recordDate >= weekAgo
-            } else if (transferHistoryFilters.dateFilter === 'custom' && transferHistoryFilters.customDate) {
-              const customDate = new Date(transferHistoryFilters.customDate)
+            } else if (transactionHistoryFilters.dateFilter === 'custom' && transactionHistoryFilters.customDate) {
+              const customDate = new Date(transactionHistoryFilters.customDate)
               matchesDate = recordDate.toDateString() === customDate.toDateString()
             }
-            
-            // Status filter
-            const matchesStatus = transferHistoryFilters.statusFilter === 'all' || record.status === transferHistoryFilters.statusFilter
-            
-            // User ID filter
-            const matchesUserId = !transferHistoryFilters.userIdFilter || record.userId.includes(transferHistoryFilters.userIdFilter)
-            
-            return matchesDate && matchesStatus && matchesUserId
+
+            const matchesType = transactionHistoryFilters.typeFilter === 'all' || record.type === transactionHistoryFilters.typeFilter
+            const matchesStatus = transactionHistoryFilters.statusFilter === 'all' || record.status === transactionHistoryFilters.statusFilter
+            const matchesSearch = !transactionHistoryFilters.searchTerm || `${record.transactionId} ${record.userId} ${record.userName} ${record.type} ${record.remarks}`.toLowerCase().includes(transactionHistoryFilters.searchTerm.toLowerCase())
+
+            return matchesDate && matchesType && matchesStatus && matchesSearch
           })
         }
-        
-        const filteredTransferHistory = filterTransferHistory()
-        
-        const getTransferStatusBadge = (status) => {
-          switch(status) {
+
+        const filteredTransactionHistory = filterTransactionHistory()
+
+        const computeRunningBalances = (list) => {
+          const sorted = [...list].sort((a, b) => new Date(b.dateTime) - new Date(a.dateTime))
+          let cur = Number(agencyWallet.coins || 0)
+          return sorted.map((record) => {
+            const running = cur
+            const amt = Number(record.coinsAdded || 0)
+            let delta = 0
+            if (record.status === 'Completed') {
+              delta = record.type === 'User RC' ? -amt : amt
+            } else if (record.status === 'Refunded') {
+              delta = record.type === 'User RC' ? amt : -amt
+            }
+            cur = cur - delta
+            return { ...record, runningBalance: running }
+          })
+        }
+
+        const transactionHistoryWithBalance = computeRunningBalances(filteredTransactionHistory)
+
+        const totalCoinsReceived = filteredTransactionHistory.reduce((sum, record) => {
+          if (record.type === 'Recharge' && record.status === 'Completed') {
+            return sum + Number(record.coinsAdded || 0)
+          }
+          return sum
+        }, 0)
+
+        const getTransactionStatusBadge = (status) => {
+          switch (status) {
             case 'Pending': return 'bg-amber-100 text-amber-700'
             case 'Completed': return 'bg-green-100 text-green-700'
             case 'Failed': return 'bg-red-100 text-red-700'
+            case 'Refunded': return 'bg-slate-100 text-slate-700'
             default: return 'bg-slate-100 text-slate-700'
           }
         }
-        
+
         return (
           <div className="space-y-4 sm:space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-3 sm:mb-4">
-              <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2"><Send className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Coin Transfer History</h4>
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3 mb-3 sm:mb-4">
+              <div>
+                <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2">
+                  <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-[#E51E25]" /> Transaction History
+                </h4>
+              </div>
+              
+              {/* Agency Wallet RC Panel */}
+              <div className="bg-gradient-to-r from-[#E51E25] to-red-500 rounded-xl p-4 sm:p-5 text-white shadow-lg flex items-center gap-4 w-full lg:w-auto">
+                <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                  <Wallet className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <div className="text-[10px] sm:text-xs font-bold text-red-100 uppercase tracking-wider mb-1">Agency Remaining Coins</div>
+                  <div className="text-2xl sm:text-3xl font-black leading-none">{agencyWallet.coins.toLocaleString()}</div>
+                </div>
+              </div>
             </div>
-            
-            {/* Filters */}
+
             <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {/* Date Filter */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+                <div className="sm:col-span-2 xl:col-span-2">
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Search</label>
+                  <input
+                    type="text"
+                    placeholder="Search by ID, user or note"
+                    value={transactionHistoryFilters.searchTerm}
+                    onChange={(e) => setTransactionHistoryFilters({ ...transactionHistoryFilters, searchTerm: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  />
+                </div>
                 <div>
                   <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Date Filter</label>
-                  <select 
-                    value={transferHistoryFilters.dateFilter}
-                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, dateFilter: e.target.value})}
+                  <select
+                    value={transactionHistoryFilters.dateFilter}
+                    onChange={(e) => setTransactionHistoryFilters({ ...transactionHistoryFilters, dateFilter: e.target.value })}
                     className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   >
                     <option value="all">All Time</option>
@@ -3613,50 +4064,65 @@ export default function DiamondAgencyPage() {
                     <option value="custom">Custom Date</option>
                   </select>
                 </div>
-                
-                {/* Custom Date */}
-                {transferHistoryFilters.dateFilter === 'custom' && (
+                {transactionHistoryFilters.dateFilter === 'custom' && (
                   <div>
                     <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Date</label>
-                    <input 
-                      type="date" 
-                      value={transferHistoryFilters.customDate}
-                      onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, customDate: e.target.value})}
+                    <input
+                      type="date"
+                      value={transactionHistoryFilters.customDate}
+                      onChange={(e) => setTransactionHistoryFilters({ ...transactionHistoryFilters, customDate: e.target.value })}
                       className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                     />
                   </div>
                 )}
-                
-                {/* Status Filter */}
+                <div>
+                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Type</label>
+                  <select
+                    value={transactionHistoryFilters.typeFilter}
+                    onChange={(e) => setTransactionHistoryFilters({ ...transactionHistoryFilters, typeFilter: e.target.value })}
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
+                  >
+                    <option value="all">All Types</option>
+                    <option value="Recharge">Recharge</option>
+                    <option value="User RC">User RC</option>
+                  </select>
+                </div>
                 <div>
                   <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Status</label>
-                  <select 
-                    value={transferHistoryFilters.statusFilter}
-                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, statusFilter: e.target.value})}
+                  <select
+                    value={transactionHistoryFilters.statusFilter}
+                    onChange={(e) => setTransactionHistoryFilters({ ...transactionHistoryFilters, statusFilter: e.target.value })}
                     className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
                   >
                     <option value="all">All Status</option>
                     <option value="Pending">Pending</option>
                     <option value="Completed">Completed</option>
                     <option value="Failed">Failed</option>
+                    <option value="Refunded">Refunded</option>
                   </select>
-                </div>
-                
-                {/* User ID Filter */}
-                <div>
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">User ID</label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter User ID" 
-                    value={transferHistoryFilters.userIdFilter}
-                    onChange={(e) => setTransferHistoryFilters({...transferHistoryFilters, userIdFilter: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
-                  />
                 </div>
               </div>
             </div>
-            
-            {/* Table */}
+
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Records</div>
+                <div className="mt-1 text-xl sm:text-2xl font-black text-slate-800">{filteredTransactionHistory.length}</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Completed</div>
+                <div className="mt-1 text-xl sm:text-2xl font-black text-green-600">{filteredTransactionHistory.filter(r => r.status === 'Completed').length}</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Pending</div>
+                <div className="mt-1 text-xl sm:text-2xl font-black text-amber-600">{filteredTransactionHistory.filter(r => r.status === 'Pending').length}</div>
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400">Total Coins Received</div>
+                <div className="mt-1 text-xl sm:text-2xl font-black text-slate-800">{totalCoinsReceived.toLocaleString()}</div>
+              </div>
+            </div>
+
             <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -3665,36 +4131,51 @@ export default function DiamondAgencyPage() {
                       <th className="p-4">Transaction ID</th>
                       <th className="p-4">User ID</th>
                       <th className="p-4">User Name</th>
-                      <th className="p-4">Coin Type</th>
-                      <th className="p-4">Coins</th>
-                      <th className="p-4">Transfer Type</th>
-                      <th className="p-4">Status</th>
-                      <th className="p-4">Time</th>
+                      <th className="p-4">Type</th>
+                      <th className="p-4">Coins Added</th>
+                      <th className="p-4">Date & Time</th>
+                      <th className="p-4 text-right">Available Balance</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {filteredTransferHistory.length === 0 ? (
+                    {filteredTransactionHistory.length === 0 ? (
                       <tr>
-                        <td colSpan="8" className="p-8 text-center text-slate-500">
-                          <Send className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
+                        <td colSpan="7" className="p-8 text-center text-slate-500">
+                          <Receipt className="w-8 h-8 sm:w-10 sm:h-10 text-slate-300 mx-auto mb-3" />
                           <div className="text-sm font-bold">No records found</div>
                         </td>
                       </tr>
                     ) : (
-                      filteredTransferHistory.map((record) => (
-                        <tr key={record.transactionId} className="hover:bg-slate-50/50">
+                      transactionHistoryWithBalance.map((record) => (
+                        <tr 
+                          key={record.transactionId} 
+                          className="hover:bg-slate-50/50 cursor-pointer transition-colors"
+                          onClick={() => {
+                            setSelectedRechargeRecord({
+                              transactionId: record.transactionId,
+                              userId: record.userId,
+                              userName: record.userName,
+                              rechargeType: record.type,
+                              coinsAdded: record.coinsAdded,
+                              status: record.status,
+                              dateTime: record.dateTime,
+                              remarks: record.remarks || ''
+                            });
+                            setShowRechargeRecordModal(true);
+                          }}
+                          title="Click to view associated package details"
+                        >
                           <td className="p-4 font-mono font-bold text-slate-700">{record.transactionId}</td>
-                          <td className="p-4 font-mono">{record.userId}</td>
+                          <td className="p-4 font-mono text-slate-800">{record.userId}</td>
                           <td className="p-4 font-semibold text-slate-800">{record.userName}</td>
-                          <td className="p-4">{record.coinType}</td>
-                          <td className="p-4 font-mono font-bold">{record.coins.toLocaleString()}</td>
-                          <td className="p-4">{record.transferType}</td>
                           <td className="p-4">
-                            <span className={`px-3 py-1 rounded-lg text-[10px] sm:text-xs font-bold ${getTransferStatusBadge(record.status)}`}>
-                              {record.status}
+                            <span className={`inline-flex items-center whitespace-nowrap px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold ${record.type === 'User RC' ? 'bg-blue-100 text-blue-700' : 'bg-[#E51E25]/10 text-[#E51E25]'}`}>
+                              {record.type}
                             </span>
                           </td>
-                          <td className="p-4 text-xs text-slate-500">{record.timestamp}</td>
+                          <td className="p-4 font-mono font-bold">{record.coinsAdded.toLocaleString()}</td>
+                          <td className="p-4 text-xs text-slate-500">{record.dateTime}</td>
+                          <td className="p-4 font-mono text-slate-800 text-right">{(record.runningBalance || 0).toLocaleString()}</td>
                         </tr>
                       ))
                     )}
@@ -3702,6 +4183,13 @@ export default function DiamondAgencyPage() {
                 </table>
               </div>
             </div>
+          </div>
+        )
+
+      case 'chat_support':
+        return (
+          <div className="space-y-4">
+            <ChatSupport />
           </div>
         )
 
@@ -3817,102 +4305,59 @@ export default function DiamondAgencyPage() {
             return
           }
           
-          // Check if payment is verified
-          if (!manualRechargeForm.paymentVerified) {
-            alert('Please verify payment before proceeding with recharge!')
-            return
-          }
-          
-          // Check if account type is Special ID
-          if (manualRechargeForm.accountType === 'Special ID') {
-            setShowSpecialIdModal(true)
-          } else {
-            // Show confirmation popup
-            setShowManualRechargeConfirm(true)
-          }
+          // Show confirmation popup
+          setShowManualRechargeConfirm(true)
         }
         
         const handleManualRechargeConfirm = () => {
           const coinsToRecharge = Number(manualRechargeForm.coinAmount)
           const userId = Number(manualRechargeForm.userId)
           
-          // If requires approval, create custom recharge request
-          if (manualRechargeForm.requiresApproval) {
-            const newRequest = {
-              id: `CR-${String(customRechargeRequests.length + 1).padStart(3, '0')}`,
-              userId: manualRechargeForm.userId,
-              userName: manualRechargeForm.userName,
-              requestedCoins: coinsToRecharge,
-              rechargeType: manualRechargeForm.rechargeType,
-              status: 'Pending',
-              date: new Date().toLocaleString('en-US', { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-              }).replace(',', ''),
-              remarks: manualRechargeForm.remarks || 'Custom recharge request'
-            }
-            
-            setCustomRechargeRequests(prev => [newRequest, ...prev])
-            
-            setManualRechargeSuccess({
-              requestId: newRequest.id,
-              userId: manualRechargeForm.userId,
-              userName: manualRechargeForm.userName,
-              coins: coinsToRecharge,
-              rechargeType: manualRechargeForm.rechargeType,
-              requiresApproval: true
-            })
-          } else {
-            // Check if agency has enough coins
-            if (agencyWallet.coins < coinsToRecharge) {
-              alert('Insufficient coins in Agency Wallet!')
-              setShowManualRechargeConfirm(false)
-              return
-            }
-            
-            // Deduct from agency wallet
-            setAgencyWallet(prev => ({ coins: prev.coins - coinsToRecharge }))
-            
-            // Credit to user wallet
-            setUserWallets(prev => prev.map(user => {
-              if (user.id === userId) {
-                return { ...user, coins: user.coins + coinsToRecharge }
-              }
-              return user
-            }))
-            
-            // Add to recharge history
-            const newTransaction = {
-              transactionId: `TXN-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
-              rechargeId: `RC-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
-              userId: manualRechargeForm.userId,
-              userName: manualRechargeForm.userName,
-              rechargeType: manualRechargeForm.rechargeType,
-              coinsAdded: coinsToRecharge,
-              status: 'Completed',
-              dateTime: new Date().toLocaleString('en-US', { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-              }).replace(',', ''),
-              remarks: manualRechargeForm.remarks || 'Manual recharge'
-            }
-            
-            setRechargeHistory(prev => [newTransaction, ...prev])
-            
-            setManualRechargeSuccess({
-              userId: manualRechargeForm.userId,
-              userName: manualRechargeForm.userName,
-              coins: coinsToRecharge,
-              rechargeType: manualRechargeForm.rechargeType,
-              requiresApproval: false
-            })
+          // Check if agency has enough coins
+          if (agencyWallet.coins < coinsToRecharge) {
+            alert('Insufficient coins in Agency Wallet!')
+            setShowManualRechargeConfirm(false)
+            return
           }
+          
+          // Deduct from agency wallet
+          setAgencyWallet(prev => ({ coins: prev.coins - coinsToRecharge }))
+          
+          // Credit to user wallet
+          setUserWallets(prev => prev.map(user => {
+            if (user.id === userId) {
+              return { ...user, coins: user.coins + coinsToRecharge }
+            }
+            return user
+          }))
+          
+          // Add to recharge history
+          const newTransaction = {
+            transactionId: `TXN-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
+            rechargeId: `RC-${String(rechargeHistory.length + 1).padStart(3, '0')}`,
+            userId: manualRechargeForm.userId,
+            userName: manualRechargeForm.userName,
+            rechargeType: manualRechargeForm.rechargeType,
+            coinsAdded: coinsToRecharge,
+            status: 'Completed',
+            dateTime: new Date().toLocaleString('en-US', { 
+              year: 'numeric', 
+              month: '2-digit', 
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit'
+            }).replace(',', ''),
+            remarks: manualRechargeForm.remarks || 'Manual recharge'
+          }
+          
+          setRechargeHistory(prev => [newTransaction, ...prev])
+          
+          setManualRechargeSuccess({
+            userId: manualRechargeForm.userId,
+            userName: manualRechargeForm.userName,
+            coins: coinsToRecharge,
+            rechargeType: manualRechargeForm.rechargeType
+          })
           
           // Reset form and close confirmation
           setManualRechargeForm({
@@ -3923,9 +4368,7 @@ export default function DiamondAgencyPage() {
             accountType: '',
             coinAmount: '',
             rechargeType: 'Normal Coin',
-            remarks: '',
-            requiresApproval: false,
-            paymentVerified: false
+            remarks: ''
           })
           setShowManualRechargeConfirm(false)
         }
@@ -3934,31 +4377,6 @@ export default function DiamondAgencyPage() {
           setShowManualRechargeConfirm(false)
         }
 
-        const handleSpecialIdConfirm = () => {
-          if (!specialIdSubType) {
-            alert('Please select an account type!')
-            return
-          }
-          setShowSpecialIdModal(false)
-          setShowManualRechargeConfirm(true)
-        }
-
-        const handleSpecialIdCancel = () => {
-          setShowSpecialIdModal(false)
-          setSpecialIdSubType('')
-        }
-
-        const handleAgencyIdConfirm = () => {
-          setManualRechargeForm(prev => ({ ...prev, agencyId: pendingAgencyId }))
-          setShowAgencyIdConfirm(false)
-          setPendingAgencyId('')
-        }
-
-        const handleAgencyIdCancel = () => {
-          setShowAgencyIdConfirm(false)
-          setPendingAgencyId('')
-        }
-        
         return (
           <div className="space-y-4 sm:space-y-6 max-w-2xl">
             {/* Success Confirmation - eSewa Style */}
@@ -4035,18 +4453,12 @@ export default function DiamondAgencyPage() {
               <form onSubmit={handleManualRechargeSubmit} className="space-y-4 sm:space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID</label>
+                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Agency ID(Auto)</label>
                     <input 
                       type="text" 
                       value={manualRechargeForm.agencyId}
-                      onChange={e => {
-                        const newAgencyId = e.target.value
-                        if (newAgencyId !== manualRechargeForm.agencyId) {
-                          setPendingAgencyId(newAgencyId)
-                          setShowAgencyIdConfirm(true)
-                        }
-                      }}
-                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30" 
+                      readOnly
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-slate-500 cursor-not-allowed" 
                     />
                   </div>
                   <div>
@@ -4100,7 +4512,6 @@ export default function DiamondAgencyPage() {
                       <option value="">-- Select Account Type --</option>
                       <option value="Personal">Personal</option>
                       <option value="Official">Official</option>
-                      <option value="Special ID">Special ID</option>
                     </select>
                   </div>
                 </div>
@@ -4126,7 +4537,6 @@ export default function DiamondAgencyPage() {
                     <option value="Normal Coin">Normal Coin</option>
                     <option value="Blue Diamond">Blue Diamond</option>
                     <option value="Green Diamond">Green Diamond</option>
-                    <option value="Red Game Coin">Red Game Coin</option>
                   </select>
                 </div>
                 <div>
@@ -4139,39 +4549,68 @@ export default function DiamondAgencyPage() {
                     className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30 resize-none" 
                   />
                 </div>
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="requiresApproval"
-                    checked={manualRechargeForm.requiresApproval}
-                    onChange={e=>setManualRechargeForm({...manualRechargeForm, requiresApproval: e.target.checked})}
-                    className="w-4 h-4 text-red-600 rounded focus:ring-red-500 cursor-pointer"
-                  />
-                  <label htmlFor="requiresApproval" className="text-xs sm:text-sm font-semibold text-slate-600 cursor-pointer">
-                    Requires Super Admin Approval (Custom Recharge)
-                  </label>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input 
-                    type="checkbox" 
-                    id="paymentVerified"
-                    checked={manualRechargeForm.paymentVerified}
-                    onChange={e=>setManualRechargeForm({...manualRechargeForm, paymentVerified: e.target.checked})}
-                    className="w-4 h-4 text-green-600 rounded focus:ring-green-500 cursor-pointer"
-                  />
-                  <label htmlFor="paymentVerified" className="text-xs sm:text-sm font-semibold text-slate-600 cursor-pointer">
-                    Payment Verification - Verify payment from agency user before recharge
-                  </label>
-                </div>
                 <div className="pt-2">
                   <button 
                     type="submit" 
                     className="w-full bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
                   >
-                    {manualRechargeForm.requiresApproval ? 'Submit Request' : 'Recharge'}
+                    Recharge
                   </button>
                 </div>
               </form>
+            </div>
+
+            {/* Top 5 Recent Recharges Table */}
+            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-extrabold text-slate-800 text-base sm:text-lg flex items-center gap-2">
+                    <History className="w-4 h-4 text-[#E51E25]" /> Recent Top 5 Recharges
+                  </h4>
+                  <p className="text-[10px] sm:text-xs text-slate-500 mt-0.5">Latest manual user recharge logs</p>
+                </div>
+                <button 
+                  onClick={() => setActiveSideTab('recharge_history')}
+                  className="text-xs font-bold text-[#E51E25] hover:underline"
+                >
+                  View Full History
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-400 font-bold uppercase">
+                    <tr>
+                      <th className="p-3">Txn ID</th>
+                      <th className="p-3">User</th>
+                      <th className="p-3">Coins Added</th>
+                      <th className="p-3">Type</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-semibold">
+                    {rechargeHistory.slice(0, 5).map((rec) => (
+                      <tr key={rec.transactionId} className="hover:bg-slate-50">
+                        <td className="p-3 font-mono font-bold text-slate-700">{rec.transactionId}</td>
+                        <td className="p-3">
+                          <div className="font-bold text-slate-800">{rec.userName}</div>
+                          <div className="text-[10px] font-mono text-slate-400">ID: {rec.userId}</div>
+                        </td>
+                        <td className="p-3 font-mono font-bold text-slate-800">{rec.coinsAdded.toLocaleString()}</td>
+                        <td className="p-3 text-slate-600">{rec.rechargeType}</td>
+                        <td className="p-3">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            rec.status === 'Completed' ? 'bg-green-100 text-green-700' :
+                            rec.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
+                          }`}>
+                            {rec.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Confirmation Popup */}
@@ -4202,78 +4641,7 @@ export default function DiamondAgencyPage() {
               </div>
             )}
 
-            {/* Special ID Sub-Type Selection Modal */}
-            {showSpecialIdModal && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
-                  <div className="text-center mb-6">
-                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Special ID Detected</h4>
-                    <p className="text-slate-600 text-sm sm:text-base">
-                      Please select the account type to continue with the recharge.
-                    </p>
-                  </div>
-                  <div className="space-y-3 mb-6">
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-600 mb-2">Select Account Type</label>
-                    <select 
-                      value={specialIdSubType}
-                      onChange={e => setSpecialIdSubType(e.target.value)}
-                      className="w-full bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-red-500/30"
-                    >
-                      <option value="">-- Select Account Type --</option>
-                      <option value="Official Account">Official Account</option>
-                      <option value="VIP Account">VIP Account</option>
-                      <option value="Event Account">Event Account</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={handleSpecialIdConfirm}
-                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
-                    >
-                      Continue
-                    </button>
-                    <button 
-                      onClick={handleSpecialIdCancel}
-                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
 
-            {/* Agency ID Change Confirmation Modal */}
-            {showAgencyIdConfirm && (
-              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl">
-                  <div className="text-center mb-6">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <AlertTriangle className="w-8 h-8 text-blue-500" />
-                    </div>
-                    <h4 className="font-extrabold text-slate-800 text-lg sm:text-xl mb-2">Confirm Agency ID Change</h4>
-                    <p className="text-slate-600 text-sm sm:text-base">
-                      Are you sure you want to change the Agency ID from <span className="font-bold">{manualRechargeForm.agencyId}</span> to <span className="font-bold text-[#E51E25]">{pendingAgencyId}</span>?
-                    </p>
-                  </div>
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={handleAgencyIdConfirm}
-                      className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
-                    >
-                      Confirm Change
-                    </button>
-                    <button 
-                      onClick={handleAgencyIdCancel}
-                      className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-sm font-bold shadow-sm active:scale-[0.98] transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )
 
@@ -4309,6 +4677,103 @@ export default function DiamondAgencyPage() {
           <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
             <Gem className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-300 shrink-0" />
             <span className="font-extrabold text-sm sm:text-lg tracking-tight truncate">Diamond Agency</span>
+          </div>
+        </div>
+
+        {/* Agency + Notification + Language + Profile */}
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          {/* Agency Badge */}
+          <div className="hidden md:flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1.5 rounded-xl">
+            <Building2 className="w-4 h-4 text-yellow-300 shrink-0" />
+            <span className="text-xs font-bold truncate max-w-[160px]">
+              {profile.agencyId} - {profile.agencyName}
+            </span>
+          </div>
+
+          {/* Language Selector */}
+          <div className="relative hidden md:block">
+            <button
+              onClick={() => setLanguageMenuOpen(!languageMenuOpen)}
+              className="flex items-center gap-2 bg-white/10 border border-white/20 text-white rounded-full px-3 py-1.5 text-xs font-semibold hover:bg-white/15 transition"
+              aria-label="Select language"
+            >
+              <Globe className="w-4 h-4 text-white" />
+              <span>{selectedLanguage}</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${languageMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {languageMenuOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white text-slate-800 rounded-xl shadow-2xl border border-slate-200 overflow-hidden z-[10002]">
+                {languages.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      setSelectedLanguage(lang)
+                      setLanguageMenuOpen(false)
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Notification Bell */}
+          <button
+            onClick={() => { setActiveSideTab('notifications'); setProfileOpen(false) }}
+            className="relative p-2 rounded-lg hover:bg-white/10 transition-colors"
+            aria-label="Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            {notifications.filter(n => !n.read).length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 bg-yellow-300 text-[#E51E25] text-[9px] font-black min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
+                {notifications.filter(n => !n.read).length}
+              </span>
+            )}
+          </button>
+
+          {/* Profile Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="flex items-center gap-1.5 sm:gap-2 pl-1.5 sm:pl-2 pr-1 py-1 rounded-xl hover:bg-white/10 transition-colors"
+            >
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </div>
+              <div className="hidden sm:flex flex-col items-start leading-tight">
+                <span className="text-xs font-bold text-yellow-300 truncate max-w-[130px]">
+                  {profile.agencyName}
+                </span>
+              </div>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform shrink-0 ${profileOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {profileOpen && (
+              <>
+                <div className="fixed inset-0 z-[10000]" onClick={() => setProfileOpen(false)} />
+                <div className="absolute right-0 top-full mt-2 w-60 bg-white rounded-xl shadow-2xl border border-slate-100 py-2 text-slate-800 z-[10001]">
+                  <div className="px-4 py-2.5 border-b border-slate-100">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Agency</div>
+                    <div className="text-sm font-extrabold text-slate-800">{profile.agencyId} — {profile.agencyName}</div>
+                    <div className="text-[10px] text-slate-500 mt-0.5">{profile.email}</div>
+                  </div>
+                  <button onClick={() => { setActiveSideTab('profile'); setProfileOpen(false) }} className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                    <User className="w-3.5 h-3.5 text-slate-400" /> View Profile
+                  </button>
+                  <button onClick={() => { setActiveSideTab('settings'); setProfileOpen(false) }} className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                    <Settings className="w-3.5 h-3.5 text-slate-400" /> Settings
+                  </button>
+                  <button onClick={() => { setActiveSideTab('help'); setProfileOpen(false) }} className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                    <HelpCircle className="w-3.5 h-3.5 text-slate-400" /> Help
+                  </button>
+                  <button onClick={() => { setActiveSideTab('chat_support'); setProfileOpen(false) }} className="w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-2">
+                    <MessageSquare className="w-3.5 h-3.5 text-slate-400" /> Chat Support
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -4461,12 +4926,210 @@ export default function DiamondAgencyPage() {
         <main className="flex-1 min-w-0 p-3 sm:p-4 md:p-6 lg:p-8 pt-16 sm:pt-18 md:pt-20 overflow-x-hidden">
           <div className="mb-4 sm:mb-6">
             <h2 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800">
-              {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label}
+              {menuGroups.flatMap(g => g.key ? [g] : g.subItems).find(m => m.key === activeSideTab)?.label || (activeSideTab === 'help' ? 'Help & Support' : '')}
             </h2>
           </div>
           {renderPanel()}
         </main>
       </div>
+
+      {/* Package Details Modal */}
+      {showPkgDetailModal && selectedPackageDetail && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-slideUp">
+            <div className="bg-gradient-to-r from-red-600 to-[#E51E25] p-5 text-white flex justify-between items-start">
+              <div>
+                <div className="inline-flex items-center gap-1.5 bg-black/20 border border-white/30 rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider mb-2">
+                  <Gem className="w-3 h-3 text-white" /> Super Admin Package
+                </div>
+                <h3 className="font-black text-xl">{selectedPackageDetail.name}</h3>
+                <p className="text-xs text-red-100 mt-1">Package ID: {selectedPackageDetail.id}</p>
+              </div>
+              <button 
+                onClick={() => setShowPkgDetailModal(false)}
+                className="p-1 rounded-lg bg-black/20 hover:bg-black/40 text-white transition-colors"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Base Diamonds</div>
+                  <div className="text-lg font-black text-slate-800 font-mono">{selectedPackageDetail.diamonds.toLocaleString()}</div>
+                </div>
+                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Price (USD)</div>
+                  <div className="text-lg font-black text-green-600 font-mono">${selectedPackageDetail.price.toFixed(2)}</div>
+                </div>
+                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Bonus Percentage</div>
+                  <div className="text-lg font-black text-amber-600 font-mono">+{selectedPackageDetail.bonusPct}%</div>
+                </div>
+                <div className="bg-slate-50 border border-slate-100 p-3 rounded-xl">
+                  <div className="text-[10px] font-bold uppercase text-slate-400">Total Diamonds</div>
+                  <div className="text-lg font-black text-[#E51E25] font-mono">
+                    {(selectedPackageDetail.diamonds + Math.floor(selectedPackageDetail.diamonds * (selectedPackageDetail.bonusPct / 100))).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-50 border border-slate-100 p-3.5 rounded-xl space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-slate-500 font-semibold">Total Packages Sold:</span>
+                  <span className="font-bold text-slate-800">{selectedPackageDetail.sold.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500 font-semibold">Status:</span>
+                  <span className="font-bold text-green-600 uppercase text-[10px] bg-green-50 border border-green-200 px-2 py-0.5 rounded-md">
+                    {selectedPackageDetail.status}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500 font-semibold">Source:</span>
+                  <span className="font-bold text-slate-700">Auto-Fetched (Super Admin)</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button 
+                  onClick={() => setShowPkgDetailModal(false)}
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-xs font-bold transition-all"
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={() => {
+                    const totalDiamonds = selectedPackageDetail.diamonds + Math.floor(selectedPackageDetail.diamonds * (selectedPackageDetail.bonusPct / 100))
+                    setManualRechargeForm(prev => ({ 
+                      ...prev, 
+                      coinAmount: String(totalDiamonds),
+                      rechargeType: selectedPackageDetail.name 
+                    }))
+                    setShowPkgDetailModal(false)
+                    setActiveSideTab('manual_recharge')
+                  }}
+                  className="flex-1 bg-[#E51E25] hover:bg-[#c4161c] text-white py-3 rounded-xl text-xs font-bold shadow-md transition-all"
+                >
+                  Use for Recharge
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Recharge Record details modal (with matched package specifications) */}
+      {showRechargeRecordModal && selectedRechargeRecord && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-slideUp">
+            <div className="bg-gradient-to-r from-red-600 to-[#E51E25] p-5 text-white flex justify-between items-start">
+              <div>
+                <span className="inline-flex items-center gap-1 bg-black/20 border border-white/20 rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider mb-2">
+                  Transaction Info
+                </span>
+                <h3 className="font-extrabold text-lg leading-tight">{selectedRechargeRecord.userName}</h3>
+                <p className="text-[10px] text-red-100 mt-1 font-mono">Txn ID: {selectedRechargeRecord.transactionId}</p>
+              </div>
+              <button 
+                onClick={() => setShowRechargeRecordModal(false)}
+                className="p-1 rounded-lg bg-black/20 hover:bg-black/40 text-white transition-colors"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-slate-50 border border-slate-100/80 p-3.5 rounded-xl space-y-2 text-xs font-semibold">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">User ID:</span>
+                  <span className="font-mono font-bold text-slate-800">{selectedRechargeRecord.userId}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Coins/Diamonds Added:</span>
+                  <span className="font-mono font-black text-slate-800">{selectedRechargeRecord.coinsAdded.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Recharge Type:</span>
+                  <span className="font-bold text-[#E51E25]">{selectedRechargeRecord.rechargeType}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Date & Time:</span>
+                  <span className="text-slate-600 font-bold">{selectedRechargeRecord.dateTime}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Remarks:</span>
+                  <span className="text-slate-600 font-semibold">{selectedRechargeRecord.remarks || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between items-center pt-1">
+                  <span className="text-slate-500">Status:</span>
+                  <span className={`px-2.5 py-0.5 rounded-md text-[9px] font-bold ${
+                    selectedRechargeRecord.status === 'Completed' ? 'bg-green-50 text-green-700 border border-green-200' :
+                    selectedRechargeRecord.status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 
+                    'bg-red-50 text-red-700 border border-red-200'
+                  }`}>
+                    {selectedRechargeRecord.status}
+                  </span>
+                </div>
+              </div>
+
+              {/* Match and display the coin package */}
+              {(() => {
+                const matchedPkg = packages.find(p => 
+                  selectedRechargeRecord.rechargeType.toLowerCase().includes(p.name.replace(" Package", "").toLowerCase()) ||
+                  selectedRechargeRecord.rechargeType.toLowerCase().includes(p.name.toLowerCase()) ||
+                  p.name.toLowerCase().includes(selectedRechargeRecord.rechargeType.toLowerCase()) ||
+                  (selectedRechargeRecord.rechargeType.toLowerCase().includes("normal") && p.name.toLowerCase().includes("normal")) ||
+                  (selectedRechargeRecord.rechargeType.toLowerCase().includes("blue") && p.name.toLowerCase().includes("blue")) ||
+                  (selectedRechargeRecord.rechargeType.toLowerCase().includes("green") && p.name.toLowerCase().includes("green"))
+                )
+                if (matchedPkg) {
+                  return (
+                    <div className="border border-red-100 bg-red-50/40 p-4 rounded-xl space-y-3">
+                      <div className="text-xs font-bold text-[#E51E25] flex items-center gap-1.5 uppercase tracking-wide">
+                        <Gem className="w-3.5 h-3.5" /> Associated Coin Package Specifications
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+                        <div className="bg-white border border-red-50/50 p-2 rounded-lg">
+                          <div className="text-[9px] font-bold text-slate-400 uppercase">Package Name</div>
+                          <div className="font-bold text-slate-800 mt-0.5">{matchedPkg.name}</div>
+                        </div>
+                        <div className="bg-white border border-red-50/50 p-2 rounded-lg">
+                          <div className="text-[9px] font-bold text-slate-400 uppercase">Price (USD)</div>
+                          <div className="font-bold text-green-600 mt-0.5">${matchedPkg.price.toFixed(2)}</div>
+                        </div>
+                        <div className="bg-white border border-red-50/50 p-2 rounded-lg">
+                          <div className="text-[9px] font-bold text-slate-400 uppercase">Base Diamonds</div>
+                          <div className="font-bold text-slate-700 mt-0.5">{matchedPkg.diamonds.toLocaleString()}</div>
+                        </div>
+                        <div className="bg-white border border-red-50/50 p-2 rounded-lg">
+                          <div className="text-[9px] font-bold text-slate-400 uppercase">Bonus %</div>
+                          <div className="font-bold text-amber-600 mt-0.5">+{matchedPkg.bonusPct}%</div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }
+                return (
+                  <div className="border border-slate-100 bg-slate-50 p-3.5 rounded-xl text-center text-xs text-slate-500 font-semibold">
+                    No matching Super Admin package found for this coin type.
+                  </div>
+                )
+              })()}
+
+              <div className="pt-1">
+                <button 
+                  onClick={() => setShowRechargeRecordModal(false)}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl text-xs font-bold transition-all"
+                >
+                  Close Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
